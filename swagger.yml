@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.2.0
+  version: 0.3.0
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -941,11 +941,7 @@ definitions:
       dataPoints:
         type: array
         items:
-          additionalProperties:
-            type: object
-        # type: array
-        # items:
-        #   $ref: '#/definitions/DataPoint'
+          $ref: '#/definitions/DataPoint'
       name:
         type: string
       units:
@@ -953,11 +949,13 @@ definitions:
 
   DataPoint:
     type: object
+    #required: ["value"] # make value a pointer
     properties:
       timestamp:
         type: string
         format: date-time
       value:
+        x-nullable: true
         type: number
 
   Units:

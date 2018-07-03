@@ -1,6 +1,6 @@
 {
   "name": "atlas-api-client",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API.",
   "main": "index.js",
   "dependencies": {

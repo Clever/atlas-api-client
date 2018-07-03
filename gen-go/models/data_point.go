@@ -20,7 +20,7 @@ type DataPoint struct {
 	Timestamp strfmt.DateTime `json:"timestamp,omitempty"`
 
 	// value
-	Value float64 `json:"value,omitempty"`
+	Value *float64 `json:"value,omitempty"`
 }
 
 // Validate validates this data point
