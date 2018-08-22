@@ -16,8 +16,6 @@ jobs:
     - run:
         command: mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
         name: Set up CircleCI artifacts directories
-    - run: echo noop
-    - run: echo noop
     - run:
         command: |-
           cd /tmp/ && wget https://bootstrap.pypa.io/get-pip.py && sudo python get-pip.py
