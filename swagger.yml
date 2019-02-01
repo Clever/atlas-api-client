@@ -1199,7 +1199,7 @@ definitions:
         type: string
         enum:
         - "AWS"
-      region:
+      regionName:
         type: string
   Container:
     type: object

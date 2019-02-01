@@ -25,8 +25,8 @@ type CreateOrUpdateContainerRequest struct {
 	// provider name
 	ProviderName string `json:"providerName,omitempty"`
 
-	// region
-	Region string `json:"region,omitempty"`
+	// region name
+	RegionName string `json:"regionName,omitempty"`
 }
 
 // Validate validates this create or update container request
