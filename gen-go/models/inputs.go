@@ -207,6 +207,154 @@ func (i UpdateClusterInput) Path() (string, error) {
 	return path + "?" + urlVals.Encode(), nil
 }
 
+// GetContainersInput holds the input parameters for a getContainers operation.
+type GetContainersInput struct {
+	GroupID string
+}
+
+// ValidateGetContainersInput returns an error if the input parameter doesn't
+// satisfy the requirements in the swagger yml file.
+func ValidateGetContainersInput(groupID string) error {
+
+	return nil
+}
+
+// GetContainersInputPath returns the URI path for the input.
+func GetContainersInputPath(groupID string) (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/containers"
+	urlVals := url.Values{}
+
+	pathgroupID := groupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// CreateContainerInput holds the input parameters for a createContainer operation.
+type CreateContainerInput struct {
+	GroupID                        string
+	CreateOrUpdateContainerRequest *CreateOrUpdateContainerRequest
+}
+
+// Validate returns an error if any of the CreateContainerInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i CreateContainerInput) Validate() error {
+
+	if i.CreateOrUpdateContainerRequest != nil {
+		if err := i.CreateOrUpdateContainerRequest.Validate(nil); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i CreateContainerInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/containers"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// GetContainerInput holds the input parameters for a getContainer operation.
+type GetContainerInput struct {
+	GroupID     string
+	ContainerID string
+}
+
+// Validate returns an error if any of the GetContainerInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i GetContainerInput) Validate() error {
+
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i GetContainerInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/containers/{containerID}"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathcontainerID := i.ContainerID
+	if pathcontainerID == "" {
+		err := fmt.Errorf("containerID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{containerID}", pathcontainerID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// UpdateContainerInput holds the input parameters for a updateContainer operation.
+type UpdateContainerInput struct {
+	GroupID                        string
+	ContainerID                    string
+	CreateOrUpdateContainerRequest *CreateOrUpdateContainerRequest
+}
+
+// Validate returns an error if any of the UpdateContainerInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i UpdateContainerInput) Validate() error {
+
+	if i.CreateOrUpdateContainerRequest != nil {
+		if err := i.CreateOrUpdateContainerRequest.Validate(nil); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i UpdateContainerInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/containers/{containerID}"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathcontainerID := i.ContainerID
+	if pathcontainerID == "" {
+		err := fmt.Errorf("containerID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{containerID}", pathcontainerID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
 // GetDatabaseUsersInput holds the input parameters for a getDatabaseUsers operation.
 type GetDatabaseUsersInput struct {
 	GroupID string
