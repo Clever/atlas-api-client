@@ -22,11 +22,11 @@ type Container struct {
 	// id
 	ID string `json:"id,omitempty"`
 
-	// is provisioned
-	IsProvisioned string `json:"isProvisioned,omitempty"`
-
 	// provider name
 	ProviderName string `json:"providerName,omitempty"`
+
+	// provisioned
+	Provisioned bool `json:"provisioned,omitempty"`
 
 	// region name
 	RegionName string `json:"regionName,omitempty"`

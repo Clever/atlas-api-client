@@ -1214,5 +1214,5 @@ definitions:
         type: string
       vpcId:
         type: string
-      isProvisioned:
-        type: string
+      provisioned:
+        type: boolean
