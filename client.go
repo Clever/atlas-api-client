@@ -11,7 +11,7 @@ import (
 // New creates an Atlas client give the username, password, and URL.
 func New(atlasUsername, atlasPassword, atlasURL string) *client.WagClient {
 	atlasAPI := client.New(atlasURL)
-	digestT := digestauth.NewTransport(atlasUsername, atlasPassword)
-	atlasAPI.SetTransport(limits.NewRateLimitedRoundTripper(&digestT, rate.NewLimiter(limits.AtlasRateLimit, 5)))
+	digest := digestauth.NewTransport(atlasUsername, atlasPassword)
+	atlasAPI.SetTransport(limits.NewRateLimitedRoundTripper(&digest, rate.NewLimiter(limits.AtlasRateLimit, 5)))
 	return atlasAPI
 }
