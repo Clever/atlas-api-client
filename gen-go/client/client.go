@@ -755,6 +755,499 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 	}
 }
 
+// GetContainers makes a GET request to /groups/{groupID}/containers
+// Get All Containers
+// 200: *models.GetContainersResponse
+// 400: *models.BadRequest
+// 401: *models.Unauthorized
+// 404: *models.NotFound
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) GetContainers(ctx context.Context, groupID string) (*models.GetContainersResponse, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := models.GetContainersInputPath(groupID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doGetContainersRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doGetContainersRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetContainersResponse, error) {
+	client := &http.Client{Transport: c.transport}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "getContainers")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 200:
+
+		var output models.GetContainersResponse
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 401:
+
+		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
+// CreateContainer makes a POST request to /groups/{groupID}/containers
+// Create a Container
+// 201: *models.Container
+// 400: *models.BadRequest
+// 401: *models.Unauthorized
+// 404: *models.NotFound
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) CreateContainer(ctx context.Context, i *models.CreateContainerInput) (*models.Container, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := i.Path()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	if i.CreateOrUpdateContainerRequest != nil {
+
+		var err error
+		body, err = json.Marshal(i.CreateOrUpdateContainerRequest)
+
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
+	req, err := http.NewRequest("POST", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doCreateContainerRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doCreateContainerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Container, error) {
+	client := &http.Client{Transport: c.transport}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "createContainer")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 201:
+
+		var output models.Container
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 401:
+
+		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
+// GetContainer makes a GET request to /groups/{groupID}/containers/{containerID}
+// Gets a container
+// 200: *models.Container
+// 400: *models.BadRequest
+// 404: *models.NotFound
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) GetContainer(ctx context.Context, i *models.GetContainerInput) (*models.Container, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := i.Path()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doGetContainerRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doGetContainerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Container, error) {
+	client := &http.Client{Transport: c.transport}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "getContainer")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 200:
+
+		var output models.Container
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
+// UpdateContainer makes a PATCH request to /groups/{groupID}/containers/{containerID}
+// Update a Container
+// 200: *models.Container
+// 400: *models.BadRequest
+// 401: *models.Unauthorized
+// 404: *models.NotFound
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) UpdateContainer(ctx context.Context, i *models.UpdateContainerInput) (*models.Container, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := i.Path()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	if i.CreateOrUpdateContainerRequest != nil {
+
+		var err error
+		body, err = json.Marshal(i.CreateOrUpdateContainerRequest)
+
+		if err != nil {
+			return nil, err
+		}
+
+	}
+
+	req, err := http.NewRequest("PATCH", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doUpdateContainerRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doUpdateContainerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Container, error) {
+	client := &http.Client{Transport: c.transport}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "updateContainer")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 200:
+
+		var output models.Container
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 401:
+
+		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
 // GetDatabaseUsers makes a GET request to /groups/{groupID}/databaseUsers
 // Get All DatabaseUsers
 // 200: *models.GetDatabaseUsersResponse

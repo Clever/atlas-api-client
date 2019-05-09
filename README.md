@@ -15,19 +15,17 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Clever/atlas-api-client/digestauth"
 	"github.com/Clever/atlas-api-client/gen-go/client"
 )
 
 func main() {
-	atlasAPI := client.New("https://cloud.mongodb.com")
-	digestT := digestauth.NewTransport(
-		"usename",
-		"apikey",
-	)
-	atlasAPI.SetTransport(&digestT)
-  	clusters, err := atlasAPI.GetClusters(ctx, "groupID")
-    // ...
+	username := "foo@foo.com"
+	password := "password"
+	url := "https://cloud.mongodb.com"
+	atlasAPI := client.New(atlasUsername, password, url)
+	ctx := context.Background()
+	clusters, err := atlasAPI.GetClusters(ctx, "groupID")
+	// ...
 }
 ```
 

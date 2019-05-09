@@ -128,9 +128,11 @@ class AtlasAPIClient {
    * this or the address argument
    * @param {number} [options.timeout] - The timeout to use for all client requests,
    * in milliseconds. This can be overridden on a per-request basis. Default is 5000ms.
+   * @param {bool} [options.keepalive] - Set keepalive to true for client requests. This sets the
+   * forever: true attribute in request. Defaults to false
    * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy=RetryPolicies.Single] - The logic to
    * determine which requests to retry, as well as how many times to retry.
-   * @param {module:kayvee.Logger} [options.logger=logger.New("atlas-api-client-wagclient")] - The Kayvee 
+   * @param {module:kayvee.Logger} [options.logger=logger.New("atlas-api-client-wagclient")] - The Kayvee
    * logger to use in the client.
    * @param {Object} [options.circuit] - Options for constructing the client's circuit breaker.
    * @param {bool} [options.circuit.forceClosed] - When set to true the circuit will always be closed. Default: true.
@@ -158,6 +160,11 @@ class AtlasAPIClient {
     } else {
       throw new Error("Cannot initialize atlas-api-client without discovery or address");
     }
+    if (options.keepalive) {
+      this.keepalive = options.keepalive;
+    } else {
+      this.keepalive = false;
+    }
     if (options.timeout) {
       this.timeout = options.timeout;
     } else {
@@ -170,6 +177,11 @@ class AtlasAPIClient {
       this.logger = options.logger;
     } else {
       this.logger =  new kayvee.logger("atlas-api-client-wagclient");
+    }
+    if (options.tracer) {
+      this.tracer = options.tracer;
+    } else {
+      this.tracer = opentracing.globalTracer();
     }
 
     const circuitOptions = Object.assign({}, defaultCircuitOptions, options.circuit);
@@ -269,6 +281,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -280,12 +293,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters",
         json: true,
@@ -294,6 +308,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -403,6 +420,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -414,12 +432,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/clusters");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters",
         json: true,
@@ -428,6 +447,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
       requestOptions.body = params.createOrUpdateClusterRequest;
   
@@ -539,6 +561,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -554,12 +577,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("DELETE /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "DELETE",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
         json: true,
@@ -568,6 +592,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -676,6 +703,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -691,12 +719,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
         json: true,
@@ -705,6 +734,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -809,6 +841,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -824,12 +857,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
         json: true,
@@ -838,8 +872,574 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
       requestOptions.body = params.createOrUpdateClusterRequest;
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            rejecter(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolver(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Get All Containers
+   * @param {string} groupID
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getContainers(groupID, options, cb) {
+    return this._hystrixCommand.execute(this._getContainers, arguments);
+  }
+  _getContainers(groupID, options, cb) {
+    const params = {};
+    params["groupID"] = groupID;
+
+    if (!cb && typeof options === "function") {
+      cb = options;
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      const rejecter = (err) => {
+        reject(err);
+        if (cb) {
+          cb(err);
+        }
+      };
+      const resolver = (data) => {
+        resolve(data);
+        if (cb) {
+          cb(null, data);
+        }
+      };
+
+
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/containers");
+        span.setTag("span.kind", "client");
+      }
+
+	  const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            rejecter(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolver(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Create a Container
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param params.createOrUpdateContainerRequest
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  createContainer(params, options, cb) {
+    return this._hystrixCommand.execute(this._createContainer, arguments);
+  }
+  _createContainer(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      cb = options;
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      const rejecter = (err) => {
+        reject(err);
+        if (cb) {
+          cb(err);
+        }
+      };
+      const resolver = (data) => {
+        resolve(data);
+        if (cb) {
+          cb(null, data);
+        }
+      };
+
+
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/containers");
+        span.setTag("span.kind", "client");
+      }
+
+	  const requestOptions = {
+        method: "POST",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+      requestOptions.body = params.createOrUpdateContainerRequest;
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            rejecter(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 201:
+              resolver(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Gets a container
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.containerID
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getContainer(params, options, cb) {
+    return this._hystrixCommand.execute(this._getContainer, arguments);
+  }
+  _getContainer(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      cb = options;
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      const rejecter = (err) => {
+        reject(err);
+        if (cb) {
+          cb(err);
+        }
+      };
+      const resolver = (data) => {
+        resolve(data);
+        if (cb) {
+          cb(null, data);
+        }
+      };
+
+
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.containerID) {
+        rejecter(new Error("containerID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/containers/{containerID}");
+        span.setTag("span.kind", "client");
+      }
+
+	  const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers/" + params.containerID + "",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            rejecter(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolver(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              rejecter(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Update a Container
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.containerID
+   * @param params.createOrUpdateContainerRequest
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  updateContainer(params, options, cb) {
+    return this._hystrixCommand.execute(this._updateContainer, arguments);
+  }
+  _updateContainer(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      cb = options;
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      const rejecter = (err) => {
+        reject(err);
+        if (cb) {
+          cb(err);
+        }
+      };
+      const resolver = (data) => {
+        resolve(data);
+        if (cb) {
+          cb(null, data);
+        }
+      };
+
+
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.containerID) {
+        rejecter(new Error("containerID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/containers/{containerID}");
+        span.setTag("span.kind", "client");
+      }
+
+	  const requestOptions = {
+        method: "PATCH",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers/" + params.containerID + "",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+      requestOptions.body = params.createOrUpdateContainerRequest;
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -950,6 +1550,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -961,12 +1562,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/databaseUsers");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers",
         json: true,
@@ -975,6 +1577,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -1084,6 +1689,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -1095,12 +1701,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/databaseUsers");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers",
         json: true,
@@ -1109,6 +1716,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
       requestOptions.body = params.createDatabaseUserRequest;
   
@@ -1220,6 +1830,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -1235,12 +1846,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("DELETE /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "DELETE",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
         json: true,
@@ -1249,6 +1861,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -1357,6 +1972,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -1372,12 +1988,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
         json: true,
@@ -1386,6 +2003,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -1490,6 +2110,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -1505,12 +2126,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
         json: true,
@@ -1519,6 +2141,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
       requestOptions.body = params.updateDatabaseUserRequest;
   
@@ -1631,6 +2256,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -1642,12 +2268,13 @@ class AtlasAPIClient {
       const query = {};
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes",
         json: true,
@@ -1656,6 +2283,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -1768,6 +2398,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -1795,12 +2426,13 @@ class AtlasAPIClient {
   
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/databases");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/databases",
         json: true,
@@ -1809,6 +2441,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -1927,6 +2562,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -1976,12 +2612,13 @@ class AtlasAPIClient {
   
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/databases/{databaseID}/measurements");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/databases/" + params.databaseID + "/measurements",
         json: true,
@@ -1990,6 +2627,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -2102,6 +2742,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -2129,12 +2770,13 @@ class AtlasAPIClient {
   
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/disks");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/disks",
         json: true,
@@ -2143,6 +2785,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -2261,6 +2906,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -2310,12 +2956,13 @@ class AtlasAPIClient {
   
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/disks/{diskName}/measurements");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/disks/" + params.diskName + "/measurements",
         json: true,
@@ -2324,6 +2971,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
@@ -2441,6 +3091,7 @@ class AtlasAPIClient {
       }
 
       const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
       const span = options.span;
 
       const headers = {};
@@ -2486,12 +3137,13 @@ class AtlasAPIClient {
   
 
       if (span) {
-        opentracing.inject(span, opentracing.FORMAT_TEXT_MAP, headers);
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
         span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/measurements");
         span.setTag("span.kind", "client");
       }
 
-      const requestOptions = {
+	  const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/measurements",
         json: true,
@@ -2500,6 +3152,9 @@ class AtlasAPIClient {
         qs: query,
         useQuerystring: true,
       };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;

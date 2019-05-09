@@ -31,6 +31,10 @@ atlas-api-client client library.
             * [.deleteCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deleteCluster) ⇒ <code>Promise</code>
             * [.getCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getCluster) ⇒ <code>Promise</code>
             * [.updateCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updateCluster) ⇒ <code>Promise</code>
+            * [.getContainers(groupID, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getContainers) ⇒ <code>Promise</code>
+            * [.createContainer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createContainer) ⇒ <code>Promise</code>
+            * [.getContainer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getContainer) ⇒ <code>Promise</code>
+            * [.updateContainer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updateContainer) ⇒ <code>Promise</code>
             * [.getDatabaseUsers(groupID, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getDatabaseUsers) ⇒ <code>Promise</code>
             * [.createDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createDatabaseUser) ⇒ <code>Promise</code>
             * [.deleteDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deleteDatabaseUser) ⇒ <code>Promise</code>
@@ -72,8 +76,9 @@ Create a new client object.
 | [options.address] | <code>string</code> |  | URL where the server is located. Must provide this or the discovery argument |
 | [options.discovery] | <code>bool</code> |  | Use clever-discovery to locate the server. Must provide this or the address argument |
 | [options.timeout] | <code>number</code> |  | The timeout to use for all client requests, in milliseconds. This can be overridden on a per-request basis. Default is 5000ms. |
+| [options.keepalive] | <code>bool</code> |  | Set keepalive to true for client requests. This sets the forever: true attribute in request. Defaults to false |
 | [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | <code>RetryPolicies.Single</code> | The logic to determine which requests to retry, as well as how many times to retry. |
-| [options.logger] | <code>module:kayvee.Logger</code> | <code>logger.New(&quot;atlas-api-client-wagclient&quot;)</code> | The Kayvee  logger to use in the client. |
+| [options.logger] | <code>module:kayvee.Logger</code> | <code>logger.New(&quot;atlas-api-client-wagclient&quot;)</code> | The Kayvee logger to use in the client. |
 | [options.circuit] | <code>Object</code> |  | Options for constructing the client's circuit breaker. |
 | [options.circuit.forceClosed] | <code>bool</code> |  | When set to true the circuit will always be closed. Default: true. |
 | [options.circuit.maxConcurrentRequests] | <code>number</code> |  | the maximum number of concurrent requests the client can make at the same time. Default: 100. |
@@ -193,6 +198,100 @@ Update a Cluster
 | params.groupID | <code>string</code> |  |
 | params.clusterName | <code>string</code> |  |
 | params.createOrUpdateClusterRequest |  |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+getContainers"></a>
+
+#### atlasAPIClient.getContainers(groupID, [options], [cb]) ⇒ <code>Promise</code>
+Get All Containers
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| groupID | <code>string</code> |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+createContainer"></a>
+
+#### atlasAPIClient.createContainer(params, [options], [cb]) ⇒ <code>Promise</code>
+Create a Container
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.createOrUpdateContainerRequest |  |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+getContainer"></a>
+
+#### atlasAPIClient.getContainer(params, [options], [cb]) ⇒ <code>Promise</code>
+Gets a container
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.containerID | <code>string</code> |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+updateContainer"></a>
+
+#### atlasAPIClient.updateContainer(params, [options], [cb]) ⇒ <code>Promise</code>
+Update a Container
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.containerID | <code>string</code> |  |
+| params.createOrUpdateContainerRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
 | [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |

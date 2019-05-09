@@ -571,6 +571,107 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+  /groups/{groupID}/containers:
+    get:
+      operationId: getContainers
+      description: Get All Containers
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetContainersResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+    post:
+      operationId: createContainer
+      description: Create a Container
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: createOrUpdateContainerRequest
+          in: body
+          schema:
+            $ref: "#/definitions/CreateOrUpdateContainerRequest"
+          required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Container"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+  /groups/{groupID}/containers/{containerID}:
+    get:
+      operationId: getContainer
+      description: Gets a container
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: containerID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Container"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+    patch:
+      operationId: updateContainer
+      description: Update a Container
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: containerID
+          in: path
+          required: true
+          type: string
+        - name: createOrUpdateContainerRequest
+          in: body
+          schema:
+            $ref: "#/definitions/CreateOrUpdateContainerRequest"
+          required: true
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Container"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+
 definitions:
   Unauthorized:
     type: object
@@ -1074,3 +1175,44 @@ definitions:
       start:
         type: string
         format: date-time
+
+  GetContainersResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Container'
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      totalCount:
+        type: integer
+
+  CreateOrUpdateContainerRequest:
+    type: object
+    properties:
+      atlasCidrBlock:
+        type: string
+      providerName:
+        type: string
+        enum:
+        - "AWS"
+      regionName:
+        type: string
+  Container:
+    type: object
+    properties:
+      id:
+        type: string
+      providerName:
+        type: string
+      atlasCidrBlock:
+        type: string
+      regionName:
+        type: string
+      vpcId:
+        type: string
+      provisioned:
+        type: boolean

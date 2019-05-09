@@ -60,6 +60,45 @@ type Client interface {
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateCluster(ctx context.Context, i *models.UpdateClusterInput) (*models.Cluster, error)
 
+	// GetContainers makes a GET request to /groups/{groupID}/containers
+	// Get All Containers
+	// 200: *models.GetContainersResponse
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetContainers(ctx context.Context, groupID string) (*models.GetContainersResponse, error)
+
+	// CreateContainer makes a POST request to /groups/{groupID}/containers
+	// Create a Container
+	// 201: *models.Container
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	CreateContainer(ctx context.Context, i *models.CreateContainerInput) (*models.Container, error)
+
+	// GetContainer makes a GET request to /groups/{groupID}/containers/{containerID}
+	// Gets a container
+	// 200: *models.Container
+	// 400: *models.BadRequest
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetContainer(ctx context.Context, i *models.GetContainerInput) (*models.Container, error)
+
+	// UpdateContainer makes a PATCH request to /groups/{groupID}/containers/{containerID}
+	// Update a Container
+	// 200: *models.Container
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	UpdateContainer(ctx context.Context, i *models.UpdateContainerInput) (*models.Container, error)
+
 	// GetDatabaseUsers makes a GET request to /groups/{groupID}/databaseUsers
 	// Get All DatabaseUsers
 	// 200: *models.GetDatabaseUsersResponse
