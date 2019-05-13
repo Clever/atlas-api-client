@@ -152,6 +152,69 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+  /groups/{groupID}/clusters/{targetClusterName}/restoreJobs:
+    post:
+      operationId: createRestoreJob
+      description: Create a restore job
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: targetClusterName
+          in: path
+          required: true
+          type: string
+        - name: createRestoreJobRequest
+          in: body
+          schema:
+            $ref: "#/definitions/CreateRestoreJobRequest"
+          required: true
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/RestoreJob"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+  /groups/{groupID}/clusters/{targetClusterName}/restoreJobs/{jobID}:
+    get:
+      operationId: getRestoreJob
+      description: Get one restore job
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: targetClusterName
+          in: path
+          required: true
+          type: string
+        - name: jobID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/RestoreJob"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+
+
   /groups/{groupID}/databaseUsers:
     get:
       operationId: getDatabaseUsers
@@ -906,6 +969,107 @@ definitions:
           - US_WEST_2
           - US_EAST_1
 
+  RestoreJobDelivery:
+    type: object
+    properties:
+      methodName:
+        type: string
+        enum:
+          - "AUTOMATED_RESTORE"
+          # @TODO - "HTTP"
+      targetGroupId: # for AUTOMATED_RESPONSE must send delivery.targetGroupId, and delivery.targetClusterName or delivery.targetClusterId
+        type: string
+      targetClusterName: # Use the clusterName returned in the response body of the Get All Snapshots and Get a Snapshot endpoints.
+        type: string
+      # targetClusterId: # Use the clusterId returned in the response body of the Get All Snapshots and Get a Snapshot endpoints.
+      #   type: string
+
+  RestoreJobResponseDelivery:
+    type: object
+    properties:
+      methodName:
+        type: string
+        enum:
+          - "AUTOMATED_RESTORE"
+          - "HTTP"
+      statusName:
+        description: Current status of the downloadable file.
+        type: string
+        enum:
+          - "NOT_STARTED"
+          - "IN_PROGRESS"
+          - "READY"
+          - "FAILED"
+          - "INTERRUPTED"
+          - "EXPIRED"
+          - "MAX_DOWNLOADS_EXCEEDED"
+
+  RestoreJob:
+    type: object
+    properties:
+      clusterId:
+        type: string
+        description: Unique identifier of the cluster the restore job represents.
+      created:
+        type: string
+        description: Timestamp in ISO 8601 date and time format in UTC when the restore job was requested.
+      delivery:
+        $ref: "#/definitions/RestoreJobResponseDelivery"
+      encryptionEnabled:
+        type: boolean
+        description: Indicates whether the restored snapshot data is encrypted.
+      groupId:
+        type: string
+        description: Unique identifier of the project that owns the restore job.
+      hashes:
+        type: array
+        description: If the corresponding delivery.url has been downloaded, each document in this array is a mapping of a restore file to a hashed checksum. This array is present only after the file is downloaded.
+        items:
+          $ref: "#/definitions/RestoreJobResponseHash"
+      id:
+        type: string
+        description: Unique identifier of the restore job.
+      links:
+        type: array
+        description: One or more links to sub-resources and/or related resources.
+        items:
+          $ref: '#/definitions/Link'
+      masterKeyUUID:
+        type: string
+        description: KMIP master key ID used to encrypt the snapshot data (only if encryptionEnabled is true for the snapshot).
+      snapshotId:
+        type: string
+        description: Unique identifier of the snapshot to restore.
+      statusName:
+        type: string
+        description: Current status of the job.
+        enum:
+          - "FINISHED"
+          - "IN_PROGRESS"
+          - "BROKEN"
+          - "KILLED"
+      timestamp:
+        $ref: "#definitions/Timestamp"
+
+
+  RestoreJobResponseHash:
+    type: object
+    properties:
+      typeName:
+        type: string
+        description: Hashing algorithm used to compute the hash value. If present, this value is SHA1.
+      fileName:
+        type: string
+        description: Name of the file that has been hashed.
+      hash:
+        type: string
+        description: Hash of the file.
+
+
+
+
+
+
   ReplicationSpec:
     type: object
     properties:
@@ -993,6 +1157,23 @@ definitions:
       backupEnabled:
         x-nullable: false
         type: boolean
+
+
+  CreateRestoreJobRequest:
+    type: object
+    required:
+      - delivery
+      - snapshotId
+    properties:
+      delivery:
+        $ref: "#/definitions/RestoreJobDelivery"
+      pointInTimeUTCMillis:
+        type: string
+        description: A timestamp in the number of milliseconds that have elapsed since the UNIX epoch that represents the point in time to which your data will be restored. This timestamp must be within last 24 hours of the current time.
+      snapshotId:
+        type: string
+        description: Unique identifier of the snapshot to restore.
+
 
   DatabaseUser:
     type: object
@@ -1182,6 +1363,18 @@ definitions:
       value:
         x-nullable: true
         type: number
+
+  Timestamp:
+    type: object
+    properties:
+      date:
+        type: string
+        description:  Timestamp in ISO 8601 date and time format in UTC of the latest oplog entry in the restored snapshot.
+      increment:
+        type: string
+        description: Order of all operations completed at the latest oplog entry in the restored snapshot.
+
+
 
   Units:
     type: string
