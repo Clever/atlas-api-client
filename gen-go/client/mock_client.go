@@ -98,19 +98,6 @@ func (mr *MockClientMockRecorder) UpdateCluster(ctx, i interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCluster", reflect.TypeOf((*MockClient)(nil).UpdateCluster), ctx, i)
 }
 
-// GetSnapshots mocks base method
-func (m *MockClient) GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error) {
-	ret := m.ctrl.Call(m, "GetSnapshots", ctx, i)
-	ret0, _ := ret[0].(*models.GetSnapshotsResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetSnapshots indicates an expected call of GetSnapshots
-func (mr *MockClientMockRecorder) GetSnapshots(ctx, i interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSnapshots", reflect.TypeOf((*MockClient)(nil).GetSnapshots), ctx, i)
-}
-
 // CreateRestoreJob mocks base method
 func (m *MockClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error) {
 	ret := m.ctrl.Call(m, "CreateRestoreJob", ctx, i)
@@ -122,6 +109,19 @@ func (m *MockClient) CreateRestoreJob(ctx context.Context, i *models.CreateResto
 // CreateRestoreJob indicates an expected call of CreateRestoreJob
 func (mr *MockClientMockRecorder) CreateRestoreJob(ctx, i interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRestoreJob", reflect.TypeOf((*MockClient)(nil).CreateRestoreJob), ctx, i)
+}
+
+// GetSnapshots mocks base method
+func (m *MockClient) GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error) {
+	ret := m.ctrl.Call(m, "GetSnapshots", ctx, i)
+	ret0, _ := ret[0].(*models.GetSnapshotsResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSnapshots indicates an expected call of GetSnapshots
+func (mr *MockClientMockRecorder) GetSnapshots(ctx, i interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSnapshots", reflect.TypeOf((*MockClient)(nil).GetSnapshots), ctx, i)
 }
 
 // GetRestoreJob mocks base method
