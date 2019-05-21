@@ -207,6 +207,139 @@ func (i UpdateClusterInput) Path() (string, error) {
 	return path + "?" + urlVals.Encode(), nil
 }
 
+// GetSnapshotsInput holds the input parameters for a getSnapshots operation.
+type GetSnapshotsInput struct {
+	GroupID     string
+	ClusterName string
+}
+
+// Validate returns an error if any of the GetSnapshotsInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i GetSnapshotsInput) Validate() error {
+
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i GetSnapshotsInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshots"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathclusterName := i.ClusterName
+	if pathclusterName == "" {
+		err := fmt.Errorf("clusterName cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{clusterName}", pathclusterName, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// CreateRestoreJobInput holds the input parameters for a createRestoreJob operation.
+type CreateRestoreJobInput struct {
+	GroupID                 string
+	TargetClusterName       string
+	CreateRestoreJobRequest *CreateRestoreJobRequest
+}
+
+// Validate returns an error if any of the CreateRestoreJobInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i CreateRestoreJobInput) Validate() error {
+
+	if i.CreateRestoreJobRequest != nil {
+		if err := i.CreateRestoreJobRequest.Validate(nil); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i CreateRestoreJobInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/clusters/{targetClusterName}/restoreJobs"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathtargetClusterName := i.TargetClusterName
+	if pathtargetClusterName == "" {
+		err := fmt.Errorf("targetClusterName cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{targetClusterName}", pathtargetClusterName, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// GetRestoreJobInput holds the input parameters for a getRestoreJob operation.
+type GetRestoreJobInput struct {
+	GroupID           string
+	TargetClusterName string
+	JobID             string
+}
+
+// Validate returns an error if any of the GetRestoreJobInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i GetRestoreJobInput) Validate() error {
+
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i GetRestoreJobInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/clusters/{targetClusterName}/restoreJobs/{jobID}"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathtargetClusterName := i.TargetClusterName
+	if pathtargetClusterName == "" {
+		err := fmt.Errorf("targetClusterName cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{targetClusterName}", pathtargetClusterName, -1)
+
+	pathjobID := i.JobID
+	if pathjobID == "" {
+		err := fmt.Errorf("jobID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{jobID}", pathjobID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
 // GetContainersInput holds the input parameters for a getContainers operation.
 type GetContainersInput struct {
 	GroupID string

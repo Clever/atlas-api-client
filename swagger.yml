@@ -152,6 +152,28 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+  /groups/{groupID}/clusters/{clusterName}/snapshots:
+    get:
+      operationId: getSnapshots
+      description: Gets snapshots for a cluster
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: clusterName
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetSnapshotsResponse"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
   /groups/{groupID}/clusters/{targetClusterName}/restoreJobs:
     post:
       operationId: createRestoreJob
@@ -213,7 +235,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-
 
   /groups/{groupID}/databaseUsers:
     get:
@@ -634,6 +655,7 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+
   /groups/{groupID}/containers:
     get:
       operationId: getContainers
@@ -983,7 +1005,6 @@ definitions:
         type: string
       # targetClusterId: # Use the clusterId returned in the response body of the Get All Snapshots and Get a Snapshot endpoints.
       #   type: string
-
   RestoreJobResponseDelivery:
     type: object
     properties:
@@ -1003,7 +1024,6 @@ definitions:
           - "INTERRUPTED"
           - "EXPIRED"
           - "MAX_DOWNLOADS_EXCEEDED"
-
   RestoreJob:
     type: object
     properties:
@@ -1049,9 +1069,7 @@ definitions:
           - "BROKEN"
           - "KILLED"
       timestamp:
-        $ref: "#definitions/Timestamp"
-
-
+        $ref: "#definitions/SnapshotTimestamp"
   RestoreJobResponseHash:
     type: object
     properties:
@@ -1065,10 +1083,99 @@ definitions:
         type: string
         description: Hash of the file.
 
-
-
-
-
+  GetSnapshotsResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Snapshot'
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      totalCount:
+        type: integer
+  Snapshot:
+    type: object
+    properties:
+      clusterId:
+        type: string
+        description: The unique ID of the cluster that the snapshot represents.
+      complete:
+        type: boolean
+        description: Indicates whether the snapshot exists. This is false if the snapshot creation job is in progress.
+      created:
+        $ref: "#/definitions/SnapshotTimestamp"
+      doNotDelete:
+        type: boolean
+        description: Specifies whether the snapshot can be deleted.
+      expires:
+        type: string
+        format: date-time
+        description: The date in ISO 8601 date and time format in UTC after which Atlas deletes the snapshot. If doNotDelete is set to true, any value in expires is removed. If the expires value is earlier than the current date and time, the snaphot cannot be edited.
+      groupId:
+        type: string
+        description: ID of the project that owns the snapshot.
+      id:
+        type: string
+        description: ID of the snapshot.
+      lastOplogAppliedTimestamp:
+        $ref: "#/definitions/SnapshotTimestamp"
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      parts:
+        type: array
+        description: The individual parts that comprise the complete snapshot. For a replica set, this array contains a single document. For a sharded cluster, this array contains one document for each shard plus one document for the config server.
+        items:
+          $ref: '#/definitions/SnapshotPart'
+  SnapshotTimestamp:
+    type: object
+    properties:
+      date:
+        type: string
+        description:  Timestamp in ISO 8601 date and time format in UTC of the latest oplog entry in the snapshot.
+      increment:
+        type: string
+        description: Order of all operations completed at the latest oplog entry in the snapshot.
+  SnapshotPart:
+    type: object
+    properties:
+      clusterId:
+        type: string
+        description: ID of the replica set.
+      compressionSetting:
+        type: string
+        description: Method of compression for the snapshot.
+      dataSizeBytes:
+        type: number
+        description: The total size of the data in the snapshot in bytes.
+      encryptionEnabled:
+        type: boolean
+        description: Indicates whether the snapshot is encrypted.
+      fileSizeBytes:
+        type: number
+        description: The total size of the data files in bytes.
+      masterKeyUUID:
+        type: string
+        description: The KMIP master key ID used to encrypt the snapshot data. NOTE - This appears only if encryptionEnabled is true.
+      mongodVersion:
+        type: string
+        description: The version of MongoDB that the replica set primary was running when the snapshot was created.
+      replicaSetName:
+        type: string
+        description: Name of the replica set.
+      storageSizeBytes:
+        type: number
+        description: The total size of space allocated for document storage.
+      typeName:
+        type: string
+        description: The type of server that the part represents
+        enum:
+        - "REPLICA_SET"
+        - "CONFIG_SERVER_REPLICA_SET"
 
   ReplicationSpec:
     type: object
@@ -1363,18 +1470,6 @@ definitions:
       value:
         x-nullable: true
         type: number
-
-  Timestamp:
-    type: object
-    properties:
-      date:
-        type: string
-        description:  Timestamp in ISO 8601 date and time format in UTC of the latest oplog entry in the restored snapshot.
-      increment:
-        type: string
-        description: Order of all operations completed at the latest oplog entry in the restored snapshot.
-
-
 
   Units:
     type: string
