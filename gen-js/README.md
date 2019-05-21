@@ -13,8 +13,8 @@ atlas-api-client client library.
             * [.deleteCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deleteCluster) ⇒ <code>Promise</code>
             * [.getCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getCluster) ⇒ <code>Promise</code>
             * [.updateCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updateCluster) ⇒ <code>Promise</code>
-            * [.getSnapshots(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getSnapshots) ⇒ <code>Promise</code>
             * [.createRestoreJob(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createRestoreJob) ⇒ <code>Promise</code>
+            * [.getSnapshots(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getSnapshots) ⇒ <code>Promise</code>
             * [.getRestoreJob(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getRestoreJob) ⇒ <code>Promise</code>
             * [.getContainers(groupID, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getContainers) ⇒ <code>Promise</code>
             * [.createContainer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createContainer) ⇒ <code>Promise</code>
@@ -189,29 +189,6 @@ Update a Cluster
 | [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
-<a name="module_atlas-api-client--AtlasAPIClient+getSnapshots"></a>
-
-#### atlasAPIClient.getSnapshots(params, [options], [cb]) ⇒ <code>Promise</code>
-Gets snapshots for a cluster
-
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
-**Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
-**Reject**: <code>Error</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| params | <code>Object</code> |  |
-| params.groupID | <code>string</code> |  |
-| params.clusterName | <code>string</code> |  |
-| [options] | <code>object</code> |  |
-| [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
-| [cb] | <code>function</code> |  |
-
 <a name="module_atlas-api-client--AtlasAPIClient+createRestoreJob"></a>
 
 #### atlasAPIClient.createRestoreJob(params, [options], [cb]) ⇒ <code>Promise</code>
@@ -229,8 +206,31 @@ Create a restore job
 | --- | --- | --- |
 | params | <code>Object</code> |  |
 | params.groupID | <code>string</code> |  |
-| params.targetClusterName | <code>string</code> |  |
+| params.clusterName | <code>string</code> | Name of the cluster that contains the snapshot to restore |
 | params.createRestoreJobRequest |  |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+getSnapshots"></a>
+
+#### atlasAPIClient.getSnapshots(params, [options], [cb]) ⇒ <code>Promise</code>
+Gets snapshots for a cluster
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.clusterName | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
 | [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
