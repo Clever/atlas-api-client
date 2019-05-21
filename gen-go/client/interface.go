@@ -6,7 +6,7 @@ import (
 	"github.com/Clever/atlas-api-client/gen-go/models"
 )
 
-//go:generate $GOPATH/bin/mockgen -source=$GOFILE -destination=mock_client.go -package=client
+//go:generate mockgen -source=$GOFILE -destination=mock_client.go -package=client
 
 // Client defines the methods available to clients of the atlas-api-client service.
 type Client interface {
@@ -59,6 +59,35 @@ type Client interface {
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateCluster(ctx context.Context, i *models.UpdateClusterInput) (*models.Cluster, error)
+
+	// GetSnapshots makes a GET request to /groups/{groupID}/clusters/{clusterName}/snapshots
+	// Gets snapshots for a cluster
+	// 200: *models.GetSnapshotsResponse
+	// 400: *models.BadRequest
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error)
+
+	// CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{targetClusterName}/restoreJobs
+	// Create a restore job
+	// 200: *models.RestoreJob
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error)
+
+	// GetRestoreJob makes a GET request to /groups/{groupID}/clusters/{targetClusterName}/restoreJobs/{jobID}
+	// Get one restore job
+	// 200: *models.RestoreJob
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetRestoreJob(ctx context.Context, i *models.GetRestoreJobInput) (*models.RestoreJob, error)
 
 	// GetContainers makes a GET request to /groups/{groupID}/containers
 	// Get All Containers
