@@ -755,118 +755,7 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 	}
 }
 
-// GetSnapshots makes a GET request to /groups/{groupID}/clusters/{clusterName}/snapshots
-// Gets snapshots for a cluster
-// 200: *models.GetSnapshotsResponse
-// 400: *models.BadRequest
-// 404: *models.NotFound
-// 500: *models.InternalError
-// default: client side HTTP errors, for example: context.DeadlineExceeded.
-func (c *WagClient) GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error) {
-	headers := make(map[string]string)
-
-	var body []byte
-	path, err := i.Path()
-
-	if err != nil {
-		return nil, err
-	}
-
-	path = c.basePath + path
-
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
-
-	if err != nil {
-		return nil, err
-	}
-
-	return c.doGetSnapshotsRequest(ctx, req, headers)
-}
-
-func (c *WagClient) doGetSnapshotsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetSnapshotsResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
-	req.Header.Set("Content-Type", "application/json")
-
-	for field, value := range headers {
-		req.Header.Set(field, value)
-	}
-
-	// Add the opname for doers like tracing
-	ctx = context.WithValue(ctx, opNameCtx{}, "getSnapshots")
-	req = req.WithContext(ctx)
-	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
-	// until we've finished all the processing of the request object. Otherwise we'll cancel
-	// our own request before we've finished it.
-	if c.defaultTimeout != 0 {
-		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
-		defer cancel()
-		req = req.WithContext(ctx)
-	}
-	resp, err := c.requestDoer.Do(client, req)
-	retCode := 0
-	if resp != nil {
-		retCode = resp.StatusCode
-	}
-
-	// log all client failures and non-successful HT
-	logData := logger.M{
-		"backend":     "atlas-api-client",
-		"method":      req.Method,
-		"uri":         req.URL,
-		"status_code": retCode,
-	}
-	if err == nil && retCode > 399 {
-		logData["message"] = resp.Status
-		c.logger.ErrorD("client-request-finished", logData)
-	}
-	if err != nil {
-		logData["message"] = err.Error()
-		c.logger.ErrorD("client-request-finished", logData)
-		return nil, err
-	}
-	defer resp.Body.Close()
-	switch resp.StatusCode {
-
-	case 200:
-
-		var output models.GetSnapshotsResponse
-		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
-		}
-
-		return &output, nil
-
-	case 400:
-
-		var output models.BadRequest
-		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
-		}
-		return nil, &output
-
-	case 404:
-
-		var output models.NotFound
-		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
-		}
-		return nil, &output
-
-	case 500:
-
-		var output models.InternalError
-		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
-		}
-		return nil, &output
-
-	default:
-		return nil, &models.InternalError{Message: "Unknown response"}
-	}
-}
-
-// CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{targetClusterName}/restoreJobs
+// CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 // Create a restore job
 // 200: *models.RestoreJob
 // 400: *models.BadRequest
@@ -971,6 +860,117 @@ func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Req
 	case 401:
 
 		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
+// GetSnapshots makes a GET request to /groups/{groupID}/clusters/{clusterName}/snapshots
+// Gets snapshots for a cluster
+// 200: *models.GetSnapshotsResponse
+// 400: *models.BadRequest
+// 404: *models.NotFound
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := i.Path()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doGetSnapshotsRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doGetSnapshotsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetSnapshotsResponse, error) {
+	client := &http.Client{Transport: c.transport}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "getSnapshots")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 200:
+
+		var output models.GetSnapshotsResponse
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
