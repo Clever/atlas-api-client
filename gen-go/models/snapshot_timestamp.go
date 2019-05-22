@@ -20,7 +20,7 @@ type SnapshotTimestamp struct {
 	Date string `json:"date,omitempty"`
 
 	// Order of all operations completed at the latest oplog entry in the snapshot.
-	Increment string `json:"increment,omitempty"`
+	Increment float64 `json:"increment,omitempty"`
 }
 
 // Validate validates this snapshot timestamp

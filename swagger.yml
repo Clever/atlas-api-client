@@ -1016,7 +1016,7 @@ definitions:
         type: string
         description:  Timestamp in ISO 8601 date and time format in UTC of the latest oplog entry in the snapshot.
       increment:
-        type: string
+        type: number
         description: Order of all operations completed at the latest oplog entry in the snapshot.
   SnapshotPart:
     type: object
