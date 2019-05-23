@@ -3,7 +3,6 @@ info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
   version: 0.4.0
-  version: 0.6.0
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -153,6 +152,7 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+
   /groups/{groupID}/clusters/{clusterName}/snapshots:
     get:
       operationId: getSnapshots
@@ -1254,6 +1254,9 @@ definitions:
         default: 1
         minimum: 1
         maximum: 12
+      paused:
+        type: boolean
+        description: Indicates whether the cluster is paused or not.
       providerSettings:
         $ref: "#/definitions/ProviderSettings"
       replicationFactor:
