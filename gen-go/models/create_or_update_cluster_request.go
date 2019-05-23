@@ -42,6 +42,9 @@ type CreateOrUpdateClusterRequest struct {
 	// Minimum: 1
 	NumShards int64 `json:"numShards,omitempty"`
 
+	// Indicates whether the cluster is paused or not.
+	Paused bool `json:"paused,omitempty"`
+
 	// provider settings
 	// Required: true
 	ProviderSettings *ProviderSettings `json:"providerSettings"`
