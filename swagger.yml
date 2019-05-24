@@ -24,6 +24,10 @@ responses:
     description: "Bad Request"
     schema:
       $ref: "#/definitions/BadRequest"
+  Conflict:
+    description: "Conflict"
+    schema:
+      $ref: "#/definitions/Conflict"
   InternalError:
     description: "Internal Error"
     schema:
@@ -129,6 +133,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
     delete:
       operationId: deleteCluster
       description: Deletes a cluster
@@ -790,6 +798,20 @@ definitions:
         x-go-name: unused
         type: string
   BadRequest:
+    type: object
+    properties:
+      reason:
+        type: string
+      error:
+        x-go-name: errorCode
+        type: integer
+      detail:
+        x-go-name: message
+        type: string
+      message:
+        x-go-name: unused
+        type: string
+  Conflict:
     type: object
     properties:
       reason:
