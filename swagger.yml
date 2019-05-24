@@ -51,10 +51,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     post:
       operationId: createCluster
       description: Create a Cluster
@@ -77,10 +89,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/clusters/{clusterName}:
     get:
       operationId: getCluster
@@ -103,6 +127,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
     patch:
       operationId: updateCluster
       description: Update a Cluster
@@ -129,6 +157,10 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
@@ -137,6 +169,10 @@ paths:
           description: "Conflict"
           schema:
             $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     delete:
       operationId: deleteCluster
       description: Deletes a cluster
@@ -156,10 +192,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
 
   /groups/{groupID}/clusters/{clusterName}/snapshots:
     get:
@@ -183,6 +231,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
   /groups/{groupID}/clusters/{clusterName}/restoreJobs:
     post:
       operationId: createRestoreJob
@@ -211,10 +263,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/clusters/{targetClusterName}/restoreJobs/{jobID}:
     get:
       operationId: getRestoreJob
@@ -241,10 +305,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
 
   /groups/{groupID}/databaseUsers:
     get:
@@ -264,10 +340,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     post:
       operationId: createDatabaseUser
       description: Create a DatabaseUser
@@ -290,10 +378,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/databaseUsers/admin/{username}:
     get:
       operationId: getDatabaseUser
@@ -316,6 +416,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
     patch:
       operationId: updateDatabaseUser
       description: Update a DatabaseUser
@@ -342,10 +446,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     delete:
       operationId: deleteDatabaseUser
       description: Deletes a DatabaseUser
@@ -365,10 +481,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes:
     get:
       operationId: getProcesses
@@ -387,10 +515,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/measurements:
     get:
       operationId: getProcessMeasurements
@@ -450,10 +590,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/databases:
     get:
       operationId: getProcessDatabases
@@ -488,10 +640,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/databases/{databaseID}/measurements:
     get:
       operationId: getProcessDatabaseMeasurements
@@ -555,10 +719,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
 
   /groups/{groupID}/processes/{host}:{port}/disks:
     get:
@@ -594,10 +770,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/disks/{diskName}/measurements:
     get:
       operationId: getProcessDiskMeasurements
@@ -661,10 +849,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
 
   /groups/{groupID}/containers:
     get:
@@ -684,10 +884,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     post:
       operationId: createContainer
       description: Create a Container
@@ -710,10 +922,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/containers/{containerID}:
     get:
       operationId: getContainer
@@ -736,6 +960,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
     patch:
       operationId: updateContainer
       description: Update a Container
@@ -762,10 +990,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
 
 
 definitions:
@@ -812,6 +1052,34 @@ definitions:
         x-go-name: unused
         type: string
   Conflict:
+    type: object
+    properties:
+      reason:
+        type: string
+      error:
+        x-go-name: errorCode
+        type: integer
+      detail:
+        x-go-name: message
+        type: string
+      message:
+        x-go-name: unused
+        type: string
+  Forbidden:
+    type: object
+    properties:
+      reason:
+        type: string
+      error:
+        x-go-name: errorCode
+        type: integer
+      detail:
+        x-go-name: message
+        type: string
+      message:
+        x-go-name: unused
+        type: string
+  TooManyRequests:
     type: object
     properties:
       reason:
