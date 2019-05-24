@@ -215,6 +215,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
   /groups/{groupID}/clusters/{targetClusterName}/restoreJobs/{jobID}:
     get:
       operationId: getRestoreJob

@@ -929,6 +929,7 @@ class AtlasAPIClient {
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1028,6 +1029,12 @@ class AtlasAPIClient {
             
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
