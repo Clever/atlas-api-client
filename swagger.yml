@@ -1133,10 +1133,6 @@ definitions:
 
   CreateOrUpdateClusterRequest:
     type: object
-    required:
-      - name
-      - providerSettings
-      - backupEnabled
     properties:
       autoScaling:
         $ref: "#/definitions/AutoScaling"
