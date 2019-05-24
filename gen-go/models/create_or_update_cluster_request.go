@@ -23,8 +23,7 @@ type CreateOrUpdateClusterRequest struct {
 	AutoScaling *AutoScaling `json:"autoScaling,omitempty"`
 
 	// backup enabled
-	// Required: true
-	BackupEnabled bool `json:"backupEnabled"`
+	BackupEnabled bool `json:"backupEnabled,omitempty"`
 
 	// disk size g b
 	// Maximum: 4096
@@ -34,8 +33,7 @@ type CreateOrUpdateClusterRequest struct {
 	MongoDBMajorVersion string `json:"mongoDBMajorVersion,omitempty"`
 
 	// name
-	// Required: true
-	Name *string `json:"name"`
+	Name string `json:"name,omitempty"`
 
 	// num shards
 	// Maximum: 12
@@ -46,8 +44,7 @@ type CreateOrUpdateClusterRequest struct {
 	Paused bool `json:"paused,omitempty"`
 
 	// provider settings
-	// Required: true
-	ProviderSettings *ProviderSettings `json:"providerSettings"`
+	ProviderSettings *ProviderSettings `json:"providerSettings,omitempty"`
 
 	// replication factor
 	ReplicationFactor int64 `json:"replicationFactor,omitempty"`
@@ -65,22 +62,12 @@ func (m *CreateOrUpdateClusterRequest) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateBackupEnabled(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
 	if err := m.validateDiskSizeGB(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateMongoDBMajorVersion(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateName(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -120,15 +107,6 @@ func (m *CreateOrUpdateClusterRequest) validateAutoScaling(formats strfmt.Regist
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-func (m *CreateOrUpdateClusterRequest) validateBackupEnabled(formats strfmt.Registry) error {
-
-	if err := validate.Required("backupEnabled", "body", bool(m.BackupEnabled)); err != nil {
-		return err
 	}
 
 	return nil
@@ -190,15 +168,6 @@ func (m *CreateOrUpdateClusterRequest) validateMongoDBMajorVersion(formats strfm
 	return nil
 }
 
-func (m *CreateOrUpdateClusterRequest) validateName(formats strfmt.Registry) error {
-
-	if err := validate.Required("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *CreateOrUpdateClusterRequest) validateNumShards(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.NumShards) { // not required
@@ -218,8 +187,8 @@ func (m *CreateOrUpdateClusterRequest) validateNumShards(formats strfmt.Registry
 
 func (m *CreateOrUpdateClusterRequest) validateProviderSettings(formats strfmt.Registry) error {
 
-	if err := validate.Required("providerSettings", "body", m.ProviderSettings); err != nil {
-		return err
+	if swag.IsZero(m.ProviderSettings) { // not required
+		return nil
 	}
 
 	if m.ProviderSettings != nil {
