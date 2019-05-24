@@ -770,6 +770,7 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
 // 404: *models.NotFound
+// 409: *models.Conflict
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error) {
@@ -877,6 +878,14 @@ func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Req
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}

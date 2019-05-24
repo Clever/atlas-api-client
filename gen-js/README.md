@@ -206,6 +206,7 @@ Create a restore job
 **Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
 

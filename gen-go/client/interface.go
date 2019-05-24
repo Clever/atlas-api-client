@@ -67,6 +67,7 @@ type Client interface {
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
 	// 404: *models.NotFound
+	// 409: *models.Conflict
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error)
