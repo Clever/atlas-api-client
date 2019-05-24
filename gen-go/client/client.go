@@ -630,6 +630,7 @@ func (c *WagClient) doGetClusterRequest(ctx context.Context, req *http.Request, 
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
 // 404: *models.NotFound
+// 409: *models.Conflict
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) UpdateCluster(ctx context.Context, i *models.UpdateClusterInput) (*models.Cluster, error) {
@@ -737,6 +738,14 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
