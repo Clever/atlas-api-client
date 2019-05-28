@@ -262,7 +262,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -357,8 +360,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -394,7 +415,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -488,8 +512,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -525,7 +567,10 @@ class AtlasAPIClient {
    * @fulfill {undefined}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -621,8 +666,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -658,6 +721,7 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -753,6 +817,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -785,8 +855,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
    * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -884,6 +956,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -892,6 +970,12 @@ class AtlasAPIClient {
             
             case 409:
               var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -928,8 +1012,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
    * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1027,6 +1113,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -1035,6 +1127,12 @@ class AtlasAPIClient {
             
             case 409:
               var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1070,6 +1168,7 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1165,6 +1264,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -1197,7 +1302,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1297,8 +1405,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1332,7 +1458,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1427,8 +1556,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1464,7 +1611,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1558,8 +1708,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1595,6 +1763,7 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1690,6 +1859,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -1722,7 +1897,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1820,8 +1998,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1855,7 +2051,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1950,8 +2149,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1987,7 +2204,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -2081,8 +2301,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -2118,7 +2356,10 @@ class AtlasAPIClient {
    * @fulfill {undefined}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -2214,8 +2455,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -2251,6 +2510,7 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -2346,6 +2606,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -2378,7 +2644,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -2476,8 +2745,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3167,7 +3454,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3262,8 +3552,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3302,7 +3610,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3410,8 +3721,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3456,7 +3785,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3586,8 +3918,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3626,7 +3976,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3734,8 +4087,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3780,7 +4151,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3910,8 +4284,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3955,7 +4347,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -4081,8 +4476,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
