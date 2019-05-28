@@ -1430,7 +1430,7 @@ definitions:
         type: number
         maximum: 4096
       backupEnabled:
-        x-nullable: false
+        x-nullable: true
         type: boolean
 
 
@@ -1438,7 +1438,6 @@ definitions:
     type: object
     required:
       - delivery
-      - snapshotId
     properties:
       delivery:
         $ref: "#/definitions/RestoreJobDelivery"

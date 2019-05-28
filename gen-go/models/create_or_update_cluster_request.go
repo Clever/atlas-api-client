@@ -23,7 +23,7 @@ type CreateOrUpdateClusterRequest struct {
 	AutoScaling *AutoScaling `json:"autoScaling,omitempty"`
 
 	// backup enabled
-	BackupEnabled bool `json:"backupEnabled,omitempty"`
+	BackupEnabled *bool `json:"backupEnabled,omitempty"`
 
 	// disk size g b
 	// Maximum: 4096
