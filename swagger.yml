@@ -1430,7 +1430,7 @@ definitions:
         type: number
         maximum: 4096
       backupEnabled:
-        x-nullable: false
+        x-nullable: true
         type: boolean
 
 
