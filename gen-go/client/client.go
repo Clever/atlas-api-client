@@ -152,7 +152,10 @@ func (c *WagClient) SetTransport(t http.RoundTripper) {
 // 200: *models.GetClustersResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetClusters(ctx context.Context, groupID string) (*models.GetClustersResponse, error) {
@@ -246,9 +249,33 @@ func (c *WagClient) doGetClustersRequest(ctx context.Context, req *http.Request,
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -272,7 +299,10 @@ func (c *WagClient) doGetClustersRequest(ctx context.Context, req *http.Request,
 // 201: *models.Cluster
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) CreateCluster(ctx context.Context, i *models.CreateClusterInput) (*models.Cluster, error) {
@@ -377,9 +407,33 @@ func (c *WagClient) doCreateClusterRequest(ctx context.Context, req *http.Reques
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -403,7 +457,10 @@ func (c *WagClient) doCreateClusterRequest(ctx context.Context, req *http.Reques
 // 202: nil
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) DeleteCluster(ctx context.Context, i *models.DeleteClusterInput) error {
@@ -492,9 +549,33 @@ func (c *WagClient) doDeleteClusterRequest(ctx context.Context, req *http.Reques
 		}
 		return &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return err
+		}
+		return &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return err
+		}
+		return &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return err
+		}
+		return &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return err
 		}
@@ -518,6 +599,7 @@ func (c *WagClient) doDeleteClusterRequest(ctx context.Context, req *http.Reques
 // 200: *models.Cluster
 // 400: *models.BadRequest
 // 404: *models.NotFound
+// 409: *models.Conflict
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetCluster(ctx context.Context, i *models.GetClusterInput) (*models.Cluster, error) {
@@ -611,6 +693,14 @@ func (c *WagClient) doGetClusterRequest(ctx context.Context, req *http.Request, 
 		}
 		return nil, &output
 
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 500:
 
 		var output models.InternalError
@@ -629,8 +719,10 @@ func (c *WagClient) doGetClusterRequest(ctx context.Context, req *http.Request, 
 // 200: *models.Cluster
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
 // 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) UpdateCluster(ctx context.Context, i *models.UpdateClusterInput) (*models.Cluster, error) {
@@ -735,6 +827,14 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
@@ -746,6 +846,14 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 	case 409:
 
 		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -769,8 +877,10 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 // 200: *models.RestoreJob
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
 // 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error) {
@@ -875,6 +985,14 @@ func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Req
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
@@ -886,6 +1004,14 @@ func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Req
 	case 409:
 
 		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -909,6 +1035,7 @@ func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Req
 // 200: *models.GetSnapshotsResponse
 // 400: *models.BadRequest
 // 404: *models.NotFound
+// 409: *models.Conflict
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error) {
@@ -1002,6 +1129,14 @@ func (c *WagClient) doGetSnapshotsRequest(ctx context.Context, req *http.Request
 		}
 		return nil, &output
 
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 500:
 
 		var output models.InternalError
@@ -1020,7 +1155,10 @@ func (c *WagClient) doGetSnapshotsRequest(ctx context.Context, req *http.Request
 // 200: *models.RestoreJob
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetRestoreJob(ctx context.Context, i *models.GetRestoreJobInput) (*models.RestoreJob, error) {
@@ -1114,9 +1252,33 @@ func (c *WagClient) doGetRestoreJobRequest(ctx context.Context, req *http.Reques
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -1140,7 +1302,10 @@ func (c *WagClient) doGetRestoreJobRequest(ctx context.Context, req *http.Reques
 // 200: *models.GetContainersResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetContainers(ctx context.Context, groupID string) (*models.GetContainersResponse, error) {
@@ -1234,9 +1399,33 @@ func (c *WagClient) doGetContainersRequest(ctx context.Context, req *http.Reques
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -1260,7 +1449,10 @@ func (c *WagClient) doGetContainersRequest(ctx context.Context, req *http.Reques
 // 201: *models.Container
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) CreateContainer(ctx context.Context, i *models.CreateContainerInput) (*models.Container, error) {
@@ -1365,9 +1557,33 @@ func (c *WagClient) doCreateContainerRequest(ctx context.Context, req *http.Requ
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -1391,6 +1607,7 @@ func (c *WagClient) doCreateContainerRequest(ctx context.Context, req *http.Requ
 // 200: *models.Container
 // 400: *models.BadRequest
 // 404: *models.NotFound
+// 409: *models.Conflict
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetContainer(ctx context.Context, i *models.GetContainerInput) (*models.Container, error) {
@@ -1484,6 +1701,14 @@ func (c *WagClient) doGetContainerRequest(ctx context.Context, req *http.Request
 		}
 		return nil, &output
 
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 500:
 
 		var output models.InternalError
@@ -1502,7 +1727,10 @@ func (c *WagClient) doGetContainerRequest(ctx context.Context, req *http.Request
 // 200: *models.Container
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) UpdateContainer(ctx context.Context, i *models.UpdateContainerInput) (*models.Container, error) {
@@ -1607,9 +1835,33 @@ func (c *WagClient) doUpdateContainerRequest(ctx context.Context, req *http.Requ
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -1633,7 +1885,10 @@ func (c *WagClient) doUpdateContainerRequest(ctx context.Context, req *http.Requ
 // 200: *models.GetDatabaseUsersResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetDatabaseUsers(ctx context.Context, groupID string) (*models.GetDatabaseUsersResponse, error) {
@@ -1727,9 +1982,33 @@ func (c *WagClient) doGetDatabaseUsersRequest(ctx context.Context, req *http.Req
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -1753,7 +2032,10 @@ func (c *WagClient) doGetDatabaseUsersRequest(ctx context.Context, req *http.Req
 // 201: *models.DatabaseUser
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) CreateDatabaseUser(ctx context.Context, i *models.CreateDatabaseUserInput) (*models.DatabaseUser, error) {
@@ -1858,9 +2140,33 @@ func (c *WagClient) doCreateDatabaseUserRequest(ctx context.Context, req *http.R
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -1884,7 +2190,10 @@ func (c *WagClient) doCreateDatabaseUserRequest(ctx context.Context, req *http.R
 // 200: nil
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) DeleteDatabaseUser(ctx context.Context, i *models.DeleteDatabaseUserInput) error {
@@ -1973,9 +2282,33 @@ func (c *WagClient) doDeleteDatabaseUserRequest(ctx context.Context, req *http.R
 		}
 		return &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return err
+		}
+		return &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return err
+		}
+		return &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return err
+		}
+		return &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return err
 		}
@@ -1999,6 +2332,7 @@ func (c *WagClient) doDeleteDatabaseUserRequest(ctx context.Context, req *http.R
 // 200: *models.DatabaseUser
 // 400: *models.BadRequest
 // 404: *models.NotFound
+// 409: *models.Conflict
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetDatabaseUser(ctx context.Context, i *models.GetDatabaseUserInput) (*models.DatabaseUser, error) {
@@ -2092,6 +2426,14 @@ func (c *WagClient) doGetDatabaseUserRequest(ctx context.Context, req *http.Requ
 		}
 		return nil, &output
 
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 500:
 
 		var output models.InternalError
@@ -2110,7 +2452,10 @@ func (c *WagClient) doGetDatabaseUserRequest(ctx context.Context, req *http.Requ
 // 200: *models.DatabaseUser
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) UpdateDatabaseUser(ctx context.Context, i *models.UpdateDatabaseUserInput) (*models.DatabaseUser, error) {
@@ -2215,9 +2560,33 @@ func (c *WagClient) doUpdateDatabaseUserRequest(ctx context.Context, req *http.R
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -2241,7 +2610,10 @@ func (c *WagClient) doUpdateDatabaseUserRequest(ctx context.Context, req *http.R
 // 200: *models.GetProcessesResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetProcesses(ctx context.Context, groupID string) (*models.GetProcessesResponse, error) {
@@ -2335,9 +2707,33 @@ func (c *WagClient) doGetProcessesRequest(ctx context.Context, req *http.Request
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -2361,7 +2757,10 @@ func (c *WagClient) doGetProcessesRequest(ctx context.Context, req *http.Request
 // 200: *models.GetProcessDatabasesResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetProcessDatabases(ctx context.Context, i *models.GetProcessDatabasesInput) (*models.GetProcessDatabasesResponse, error) {
@@ -2455,9 +2854,33 @@ func (c *WagClient) doGetProcessDatabasesRequest(ctx context.Context, req *http.
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -2481,7 +2904,10 @@ func (c *WagClient) doGetProcessDatabasesRequest(ctx context.Context, req *http.
 // 200: *models.GetProcessDatabaseMeasurementsResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetProcessDatabaseMeasurements(ctx context.Context, i *models.GetProcessDatabaseMeasurementsInput) (*models.GetProcessDatabaseMeasurementsResponse, error) {
@@ -2575,9 +3001,33 @@ func (c *WagClient) doGetProcessDatabaseMeasurementsRequest(ctx context.Context,
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -2601,7 +3051,10 @@ func (c *WagClient) doGetProcessDatabaseMeasurementsRequest(ctx context.Context,
 // 200: *models.GetProcessDisksResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetProcessDisks(ctx context.Context, i *models.GetProcessDisksInput) (*models.GetProcessDisksResponse, error) {
@@ -2695,9 +3148,33 @@ func (c *WagClient) doGetProcessDisksRequest(ctx context.Context, req *http.Requ
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -2721,7 +3198,10 @@ func (c *WagClient) doGetProcessDisksRequest(ctx context.Context, req *http.Requ
 // 200: *models.GetProcessDiskMeasurementsResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetProcessDiskMeasurements(ctx context.Context, i *models.GetProcessDiskMeasurementsInput) (*models.GetProcessDiskMeasurementsResponse, error) {
@@ -2815,9 +3295,33 @@ func (c *WagClient) doGetProcessDiskMeasurementsRequest(ctx context.Context, req
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
@@ -2841,7 +3345,10 @@ func (c *WagClient) doGetProcessDiskMeasurementsRequest(ctx context.Context, req
 // 200: *models.GetProcessMeasurementsResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetProcessMeasurements(ctx context.Context, i *models.GetProcessMeasurementsInput) (*models.GetProcessMeasurementsResponse, error) {
@@ -2935,9 +3442,33 @@ func (c *WagClient) doGetProcessMeasurementsRequest(ctx context.Context, req *ht
 		}
 		return nil, &output
 
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}
