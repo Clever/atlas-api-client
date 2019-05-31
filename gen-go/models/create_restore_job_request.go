@@ -25,8 +25,7 @@ type CreateRestoreJobRequest struct {
 	PointInTimeUTCMillis string `json:"pointInTimeUTCMillis,omitempty"`
 
 	// Unique identifier of the snapshot to restore.
-	// Required: true
-	SnapshotID *string `json:"snapshotId"`
+	SnapshotID string `json:"snapshotId,omitempty"`
 }
 
 // Validate validates this create restore job request
@@ -34,11 +33,6 @@ func (m *CreateRestoreJobRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDelivery(formats); err != nil {
-		// prop
-		res = append(res, err)
-	}
-
-	if err := m.validateSnapshotID(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -63,15 +57,6 @@ func (m *CreateRestoreJobRequest) validateDelivery(formats strfmt.Registry) erro
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-func (m *CreateRestoreJobRequest) validateSnapshotID(formats strfmt.Registry) error {
-
-	if err := validate.Required("snapshotId", "body", m.SnapshotID); err != nil {
-		return err
 	}
 
 	return nil
