@@ -1438,7 +1438,6 @@ definitions:
     type: object
     required:
       - delivery
-      - snapshotId
     properties:
       delivery:
         $ref: "#/definitions/RestoreJobDelivery"
