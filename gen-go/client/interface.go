@@ -12,7 +12,7 @@ import (
 type Client interface {
 
 	// GetClusters makes a GET request to /groups/{groupID}/clusters
-	// Get All Clusters
+	// Get all clusters
 	// 200: *models.GetClustersResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
@@ -73,6 +73,19 @@ type Client interface {
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateCluster(ctx context.Context, i *models.UpdateClusterInput) (*models.Cluster, error)
 
+	// GetRestoreJobs makes a GET request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
+	// Get all restore jobs for a cluster
+	// 200: *models.GetRestoreJobsResponse
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
+	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetRestoreJobs(ctx context.Context, i *models.GetRestoreJobsInput) (*models.GetRestoreJobsResponse, error)
+
 	// CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 	// Create a restore job
 	// 200: *models.RestoreJob
@@ -96,7 +109,7 @@ type Client interface {
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error)
 
-	// GetRestoreJob makes a GET request to /groups/{groupID}/clusters/{targetClusterName}/restoreJobs/{jobID}
+	// GetRestoreJob makes a GET request to /groups/{groupID}/clusters/{sourceClusterName}/restoreJobs/{jobID}
 	// Get one restore job
 	// 200: *models.RestoreJob
 	// 400: *models.BadRequest
