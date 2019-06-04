@@ -148,7 +148,7 @@ func (c *WagClient) SetTransport(t http.RoundTripper) {
 }
 
 // GetClusters makes a GET request to /groups/{groupID}/clusters
-// Get All Clusters
+// Get all clusters
 // 200: *models.GetClustersResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
@@ -872,6 +872,153 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 	}
 }
 
+// GetRestoreJobs makes a GET request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
+// Get all restore jobs for a cluster
+// 200: *models.GetRestoreJobsResponse
+// 400: *models.BadRequest
+// 401: *models.Unauthorized
+// 403: *models.Forbidden
+// 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) GetRestoreJobs(ctx context.Context, i *models.GetRestoreJobsInput) (*models.GetRestoreJobsResponse, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := i.Path()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doGetRestoreJobsRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doGetRestoreJobsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetRestoreJobsResponse, error) {
+	client := &http.Client{Transport: c.transport}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "getRestoreJobs")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 200:
+
+		var output models.GetRestoreJobsResponse
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 401:
+
+		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
 // CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 // Create a restore job
 // 200: *models.RestoreJob
@@ -1150,7 +1297,7 @@ func (c *WagClient) doGetSnapshotsRequest(ctx context.Context, req *http.Request
 	}
 }
 
-// GetRestoreJob makes a GET request to /groups/{groupID}/clusters/{targetClusterName}/restoreJobs/{jobID}
+// GetRestoreJob makes a GET request to /groups/{groupID}/clusters/{sourceClusterName}/restoreJobs/{jobID}
 // Get one restore job
 // 200: *models.RestoreJob
 // 400: *models.BadRequest

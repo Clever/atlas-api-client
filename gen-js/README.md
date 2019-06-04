@@ -13,6 +13,7 @@ atlas-api-client client library.
             * [.deleteCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deleteCluster) ⇒ <code>Promise</code>
             * [.getCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getCluster) ⇒ <code>Promise</code>
             * [.updateCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updateCluster) ⇒ <code>Promise</code>
+            * [.getRestoreJobs(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getRestoreJobs) ⇒ <code>Promise</code>
             * [.createRestoreJob(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createRestoreJob) ⇒ <code>Promise</code>
             * [.getSnapshots(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getSnapshots) ⇒ <code>Promise</code>
             * [.getRestoreJob(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getRestoreJob) ⇒ <code>Promise</code>
@@ -82,7 +83,7 @@ Create a new client object.
 <a name="module_atlas-api-client--AtlasAPIClient+getClusters"></a>
 
 #### atlasAPIClient.getClusters(groupID, [options], [cb]) ⇒ <code>Promise</code>
-Get All Clusters
+Get all clusters
 
 **Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
 **Fulfill**: <code>Object</code>  
@@ -210,6 +211,33 @@ Update a Cluster
 | [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
+<a name="module_atlas-api-client--AtlasAPIClient+getRestoreJobs"></a>
+
+#### atlasAPIClient.getRestoreJobs(params, [options], [cb]) ⇒ <code>Promise</code>
+Get all restore jobs for a cluster
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
+**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.clusterName | <code>string</code> | Name of the source cluster for the restore job (the cluster that contained the snapshot to restore) |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
 <a name="module_atlas-api-client--AtlasAPIClient+createRestoreJob"></a>
 
 #### atlasAPIClient.createRestoreJob(params, [options], [cb]) ⇒ <code>Promise</code>
@@ -282,7 +310,7 @@ Get one restore job
 | --- | --- | --- |
 | params | <code>Object</code> |  |
 | params.groupID | <code>string</code> |  |
-| params.targetClusterName | <code>string</code> |  |
+| params.sourceClusterName | <code>string</code> |  |
 | params.jobID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
