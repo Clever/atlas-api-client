@@ -1360,6 +1360,8 @@ definitions:
         type: string
       statusName:
         $ref: '#/definitions/PeerStatus'
+      vpcId:
+        type: string
 
   PeerErrorState:
     type: string

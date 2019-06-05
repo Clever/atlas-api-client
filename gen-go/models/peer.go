@@ -39,6 +39,9 @@ type Peer struct {
 
 	// status name
 	StatusName PeerStatus `json:"statusName,omitempty"`
+
+	// vpc Id
+	VpcID string `json:"vpcId,omitempty"`
 }
 
 // Validate validates this peer
