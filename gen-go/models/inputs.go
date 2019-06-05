@@ -542,6 +542,193 @@ func (i UpdateDatabaseUserInput) Path() (string, error) {
 	return path + "?" + urlVals.Encode(), nil
 }
 
+// GetPeersInput holds the input parameters for a getPeers operation.
+type GetPeersInput struct {
+	GroupID string
+}
+
+// ValidateGetPeersInput returns an error if the input parameter doesn't
+// satisfy the requirements in the swagger yml file.
+func ValidateGetPeersInput(groupID string) error {
+
+	return nil
+}
+
+// GetPeersInputPath returns the URI path for the input.
+func GetPeersInputPath(groupID string) (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/peers"
+	urlVals := url.Values{}
+
+	pathgroupID := groupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// CreatePeerInput holds the input parameters for a createPeer operation.
+type CreatePeerInput struct {
+	GroupID           string
+	CreatePeerRequest *CreatePeerRequest
+}
+
+// Validate returns an error if any of the CreatePeerInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i CreatePeerInput) Validate() error {
+
+	if i.CreatePeerRequest != nil {
+		if err := i.CreatePeerRequest.Validate(nil); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i CreatePeerInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/peers"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// DeletePeerInput holds the input parameters for a deletePeer operation.
+type DeletePeerInput struct {
+	GroupID string
+	PeerID  string
+}
+
+// Validate returns an error if any of the DeletePeerInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i DeletePeerInput) Validate() error {
+
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i DeletePeerInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/peers/{peerID}"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathpeerID := i.PeerID
+	if pathpeerID == "" {
+		err := fmt.Errorf("peerID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{peerID}", pathpeerID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// GetPeerInput holds the input parameters for a getPeer operation.
+type GetPeerInput struct {
+	GroupID string
+	PeerID  string
+}
+
+// Validate returns an error if any of the GetPeerInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i GetPeerInput) Validate() error {
+
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i GetPeerInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/peers/{peerID}"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathpeerID := i.PeerID
+	if pathpeerID == "" {
+		err := fmt.Errorf("peerID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{peerID}", pathpeerID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// UpdatePeerInput holds the input parameters for a updatePeer operation.
+type UpdatePeerInput struct {
+	GroupID           string
+	PeerID            string
+	UpdatePeerRequest *UpdatePeerRequest
+}
+
+// Validate returns an error if any of the UpdatePeerInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i UpdatePeerInput) Validate() error {
+
+	if i.UpdatePeerRequest != nil {
+		if err := i.UpdatePeerRequest.Validate(nil); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i UpdatePeerInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/peers/{peerID}"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathpeerID := i.PeerID
+	if pathpeerID == "" {
+		err := fmt.Errorf("peerID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{peerID}", pathpeerID, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
 // GetProcessesInput holds the input parameters for a getProcesses operation.
 type GetProcessesInput struct {
 	GroupID string

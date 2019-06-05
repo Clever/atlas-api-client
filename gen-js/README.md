@@ -1,21 +1,3 @@
-## Modules
-
-<dl>
-<dt><a href="#module_atlas-api-client">atlas-api-client</a></dt>
-<dd><p>atlas-api-client client library.</p>
-</dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#responseLog">responseLog()</a></dt>
-<dd><p>Request status log is used to
-to output the status of a request returned
-by the client.</p>
-</dd>
-</dl>
-
 <a name="module_atlas-api-client"></a>
 
 ## atlas-api-client
@@ -40,6 +22,11 @@ atlas-api-client client library.
             * [.deleteDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deleteDatabaseUser) ⇒ <code>Promise</code>
             * [.getDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getDatabaseUser) ⇒ <code>Promise</code>
             * [.updateDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updateDatabaseUser) ⇒ <code>Promise</code>
+            * [.getPeers(groupID, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getPeers) ⇒ <code>Promise</code>
+            * [.createPeer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createPeer) ⇒ <code>Promise</code>
+            * [.deletePeer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deletePeer) ⇒ <code>Promise</code>
+            * [.getPeer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getPeer) ⇒ <code>Promise</code>
+            * [.updatePeer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updatePeer) ⇒ <code>Promise</code>
             * [.getProcesses(groupID, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getProcesses) ⇒ <code>Promise</code>
             * [.getProcessDatabases(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getProcessDatabases) ⇒ <code>Promise</code>
             * [.getProcessDatabaseMeasurements(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getProcessDatabaseMeasurements) ⇒ <code>Promise</code>
@@ -416,6 +403,124 @@ Update a DatabaseUser
 | [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
+<a name="module_atlas-api-client--AtlasAPIClient+getPeers"></a>
+
+#### atlasAPIClient.getPeers(groupID, [options], [cb]) ⇒ <code>Promise</code>
+Get All VPC Peering Connections in One Project
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| groupID | <code>string</code> |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+createPeer"></a>
+
+#### atlasAPIClient.createPeer(params, [options], [cb]) ⇒ <code>Promise</code>
+Create One New VPC Peering Connection
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.createPeerRequest |  |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+deletePeer"></a>
+
+#### atlasAPIClient.deletePeer(params, [options], [cb]) ⇒ <code>Promise</code>
+Delete One Existing VPC Peering Connection
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>undefined</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.peerID | <code>string</code> |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+getPeer"></a>
+
+#### atlasAPIClient.getPeer(params, [options], [cb]) ⇒ <code>Promise</code>
+Gets One Specific VPC Peering Connection
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.peerID | <code>string</code> |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+updatePeer"></a>
+
+#### atlasAPIClient.updatePeer(params, [options], [cb]) ⇒ <code>Promise</code>
+Update One Existing VPC Peering Connection
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.peerID | <code>string</code> |  |
+| params.updatePeerRequest |  |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
 <a name="module_atlas-api-client--AtlasAPIClient+getProcesses"></a>
 
 #### atlasAPIClient.getProcesses(groupID, [options], [cb]) ⇒ <code>Promise</code>
@@ -703,11 +808,3 @@ InternalError
 Default circuit breaker options.
 
 **Kind**: static constant of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
-<a name="responseLog"></a>
-
-## responseLog()
-Request status log is used to
-to output the status of a request returned
-by the client.
-
-**Kind**: global function  

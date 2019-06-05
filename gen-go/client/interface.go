@@ -6,7 +6,7 @@ import (
 	"github.com/Clever/atlas-api-client/gen-go/models"
 )
 
-//go:generate $GOPATH/bin/mockgen -source=$GOFILE -destination=mock_client.go -package=client
+//go:generate mockgen -source=$GOFILE -destination=mock_client.go -package=client
 
 // Client defines the methods available to clients of the atlas-api-client service.
 type Client interface {
@@ -147,6 +147,55 @@ type Client interface {
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateDatabaseUser(ctx context.Context, i *models.UpdateDatabaseUserInput) (*models.DatabaseUser, error)
+
+	// GetPeers makes a GET request to /groups/{groupID}/peers
+	// Get All VPC Peering Connections in One Project
+	// 200: *models.GetPeersResponse
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetPeers(ctx context.Context, groupID string) (*models.GetPeersResponse, error)
+
+	// CreatePeer makes a POST request to /groups/{groupID}/peers
+	// Create One New VPC Peering Connection
+	// 201: *models.Peer
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	CreatePeer(ctx context.Context, i *models.CreatePeerInput) (*models.Peer, error)
+
+	// DeletePeer makes a DELETE request to /groups/{groupID}/peers/{peerID}
+	// Delete One Existing VPC Peering Connection
+	// 200: nil
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	DeletePeer(ctx context.Context, i *models.DeletePeerInput) error
+
+	// GetPeer makes a GET request to /groups/{groupID}/peers/{peerID}
+	// Gets One Specific VPC Peering Connection
+	// 200: *models.Peer
+	// 400: *models.BadRequest
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetPeer(ctx context.Context, i *models.GetPeerInput) (*models.Peer, error)
+
+	// UpdatePeer makes a PATCH request to /groups/{groupID}/peers/{peerID}
+	// Update One Existing VPC Peering Connection
+	// 200: *models.Peer
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	UpdatePeer(ctx context.Context, i *models.UpdatePeerInput) (*models.Peer, error)
 
 	// GetProcesses makes a GET request to /groups/{groupID}/processes
 	// Get All Processes

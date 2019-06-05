@@ -672,6 +672,130 @@ paths:
           schema:
             $ref: "#/definitions/NotFound"
 
+  /groups/{groupID}/peers:
+    get:
+      operationId: getPeers
+      description: Get All VPC Peering Connections in One Project
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetPeersResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+    post:
+      operationId: createPeer
+      description: Create One New VPC Peering Connection
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: createPeerRequest
+          in: body
+          schema:
+            $ref: "#/definitions/CreatePeerRequest"
+          required: true
+      responses:
+        201:
+          description: "Created"
+          schema:
+            $ref: "#/definitions/Peer"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+  /groups/{groupID}/peers/{peerID}:
+    get:
+      operationId: getPeer
+      description: Gets One Specific VPC Peering Connection
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: peerID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Peer"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+    patch:
+      operationId: updatePeer
+      description: Update One Existing VPC Peering Connection
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: peerID
+          in: path
+          required: true
+          type: string
+        - name: updatePeerRequest
+          in: body
+          schema:
+            $ref: "#/definitions/UpdatePeerRequest"
+          required: true
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Peer"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+    delete:
+      operationId: deletePeer
+      description: Delete One Existing VPC Peering Connection
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: peerID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+
 definitions:
   Unauthorized:
     type: object
@@ -1216,3 +1340,84 @@ definitions:
         type: string
       provisioned:
         type: boolean
+
+  Peer:
+    type: object
+    properties:
+      accepterRegionName:
+        type: string
+      awsAccountId:
+        type: string
+      connectionId:
+        type: string
+      containerId:
+        type: string
+      errorStateName:
+        $ref: '#/definitions/PeerErrorState'
+      id:
+        type: string
+      routeTableCidrBlock:
+        type: string
+      statusName:
+        $ref: '#/definitions/PeerStatus'
+
+  PeerErrorState:
+    type: string
+    enum:
+    - "REJECTED"
+    - "EXPIRED"
+    - "INVALID_ARGUMENT"
+
+  PeerStatus:
+    type: string
+    enum:
+    - "INITIATING"
+    - "PENDING_ACCEPTANCE"
+    - "FAILED"
+    - "FINALIZING"
+    - "AVAILABLE"
+    - "TERMINATING"
+
+  UpdatePeerRequest:
+    type: object
+    properties:
+      awsAccountId:
+        type: string
+      providerName:
+        type: string
+      providerName:
+        type: string
+      routeTableCidrBlock:
+        type: string
+      vpcId:
+        type: string
+
+  GetPeersResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Peer'
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      totalCount:
+        type: integer
+
+  CreatePeerRequest:
+    type: object
+    properties:
+      accepterRegionName:
+        type: string
+      awsAccountId:
+        type: string
+      containerId:
+        type: string
+      providerName:
+        type: string
+      routeTableCidrBlock:
+        type: string
+      vpcId:
+        type: string
