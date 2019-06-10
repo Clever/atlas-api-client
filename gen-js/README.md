@@ -406,7 +406,7 @@ Update a DatabaseUser
 <a name="module_atlas-api-client--AtlasAPIClient+getPeers"></a>
 
 #### atlasAPIClient.getPeers(groupID, [options], [cb]) ⇒ <code>Promise</code>
-Get All VPC Peering Connections in One Project
+Get All VPC Peering Connections in One Project (first page only)
 
 **Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
 **Fulfill**: <code>Object</code>  

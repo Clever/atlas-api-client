@@ -149,7 +149,7 @@ type Client interface {
 	UpdateDatabaseUser(ctx context.Context, i *models.UpdateDatabaseUserInput) (*models.DatabaseUser, error)
 
 	// GetPeers makes a GET request to /groups/{groupID}/peers
-	// Get All VPC Peering Connections in One Project
+	// Get All VPC Peering Connections in One Project (first page only)
 	// 200: *models.GetPeersResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized

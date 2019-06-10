@@ -2086,7 +2086,7 @@ class AtlasAPIClient {
   }
 
   /**
-   * Get All VPC Peering Connections in One Project
+   * Get All VPC Peering Connections in One Project (first page only)
    * @param {string} groupID
    * @param {object} [options]
    * @param {number} [options.timeout] - A request specific timeout

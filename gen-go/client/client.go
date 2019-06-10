@@ -1857,7 +1857,7 @@ func (c *WagClient) doUpdateDatabaseUserRequest(ctx context.Context, req *http.R
 }
 
 // GetPeers makes a GET request to /groups/{groupID}/peers
-// Get All VPC Peering Connections in One Project
+// Get All VPC Peering Connections in One Project (first page only)
 // 200: *models.GetPeersResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized

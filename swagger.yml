@@ -675,7 +675,7 @@ paths:
   /groups/{groupID}/peers:
     get:
       operationId: getPeers
-      description: Get All VPC Peering Connections in One Project
+      description: Get All VPC Peering Connections in One Project (first page only)
       parameters:
         - name: groupID
           in: path
@@ -1384,8 +1384,6 @@ definitions:
     type: object
     properties:
       awsAccountId:
-        type: string
-      providerName:
         type: string
       providerName:
         type: string
