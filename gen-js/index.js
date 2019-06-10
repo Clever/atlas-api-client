@@ -74,6 +74,7 @@ const noRetryPolicy = {
  * Request status log is used to
  * to output the status of a request returned
  * by the client.
+ * @private
  */
 function responseLog(logger, req, res, err) {
   var res = res || { };
@@ -91,6 +92,22 @@ function responseLog(logger, req, res, err) {
   } else {
     logger.infoD("client-request-finished", logData);
   }
+}
+
+/**
+ * Takes a promise and uses the provided callback (if any) to handle promise
+ * resolutions and rejections
+ * @private
+ */
+function applyCallback(promise, cb) {
+  if (!cb) {
+    return promise;
+  }
+  return promise.then((result) => {
+    cb(null, result);
+  }).catch((err) => {
+    cb(err);
+  });
 }
 
 /**
@@ -250,32 +267,22 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getClusters(groupID, options, cb) {
-    return this._hystrixCommand.execute(this._getClusters, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getClusters, arguments), callback);
   }
+
   _getClusters(groupID, options, cb) {
     const params = {};
     params["groupID"] = groupID;
 
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -286,7 +293,7 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -299,7 +306,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters",
         json: true,
@@ -329,43 +336,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -392,29 +399,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   createCluster(params, options, cb) {
-    return this._hystrixCommand.execute(this._createCluster, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._createCluster, arguments), callback);
   }
+
   _createCluster(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -425,7 +422,7 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -438,7 +435,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters",
         json: true,
@@ -470,43 +467,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 201:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -533,29 +530,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   deleteCluster(params, options, cb) {
-    return this._hystrixCommand.execute(this._deleteCluster, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._deleteCluster, arguments), callback);
   }
+
   _deleteCluster(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -566,11 +553,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.clusterName) {
-        rejecter(new Error("clusterName must be non-empty because it's a path parameter"));
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -583,7 +570,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "DELETE",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
         json: true,
@@ -613,43 +600,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 202:
-              resolver();
+              resolve();
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -675,29 +662,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getCluster(params, options, cb) {
-    return this._hystrixCommand.execute(this._getCluster, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getCluster, arguments), callback);
   }
+
   _getCluster(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -708,11 +685,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.clusterName) {
-        rejecter(new Error("clusterName must be non-empty because it's a path parameter"));
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -725,7 +702,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
         json: true,
@@ -755,37 +732,37 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -813,29 +790,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   updateCluster(params, options, cb) {
-    return this._hystrixCommand.execute(this._updateCluster, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._updateCluster, arguments), callback);
   }
+
   _updateCluster(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -846,11 +813,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.clusterName) {
-        rejecter(new Error("clusterName must be non-empty because it's a path parameter"));
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -863,7 +830,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
         json: true,
@@ -895,43 +862,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -956,32 +923,22 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getContainers(groupID, options, cb) {
-    return this._hystrixCommand.execute(this._getContainers, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getContainers, arguments), callback);
   }
+
   _getContainers(groupID, options, cb) {
     const params = {};
     params["groupID"] = groupID;
 
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -992,7 +949,7 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1005,7 +962,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers",
         json: true,
@@ -1035,43 +992,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -1098,29 +1055,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   createContainer(params, options, cb) {
-    return this._hystrixCommand.execute(this._createContainer, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._createContainer, arguments), callback);
   }
+
   _createContainer(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -1131,7 +1078,7 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1144,7 +1091,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers",
         json: true,
@@ -1176,43 +1123,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 201:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -1238,29 +1185,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getContainer(params, options, cb) {
-    return this._hystrixCommand.execute(this._getContainer, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getContainer, arguments), callback);
   }
+
   _getContainer(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -1271,11 +1208,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.containerID) {
-        rejecter(new Error("containerID must be non-empty because it's a path parameter"));
+        reject(new Error("containerID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1288,7 +1225,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers/" + params.containerID + "",
         json: true,
@@ -1318,37 +1255,37 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -1376,29 +1313,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   updateContainer(params, options, cb) {
-    return this._hystrixCommand.execute(this._updateContainer, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._updateContainer, arguments), callback);
   }
+
   _updateContainer(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -1409,11 +1336,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.containerID) {
-        rejecter(new Error("containerID must be non-empty because it's a path parameter"));
+        reject(new Error("containerID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1426,7 +1353,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers/" + params.containerID + "",
         json: true,
@@ -1458,43 +1385,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -1519,32 +1446,22 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getDatabaseUsers(groupID, options, cb) {
-    return this._hystrixCommand.execute(this._getDatabaseUsers, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getDatabaseUsers, arguments), callback);
   }
+
   _getDatabaseUsers(groupID, options, cb) {
     const params = {};
     params["groupID"] = groupID;
 
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -1555,7 +1472,7 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1568,7 +1485,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers",
         json: true,
@@ -1598,43 +1515,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -1661,29 +1578,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   createDatabaseUser(params, options, cb) {
-    return this._hystrixCommand.execute(this._createDatabaseUser, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._createDatabaseUser, arguments), callback);
   }
+
   _createDatabaseUser(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -1694,7 +1601,7 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1707,7 +1614,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers",
         json: true,
@@ -1739,43 +1646,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 201:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -1802,29 +1709,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   deleteDatabaseUser(params, options, cb) {
-    return this._hystrixCommand.execute(this._deleteDatabaseUser, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._deleteDatabaseUser, arguments), callback);
   }
+
   _deleteDatabaseUser(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -1835,11 +1732,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.username) {
-        rejecter(new Error("username must be non-empty because it's a path parameter"));
+        reject(new Error("username must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1852,7 +1749,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "DELETE",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
         json: true,
@@ -1882,43 +1779,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver();
+              resolve();
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -1944,29 +1841,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getDatabaseUser(params, options, cb) {
-    return this._hystrixCommand.execute(this._getDatabaseUser, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getDatabaseUser, arguments), callback);
   }
+
   _getDatabaseUser(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -1977,11 +1864,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.username) {
-        rejecter(new Error("username must be non-empty because it's a path parameter"));
+        reject(new Error("username must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -1994,7 +1881,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
         json: true,
@@ -2024,37 +1911,37 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -2082,29 +1969,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   updateDatabaseUser(params, options, cb) {
-    return this._hystrixCommand.execute(this._updateDatabaseUser, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._updateDatabaseUser, arguments), callback);
   }
+
   _updateDatabaseUser(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -2115,11 +1992,11 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.username) {
-        rejecter(new Error("username must be non-empty because it's a path parameter"));
+        reject(new Error("username must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -2132,7 +2009,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
         json: true,
@@ -2164,43 +2041,699 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Get All VPC Peering Connections in One Project (first page only)
+   * @param {string} groupID
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getPeers(groupID, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getPeers, arguments), callback);
+  }
+
+  _getPeers(groupID, options, cb) {
+    const params = {};
+    params["groupID"] = groupID;
+
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/peers");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Create One New VPC Peering Connection
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param params.createPeerRequest
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  createPeer(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._createPeer, arguments), callback);
+  }
+
+  _createPeer(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/peers");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "POST",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+      requestOptions.body = params.createPeerRequest;
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 201:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Delete One Existing VPC Peering Connection
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.peerID
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {undefined}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  deletePeer(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._deletePeer, arguments), callback);
+  }
+
+  _deletePeer(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.peerID) {
+        reject(new Error("peerID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("DELETE /api/atlas/v1.0/groups/{groupID}/peers/{peerID}");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "DELETE",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers/" + params.peerID + "",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve();
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Gets One Specific VPC Peering Connection
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.peerID
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getPeer(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getPeer, arguments), callback);
+  }
+
+  _getPeer(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.peerID) {
+        reject(new Error("peerID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/peers/{peerID}");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers/" + params.peerID + "",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Update One Existing VPC Peering Connection
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.peerID
+   * @param params.updatePeerRequest
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  updatePeer(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._updatePeer, arguments), callback);
+  }
+
+  _updatePeer(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.peerID) {
+        reject(new Error("peerID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/peers/{peerID}");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "PATCH",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers/" + params.peerID + "",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+      requestOptions.body = params.updatePeerRequest;
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
               return;
           }
         });
@@ -2225,32 +2758,22 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getProcesses(groupID, options, cb) {
-    return this._hystrixCommand.execute(this._getProcesses, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getProcesses, arguments), callback);
   }
+
   _getProcesses(groupID, options, cb) {
     const params = {};
     params["groupID"] = groupID;
 
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -2261,7 +2784,7 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -2274,7 +2797,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes",
         json: true,
@@ -2304,43 +2827,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -2370,29 +2893,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getProcessDatabases(params, options, cb) {
-    return this._hystrixCommand.execute(this._getProcessDatabases, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getProcessDatabases, arguments), callback);
   }
+
   _getProcessDatabases(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -2403,15 +2916,15 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.host) {
-        rejecter(new Error("host must be non-empty because it's a path parameter"));
+        reject(new Error("host must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.port) {
-        rejecter(new Error("port must be non-empty because it's a path parameter"));
+        reject(new Error("port must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -2432,7 +2945,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/databases",
         json: true,
@@ -2462,43 +2975,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -2534,29 +3047,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getProcessDatabaseMeasurements(params, options, cb) {
-    return this._hystrixCommand.execute(this._getProcessDatabaseMeasurements, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getProcessDatabaseMeasurements, arguments), callback);
   }
+
   _getProcessDatabaseMeasurements(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -2567,19 +3070,19 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.host) {
-        rejecter(new Error("host must be non-empty because it's a path parameter"));
+        reject(new Error("host must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.port) {
-        rejecter(new Error("port must be non-empty because it's a path parameter"));
+        reject(new Error("port must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.databaseID) {
-        rejecter(new Error("databaseID must be non-empty because it's a path parameter"));
+        reject(new Error("databaseID must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -2618,7 +3121,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/databases/" + params.databaseID + "/measurements",
         json: true,
@@ -2648,43 +3151,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -2714,29 +3217,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getProcessDisks(params, options, cb) {
-    return this._hystrixCommand.execute(this._getProcessDisks, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getProcessDisks, arguments), callback);
   }
+
   _getProcessDisks(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -2747,15 +3240,15 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.host) {
-        rejecter(new Error("host must be non-empty because it's a path parameter"));
+        reject(new Error("host must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.port) {
-        rejecter(new Error("port must be non-empty because it's a path parameter"));
+        reject(new Error("port must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -2776,7 +3269,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/disks",
         json: true,
@@ -2806,43 +3299,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -2878,29 +3371,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getProcessDiskMeasurements(params, options, cb) {
-    return this._hystrixCommand.execute(this._getProcessDiskMeasurements, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getProcessDiskMeasurements, arguments), callback);
   }
+
   _getProcessDiskMeasurements(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -2911,19 +3394,19 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.host) {
-        rejecter(new Error("host must be non-empty because it's a path parameter"));
+        reject(new Error("host must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.port) {
-        rejecter(new Error("port must be non-empty because it's a path parameter"));
+        reject(new Error("port must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.diskName) {
-        rejecter(new Error("diskName must be non-empty because it's a path parameter"));
+        reject(new Error("diskName must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -2962,7 +3445,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/disks/" + params.diskName + "/measurements",
         json: true,
@@ -2992,43 +3475,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
@@ -3063,29 +3546,19 @@ class AtlasAPIClient {
    * @reject {Error}
    */
   getProcessMeasurements(params, options, cb) {
-    return this._hystrixCommand.execute(this._getProcessMeasurements, arguments);
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getProcessMeasurements, arguments), callback);
   }
+
   _getProcessMeasurements(params, options, cb) {
     if (!cb && typeof options === "function") {
-      cb = options;
       options = undefined;
     }
 
     return new Promise((resolve, reject) => {
-      const rejecter = (err) => {
-        reject(err);
-        if (cb) {
-          cb(err);
-        }
-      };
-      const resolver = (data) => {
-        resolve(data);
-        if (cb) {
-          cb(null, data);
-        }
-      };
-
-
       if (!options) {
         options = {};
       }
@@ -3096,15 +3569,15 @@ class AtlasAPIClient {
 
       const headers = {};
       if (!params.groupID) {
-        rejecter(new Error("groupID must be non-empty because it's a path parameter"));
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.host) {
-        rejecter(new Error("host must be non-empty because it's a path parameter"));
+        reject(new Error("host must be non-empty because it's a path parameter"));
         return;
       }
       if (!params.port) {
-        rejecter(new Error("port must be non-empty because it's a path parameter"));
+        reject(new Error("port must be non-empty because it's a path parameter"));
         return;
       }
 
@@ -3143,7 +3616,7 @@ class AtlasAPIClient {
         span.setTag("span.kind", "client");
       }
 
-	  const requestOptions = {
+      const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/measurements",
         json: true,
@@ -3173,43 +3646,43 @@ class AtlasAPIClient {
           if (err) {
             err._fromRequest = true;
             responseLog(logger, requestOptions, response, err)
-            rejecter(err);
+            reject(err);
             return;
           }
 
           switch (response.statusCode) {
             case 200:
-              resolver(body);
+              resolve(body);
               break;
             
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
             
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
-              rejecter(err);
+              reject(err);
               return;
           }
         });
