@@ -167,8 +167,11 @@ Gets a cluster
 **Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
 **Fulfill**: <code>Object</code>  
 **Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
 **Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
+**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
 

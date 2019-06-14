@@ -598,8 +598,11 @@ func (c *WagClient) doDeleteClusterRequest(ctx context.Context, req *http.Reques
 // Gets a cluster
 // 200: *models.Cluster
 // 400: *models.BadRequest
+// 401: *models.Unauthorized
+// 403: *models.Forbidden
 // 404: *models.NotFound
 // 409: *models.Conflict
+// 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
 func (c *WagClient) GetCluster(ctx context.Context, i *models.GetClusterInput) (*models.Cluster, error) {
@@ -685,6 +688,22 @@ func (c *WagClient) doGetClusterRequest(ctx context.Context, req *http.Request, 
 		}
 		return nil, &output
 
+	case 401:
+
+		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
 	case 404:
 
 		var output models.NotFound
@@ -696,6 +715,14 @@ func (c *WagClient) doGetClusterRequest(ctx context.Context, req *http.Request, 
 	case 409:
 
 		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}

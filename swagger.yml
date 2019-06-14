@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.5.0
+  version: 0.5.1
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -123,6 +123,14 @@ paths:
           description: "Success"
           schema:
             $ref: "#/definitions/Cluster"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
@@ -131,6 +139,10 @@ paths:
           description: "Conflict"
           schema:
             $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     patch:
       operationId: updateCluster
       description: Update a Cluster

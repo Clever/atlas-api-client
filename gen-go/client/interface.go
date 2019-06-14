@@ -54,8 +54,11 @@ type Client interface {
 	// Gets a cluster
 	// 200: *models.Cluster
 	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
 	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetCluster(ctx context.Context, i *models.GetClusterInput) (*models.Cluster, error)
