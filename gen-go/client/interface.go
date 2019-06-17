@@ -91,7 +91,7 @@ type Client interface {
 
 	// CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 	// Create a restore job
-	// 200: *models.RestoreJob
+	// 200: *models.CreateRestoreJobResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
@@ -100,7 +100,7 @@ type Client interface {
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
-	CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error)
+	CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.CreateRestoreJobResponse, error)
 
 	// GetSnapshots makes a GET request to /groups/{groupID}/clusters/{clusterName}/snapshots
 	// Gets snapshots for a cluster

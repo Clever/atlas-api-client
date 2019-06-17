@@ -1048,7 +1048,7 @@ func (c *WagClient) doGetRestoreJobsRequest(ctx context.Context, req *http.Reque
 
 // CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 // Create a restore job
-// 200: *models.RestoreJob
+// 200: *models.CreateRestoreJobResponse
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
 // 403: *models.Forbidden
@@ -1057,7 +1057,7 @@ func (c *WagClient) doGetRestoreJobsRequest(ctx context.Context, req *http.Reque
 // 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
-func (c *WagClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error) {
+func (c *WagClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.CreateRestoreJobResponse, error) {
 	headers := make(map[string]string)
 
 	var body []byte
@@ -1089,7 +1089,7 @@ func (c *WagClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestor
 	return c.doCreateRestoreJobRequest(ctx, req, headers)
 }
 
-func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.RestoreJob, error) {
+func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.CreateRestoreJobResponse, error) {
 	client := &http.Client{Transport: c.transport}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -1136,7 +1136,7 @@ func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Req
 
 	case 200:
 
-		var output models.RestoreJob
+		var output models.CreateRestoreJobResponse
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
 			return nil, err
 		}

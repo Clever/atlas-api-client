@@ -112,9 +112,9 @@ func (mr *MockClientMockRecorder) GetRestoreJobs(ctx, i interface{}) *gomock.Cal
 }
 
 // CreateRestoreJob mocks base method
-func (m *MockClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.RestoreJob, error) {
+func (m *MockClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.CreateRestoreJobResponse, error) {
 	ret := m.ctrl.Call(m, "CreateRestoreJob", ctx, i)
-	ret0, _ := ret[0].(*models.RestoreJob)
+	ret0, _ := ret[0].(*models.CreateRestoreJobResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
