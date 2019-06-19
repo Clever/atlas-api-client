@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.5.2
+  version: 0.5.0
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
