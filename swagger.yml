@@ -59,10 +59,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -135,10 +131,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -243,10 +235,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
   /groups/{groupID}/clusters/{clusterName}/restoreJobs:
     get:
       operationId: getRestoreJobs
@@ -278,10 +266,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -363,10 +347,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -398,10 +378,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -466,10 +442,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
     patch:
       operationId: updateDatabaseUser
       description: Update a DatabaseUser
@@ -573,10 +545,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -648,10 +616,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -698,10 +662,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -777,10 +737,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -828,10 +784,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -907,10 +859,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -942,10 +890,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
         429:
           description: "To Many Requests"
           schema:
@@ -1010,10 +954,6 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
-        409:
-          description: "Conflict"
-          schema:
-            $ref: "#/definitions/Conflict"
     patch:
       operationId: updateContainer
       description: Update a Container

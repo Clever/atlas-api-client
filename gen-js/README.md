@@ -47,9 +47,9 @@ atlas-api-client client library.
                 * [.Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized) ⇐ <code>Error</code>
                 * [.Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden) ⇐ <code>Error</code>
                 * [.NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound) ⇐ <code>Error</code>
-                * [.Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict) ⇐ <code>Error</code>
                 * [.TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests) ⇐ <code>Error</code>
                 * [.InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError) ⇐ <code>Error</code>
+                * [.Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict) ⇐ <code>Error</code>
             * [.DefaultCircuitOptions](#module_atlas-api-client--AtlasAPIClient.DefaultCircuitOptions)
 
 <a name="exp_module_atlas-api-client--AtlasAPIClient"></a>
@@ -91,7 +91,6 @@ Get all clusters
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -170,7 +169,6 @@ Gets a cluster
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -225,7 +223,6 @@ Get all restore jobs for a cluster
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -278,7 +275,6 @@ Gets snapshots for a cluster
 **Fulfill**: <code>Object</code>  
 **Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
 
@@ -304,7 +300,6 @@ Get one restore job
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -332,7 +327,6 @@ Get All Containers
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -382,7 +376,6 @@ Gets a container
 **Fulfill**: <code>Object</code>  
 **Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
 
@@ -436,7 +429,6 @@ Get All DatabaseUsers
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -513,7 +505,6 @@ Gets a database user
 **Fulfill**: <code>Object</code>  
 **Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
 
@@ -685,7 +676,6 @@ Get All Processes
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -710,7 +700,6 @@ Get the available databases for a Atlas MongoDB Process
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -740,7 +729,6 @@ Get the measurements of the specified database for a Atlas MongoDB process.
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -776,7 +764,6 @@ Get the available disks for a Atlas MongoDB Process
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -806,7 +793,6 @@ Get the measurements of the specified disk for a Atlas MongoDB process.
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -842,7 +828,6 @@ Get measurements for a specific Atlas MongoDB process (mongod or mongos).
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
 **Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
 **Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
 **Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
 **Reject**: <code>Error</code>  
@@ -908,9 +893,9 @@ Errors returned by methods.
     * [.Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized) ⇐ <code>Error</code>
     * [.Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden) ⇐ <code>Error</code>
     * [.NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound) ⇐ <code>Error</code>
-    * [.Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict) ⇐ <code>Error</code>
     * [.TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests) ⇐ <code>Error</code>
     * [.InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError) ⇐ <code>Error</code>
+    * [.Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict) ⇐ <code>Error</code>
 
 <a name="module_atlas-api-client--AtlasAPIClient.Errors.BadRequest"></a>
 
@@ -976,22 +961,6 @@ NotFound
 | message | <code>string</code> | 
 | reason | <code>string</code> | 
 
-<a name="module_atlas-api-client--AtlasAPIClient.Errors.Conflict"></a>
-
-##### Errors.Conflict ⇐ <code>Error</code>
-Conflict
-
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
-**Properties**
-
-| Name | Type |
-| --- | --- |
-| detail | <code>string</code> | 
-| error | <code>number</code> | 
-| message | <code>string</code> | 
-| reason | <code>string</code> | 
-
 <a name="module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests"></a>
 
 ##### Errors.TooManyRequests ⇐ <code>Error</code>
@@ -1012,6 +981,22 @@ TooManyRequests
 
 ##### Errors.InternalError ⇐ <code>Error</code>
 InternalError
+
+**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
+**Extends:** <code>Error</code>  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| detail | <code>string</code> | 
+| error | <code>number</code> | 
+| message | <code>string</code> | 
+| reason | <code>string</code> | 
+
+<a name="module_atlas-api-client--AtlasAPIClient.Errors.Conflict"></a>
+
+##### Errors.Conflict ⇐ <code>Error</code>
+Conflict
 
 **Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
 **Extends:** <code>Error</code>  

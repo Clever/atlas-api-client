@@ -18,7 +18,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -57,7 +56,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -83,7 +81,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -107,7 +104,6 @@ type Client interface {
 	// 200: *models.GetSnapshotsResponse
 	// 400: *models.BadRequest
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error)
@@ -119,7 +115,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -132,7 +127,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -156,7 +150,6 @@ type Client interface {
 	// 200: *models.Container
 	// 400: *models.BadRequest
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetContainer(ctx context.Context, i *models.GetContainerInput) (*models.Container, error)
@@ -181,7 +174,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -218,7 +210,6 @@ type Client interface {
 	// 200: *models.DatabaseUser
 	// 400: *models.BadRequest
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetDatabaseUser(ctx context.Context, i *models.GetDatabaseUserInput) (*models.DatabaseUser, error)
@@ -292,7 +283,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -305,7 +295,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -318,7 +307,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -331,7 +319,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -344,7 +331,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
@@ -357,7 +343,6 @@ type Client interface {
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
 	// 404: *models.NotFound
-	// 409: *models.Conflict
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.

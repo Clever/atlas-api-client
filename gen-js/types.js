@@ -77,25 +77,6 @@ module.exports.Errors.NotFound = class extends Error {
 };
 
 /**
- * Conflict
- * @extends Error
- * @memberof module:atlas-api-client
- * @alias module:atlas-api-client.Errors.Conflict
- * @property {string} detail
- * @property {number} error
- * @property {string} message
- * @property {string} reason
- */
-module.exports.Errors.Conflict = class extends Error {
-  constructor(body) {
-    super(body.message);
-    for (const k of Object.keys(body)) {
-      this[k] = body[k];
-    }
-  }
-};
-
-/**
  * TooManyRequests
  * @extends Error
  * @memberof module:atlas-api-client
@@ -125,6 +106,25 @@ module.exports.Errors.TooManyRequests = class extends Error {
  * @property {string} reason
  */
 module.exports.Errors.InternalError = class extends Error {
+  constructor(body) {
+    super(body.message);
+    for (const k of Object.keys(body)) {
+      this[k] = body[k];
+    }
+  }
+};
+
+/**
+ * Conflict
+ * @extends Error
+ * @memberof module:atlas-api-client
+ * @alias module:atlas-api-client.Errors.Conflict
+ * @property {string} detail
+ * @property {number} error
+ * @property {string} message
+ * @property {string} reason
+ */
+module.exports.Errors.Conflict = class extends Error {
   constructor(body) {
     super(body.message);
     for (const k of Object.keys(body)) {
