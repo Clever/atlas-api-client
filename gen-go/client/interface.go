@@ -12,11 +12,14 @@ import (
 type Client interface {
 
 	// GetClusters makes a GET request to /groups/{groupID}/clusters
-	// Get All Clusters
+	// Get all clusters
 	// 200: *models.GetClustersResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetClusters(ctx context.Context, groupID string) (*models.GetClustersResponse, error)
@@ -26,7 +29,10 @@ type Client interface {
 	// 201: *models.Cluster
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	CreateCluster(ctx context.Context, i *models.CreateClusterInput) (*models.Cluster, error)
@@ -36,7 +42,10 @@ type Client interface {
 	// 202: nil
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	DeleteCluster(ctx context.Context, i *models.DeleteClusterInput) error
@@ -45,7 +54,11 @@ type Client interface {
 	// Gets a cluster
 	// 200: *models.Cluster
 	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetCluster(ctx context.Context, i *models.GetClusterInput) (*models.Cluster, error)
@@ -55,17 +68,72 @@ type Client interface {
 	// 200: *models.Cluster
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateCluster(ctx context.Context, i *models.UpdateClusterInput) (*models.Cluster, error)
+
+	// GetRestoreJobs makes a GET request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
+	// Get all restore jobs for a cluster
+	// 200: *models.GetRestoreJobsResponse
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
+	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetRestoreJobs(ctx context.Context, i *models.GetRestoreJobsInput) (*models.GetRestoreJobsResponse, error)
+
+	// CreateRestoreJob makes a POST request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
+	// Create a restore job
+	// 200: *models.CreateRestoreJobResponse
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
+	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.CreateRestoreJobResponse, error)
+
+	// GetSnapshots makes a GET request to /groups/{groupID}/clusters/{clusterName}/snapshots
+	// Gets snapshots for a cluster
+	// 200: *models.GetSnapshotsResponse
+	// 400: *models.BadRequest
+	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetSnapshots(ctx context.Context, i *models.GetSnapshotsInput) (*models.GetSnapshotsResponse, error)
+
+	// GetRestoreJob makes a GET request to /groups/{groupID}/clusters/{sourceClusterName}/restoreJobs/{jobID}
+	// Get one restore job
+	// 200: *models.RestoreJob
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
+	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetRestoreJob(ctx context.Context, i *models.GetRestoreJobInput) (*models.RestoreJob, error)
 
 	// GetContainers makes a GET request to /groups/{groupID}/containers
 	// Get All Containers
 	// 200: *models.GetContainersResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetContainers(ctx context.Context, groupID string) (*models.GetContainersResponse, error)
@@ -75,7 +143,10 @@ type Client interface {
 	// 201: *models.Container
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	CreateContainer(ctx context.Context, i *models.CreateContainerInput) (*models.Container, error)
@@ -85,6 +156,7 @@ type Client interface {
 	// 200: *models.Container
 	// 400: *models.BadRequest
 	// 404: *models.NotFound
+	// 409: *models.Conflict
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetContainer(ctx context.Context, i *models.GetContainerInput) (*models.Container, error)
@@ -94,7 +166,10 @@ type Client interface {
 	// 200: *models.Container
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateContainer(ctx context.Context, i *models.UpdateContainerInput) (*models.Container, error)
@@ -104,7 +179,10 @@ type Client interface {
 	// 200: *models.GetDatabaseUsersResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetDatabaseUsers(ctx context.Context, groupID string) (*models.GetDatabaseUsersResponse, error)
@@ -114,7 +192,10 @@ type Client interface {
 	// 201: *models.DatabaseUser
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	CreateDatabaseUser(ctx context.Context, i *models.CreateDatabaseUserInput) (*models.DatabaseUser, error)
@@ -124,7 +205,10 @@ type Client interface {
 	// 200: nil
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	DeleteDatabaseUser(ctx context.Context, i *models.DeleteDatabaseUserInput) error
@@ -134,6 +218,7 @@ type Client interface {
 	// 200: *models.DatabaseUser
 	// 400: *models.BadRequest
 	// 404: *models.NotFound
+	// 409: *models.Conflict
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetDatabaseUser(ctx context.Context, i *models.GetDatabaseUserInput) (*models.DatabaseUser, error)
@@ -143,7 +228,10 @@ type Client interface {
 	// 200: *models.DatabaseUser
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateDatabaseUser(ctx context.Context, i *models.UpdateDatabaseUserInput) (*models.DatabaseUser, error)
@@ -202,7 +290,10 @@ type Client interface {
 	// 200: *models.GetProcessesResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetProcesses(ctx context.Context, groupID string) (*models.GetProcessesResponse, error)
@@ -212,7 +303,10 @@ type Client interface {
 	// 200: *models.GetProcessDatabasesResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetProcessDatabases(ctx context.Context, i *models.GetProcessDatabasesInput) (*models.GetProcessDatabasesResponse, error)
@@ -222,7 +316,10 @@ type Client interface {
 	// 200: *models.GetProcessDatabaseMeasurementsResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetProcessDatabaseMeasurements(ctx context.Context, i *models.GetProcessDatabaseMeasurementsInput) (*models.GetProcessDatabaseMeasurementsResponse, error)
@@ -232,7 +329,10 @@ type Client interface {
 	// 200: *models.GetProcessDisksResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetProcessDisks(ctx context.Context, i *models.GetProcessDisksInput) (*models.GetProcessDisksResponse, error)
@@ -242,7 +342,10 @@ type Client interface {
 	// 200: *models.GetProcessDiskMeasurementsResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetProcessDiskMeasurements(ctx context.Context, i *models.GetProcessDiskMeasurementsInput) (*models.GetProcessDiskMeasurementsResponse, error)
@@ -252,7 +355,10 @@ type Client interface {
 	// 200: *models.GetProcessMeasurementsResponse
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
 	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	GetProcessMeasurements(ctx context.Context, i *models.GetProcessMeasurementsInput) (*models.GetProcessMeasurementsResponse, error)

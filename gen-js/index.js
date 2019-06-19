@@ -251,7 +251,7 @@ class AtlasAPIClient {
   }
 
   /**
-   * Get All Clusters
+   * Get all clusters
    * @param {string} groupID
    * @param {object} [options]
    * @param {number} [options.timeout] - A request specific timeout
@@ -262,7 +262,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -357,8 +360,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -394,7 +415,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -488,8 +512,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -525,7 +567,10 @@ class AtlasAPIClient {
    * @fulfill {undefined}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -621,8 +666,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -657,7 +720,11 @@ class AtlasAPIClient {
    * @returns {Promise}
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -747,8 +814,32 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -785,7 +876,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -883,8 +977,629 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Get all restore jobs for a cluster
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.clusterName - Name of the source cluster for the restore job (the cluster that contained the snapshot to restore)
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getRestoreJobs(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getRestoreJobs, arguments), callback);
+  }
+
+  _getRestoreJobs(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.clusterName) {
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restoreJobs");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/restoreJobs",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Create a restore job
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.clusterName - Name of the cluster that contains the snapshot to restore
+   * @param params.createRestoreJobRequest
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  createRestoreJob(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._createRestoreJob, arguments), callback);
+  }
+
+  _createRestoreJob(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.clusterName) {
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restoreJobs");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "POST",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/restoreJobs",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+      requestOptions.body = params.createRestoreJobRequest;
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Gets snapshots for a cluster
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.clusterName
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getSnapshots(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getSnapshots, arguments), callback);
+  }
+
+  _getSnapshots(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.clusterName) {
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshots");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/snapshots",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Get one restore job
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.sourceClusterName
+   * @param {string} params.jobID
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getRestoreJob(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getRestoreJob, arguments), callback);
+  }
+
+  _getRestoreJob(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.sourceClusterName) {
+        reject(new Error("sourceClusterName must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.jobID) {
+        reject(new Error("jobID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{sourceClusterName}/restoreJobs/{jobID}");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.sourceClusterName + "/restoreJobs/" + params.jobID + "",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -918,7 +1633,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1013,8 +1731,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1050,7 +1786,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1144,8 +1883,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1181,6 +1938,7 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1276,6 +2034,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -1308,7 +2072,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1406,8 +2173,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1441,7 +2226,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1536,8 +2324,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1573,7 +2379,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1667,8 +2476,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1704,7 +2531,10 @@ class AtlasAPIClient {
    * @fulfill {undefined}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1800,8 +2630,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -1837,6 +2685,7 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -1932,6 +2781,12 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
@@ -1964,7 +2819,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -2062,8 +2920,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -2753,7 +3629,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -2848,8 +3727,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -2888,7 +3785,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -2996,8 +3896,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3042,7 +3960,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3172,8 +4093,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3212,7 +4151,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3320,8 +4262,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3366,7 +4326,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3496,8 +4459,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
@@ -3541,7 +4522,10 @@ class AtlasAPIClient {
    * @fulfill {Object}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
    * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
    * @reject {module:atlas-api-client.Errors.InternalError}
    * @reject {Error}
    */
@@ -3667,8 +4651,26 @@ class AtlasAPIClient {
               reject(err);
               return;
             
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
             case 404:
               var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;

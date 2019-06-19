@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.4.0
+  version: 0.5.2
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -24,6 +24,10 @@ responses:
     description: "Bad Request"
     schema:
       $ref: "#/definitions/BadRequest"
+  Conflict:
+    description: "Conflict"
+    schema:
+      $ref: "#/definitions/Conflict"
   InternalError:
     description: "Internal Error"
     schema:
@@ -32,7 +36,7 @@ paths:
   /groups/{groupID}/clusters:
     get:
       operationId: getClusters
-      description: Get All Clusters
+      description: Get all clusters
       parameters:
         - name: groupID
           in: path
@@ -47,10 +51,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     post:
       operationId: createCluster
       description: Create a Cluster
@@ -73,10 +89,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/clusters/{clusterName}:
     get:
       operationId: getCluster
@@ -95,10 +123,26 @@ paths:
           description: "Success"
           schema:
             $ref: "#/definitions/Cluster"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     patch:
       operationId: updateCluster
       description: Update a Cluster
@@ -125,10 +169,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     delete:
       operationId: deleteCluster
       description: Deletes a cluster
@@ -148,10 +204,174 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
+
+  /groups/{groupID}/clusters/{clusterName}/snapshots:
+    get:
+      operationId: getSnapshots
+      description: Gets snapshots for a cluster
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: clusterName
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetSnapshotsResponse"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+  /groups/{groupID}/clusters/{clusterName}/restoreJobs:
+    get:
+      operationId: getRestoreJobs
+      description: Get all restore jobs for a cluster
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: clusterName
+          in: path
+          required: true
+          type: string
+          description: "Name of the source cluster for the restore job (the cluster that contained the snapshot to restore)"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetRestoreJobsResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
+    post:
+      operationId: createRestoreJob
+      description: Create a restore job
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: clusterName
+          in: path
+          required: true
+          type: string
+          description: "Name of the cluster that contains the snapshot to restore"
+        - name: createRestoreJobRequest
+          in: body
+          schema:
+            $ref: "#/definitions/CreateRestoreJobRequest"
+          required: true
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/CreateRestoreJobResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
+  /groups/{groupID}/clusters/{sourceClusterName}/restoreJobs/{jobID}:
+    get:
+      operationId: getRestoreJob
+      description: Get one restore job
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: sourceClusterName
+          in: path
+          required: true
+          type: string
+        - name: jobID
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/RestoreJob"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
+
   /groups/{groupID}/databaseUsers:
     get:
       operationId: getDatabaseUsers
@@ -170,10 +390,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     post:
       operationId: createDatabaseUser
       description: Create a DatabaseUser
@@ -196,10 +428,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/databaseUsers/admin/{username}:
     get:
       operationId: getDatabaseUser
@@ -222,6 +466,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
     patch:
       operationId: updateDatabaseUser
       description: Update a DatabaseUser
@@ -248,10 +496,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     delete:
       operationId: deleteDatabaseUser
       description: Deletes a DatabaseUser
@@ -271,10 +531,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes:
     get:
       operationId: getProcesses
@@ -293,10 +565,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/measurements:
     get:
       operationId: getProcessMeasurements
@@ -356,10 +640,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/databases:
     get:
       operationId: getProcessDatabases
@@ -394,10 +690,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/databases/{databaseID}/measurements:
     get:
       operationId: getProcessDatabaseMeasurements
@@ -461,10 +769,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
 
   /groups/{groupID}/processes/{host}:{port}/disks:
     get:
@@ -500,10 +820,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/processes/{host}:{port}/disks/{diskName}/measurements:
     get:
       operationId: getProcessDiskMeasurements
@@ -567,10 +899,23 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
+
   /groups/{groupID}/containers:
     get:
       operationId: getContainers
@@ -589,10 +934,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
     post:
       operationId: createContainer
       description: Create a Container
@@ -615,10 +972,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
   /groups/{groupID}/containers/{containerID}:
     get:
       operationId: getContainer
@@ -641,6 +1010,10 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
     patch:
       operationId: updateContainer
       description: Update a Container
@@ -667,10 +1040,22 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
         404:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
 
   /groups/{groupID}/peers:
     get:
@@ -839,6 +1224,48 @@ definitions:
       message:
         x-go-name: unused
         type: string
+  Conflict:
+    type: object
+    properties:
+      reason:
+        type: string
+      error:
+        x-go-name: errorCode
+        type: integer
+      detail:
+        x-go-name: message
+        type: string
+      message:
+        x-go-name: unused
+        type: string
+  Forbidden:
+    type: object
+    properties:
+      reason:
+        type: string
+      error:
+        x-go-name: errorCode
+        type: integer
+      detail:
+        x-go-name: message
+        type: string
+      message:
+        x-go-name: unused
+        type: string
+  TooManyRequests:
+    type: object
+    properties:
+      reason:
+        type: string
+      error:
+        x-go-name: errorCode
+        type: integer
+      detail:
+        x-go-name: message
+        type: string
+      message:
+        x-go-name: unused
+        type: string
   InternalError:
     type: object
     properties:
@@ -861,6 +1288,26 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Cluster'
+      totalCount:
+        type: integer
+
+  GetRestoreJobsResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/RestoreJob'
+      totalCount:
+        type: integer
+
+  CreateRestoreJobResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/RestoreJob'
       totalCount:
         type: integer
 
@@ -905,6 +1352,192 @@ definitions:
           - US_WEST_1
           - US_WEST_2
           - US_EAST_1
+
+  RestoreJobDelivery:
+    type: object
+    properties:
+      methodName:
+        type: string
+        enum:
+          - "AUTOMATED_RESTORE"
+          # @TODO - "HTTP"
+      targetGroupId: # for AUTOMATED_RESPONSE must send delivery.targetGroupId, and delivery.targetClusterName or delivery.targetClusterId
+        type: string
+      targetClusterName: # Use the clusterName returned in the response body of the Get All Snapshots and Get a Snapshot endpoints.
+        type: string
+      # targetClusterId: # Use the clusterId returned in the response body of the Get All Snapshots and Get a Snapshot endpoints.
+      #   type: string
+  RestoreJobResponseDelivery:
+    type: object
+    properties:
+      methodName:
+        type: string
+        enum:
+          - "AUTOMATED_RESTORE"
+          - "HTTP"
+      statusName:
+        description: Current status of the downloadable file.
+        type: string
+        enum:
+          - "NOT_STARTED"
+          - "IN_PROGRESS"
+          - "READY"
+          - "FAILED"
+          - "INTERRUPTED"
+          - "EXPIRED"
+          - "MAX_DOWNLOADS_EXCEEDED"
+  RestoreJob:
+    type: object
+    properties:
+      clusterId:
+        type: string
+        description: Unique identifier of the cluster the restore job represents.
+      created:
+        type: string
+        description: Timestamp in ISO 8601 date and time format in UTC when the restore job was requested.
+      delivery:
+        $ref: "#/definitions/RestoreJobResponseDelivery"
+      encryptionEnabled:
+        type: boolean
+        description: Indicates whether the restored snapshot data is encrypted.
+      groupId:
+        type: string
+        description: Unique identifier of the project that owns the restore job.
+      hashes:
+        type: array
+        description: If the corresponding delivery.url has been downloaded, each document in this array is a mapping of a restore file to a hashed checksum. This array is present only after the file is downloaded.
+        items:
+          $ref: "#/definitions/RestoreJobResponseHash"
+      id:
+        type: string
+        description: Unique identifier of the restore job.
+      links:
+        type: array
+        description: One or more links to sub-resources and/or related resources.
+        items:
+          $ref: '#/definitions/Link'
+      masterKeyUUID:
+        type: string
+        description: KMIP master key ID used to encrypt the snapshot data (only if encryptionEnabled is true for the snapshot).
+      snapshotId:
+        type: string
+        description: Unique identifier of the snapshot to restore.
+      statusName:
+        type: string
+        description: Current status of the job.
+        enum:
+          - "FINISHED"
+          - "IN_PROGRESS"
+          - "BROKEN"
+          - "KILLED"
+      timestamp:
+        $ref: "#definitions/SnapshotTimestamp"
+  RestoreJobResponseHash:
+    type: object
+    properties:
+      typeName:
+        type: string
+        description: Hashing algorithm used to compute the hash value. If present, this value is SHA1.
+      fileName:
+        type: string
+        description: Name of the file that has been hashed.
+      hash:
+        type: string
+        description: Hash of the file.
+
+  GetSnapshotsResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Snapshot'
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      totalCount:
+        type: integer
+  Snapshot:
+    type: object
+    properties:
+      clusterId:
+        type: string
+        description: The unique ID of the cluster that the snapshot represents.
+      complete:
+        type: boolean
+        description: Indicates whether the snapshot exists. This is false if the snapshot creation job is in progress.
+      created:
+        $ref: "#/definitions/SnapshotTimestamp"
+      doNotDelete:
+        type: boolean
+        description: Specifies whether the snapshot can be deleted.
+      expires:
+        type: string
+        format: date-time
+        description: The date in ISO 8601 date and time format in UTC after which Atlas deletes the snapshot. If doNotDelete is set to true, any value in expires is removed. If the expires value is earlier than the current date and time, the snaphot cannot be edited.
+      groupId:
+        type: string
+        description: ID of the project that owns the snapshot.
+      id:
+        type: string
+        description: ID of the snapshot.
+      lastOplogAppliedTimestamp:
+        $ref: "#/definitions/SnapshotTimestamp"
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      parts:
+        type: array
+        description: The individual parts that comprise the complete snapshot. For a replica set, this array contains a single document. For a sharded cluster, this array contains one document for each shard plus one document for the config server.
+        items:
+          $ref: '#/definitions/SnapshotPart'
+  SnapshotTimestamp:
+    type: object
+    properties:
+      date:
+        type: string
+        description:  Timestamp in ISO 8601 date and time format in UTC of the latest oplog entry in the snapshot.
+      increment:
+        type: number
+        description: Order of all operations completed at the latest oplog entry in the snapshot.
+  SnapshotPart:
+    type: object
+    properties:
+      clusterId:
+        type: string
+        description: ID of the replica set.
+      compressionSetting:
+        type: string
+        description: Method of compression for the snapshot.
+      dataSizeBytes:
+        type: number
+        description: The total size of the data in the snapshot in bytes.
+      encryptionEnabled:
+        type: boolean
+        description: Indicates whether the snapshot is encrypted.
+      fileSizeBytes:
+        type: number
+        description: The total size of the data files in bytes.
+      masterKeyUUID:
+        type: string
+        description: The KMIP master key ID used to encrypt the snapshot data. NOTE - This appears only if encryptionEnabled is true.
+      mongodVersion:
+        type: string
+        description: The version of MongoDB that the replica set primary was running when the snapshot was created.
+      replicaSetName:
+        type: string
+        description: Name of the replica set.
+      storageSizeBytes:
+        type: number
+        description: The total size of space allocated for document storage.
+      typeName:
+        type: string
+        description: The type of server that the part represents
+        enum:
+        - "REPLICA_SET"
+        - "CONFIG_SERVER_REPLICA_SET"
 
   ReplicationSpec:
     type: object
@@ -961,10 +1594,6 @@ definitions:
 
   CreateOrUpdateClusterRequest:
     type: object
-    required:
-      - name
-      - providerSettings
-      - backupEnabled
     properties:
       autoScaling:
         $ref: "#/definitions/AutoScaling"
@@ -981,6 +1610,9 @@ definitions:
         default: 1
         minimum: 1
         maximum: 12
+      paused:
+        type: boolean
+        description: Indicates whether the cluster is paused or not.
       providerSettings:
         $ref: "#/definitions/ProviderSettings"
       replicationFactor:
@@ -991,8 +1623,24 @@ definitions:
         type: number
         maximum: 4096
       backupEnabled:
-        x-nullable: false
+        x-nullable: true
         type: boolean
+
+
+  CreateRestoreJobRequest:
+    type: object
+    required:
+      - delivery
+    properties:
+      delivery:
+        $ref: "#/definitions/RestoreJobDelivery"
+      pointInTimeUTCMillis:
+        type: string
+        description: A timestamp in the number of milliseconds that have elapsed since the UNIX epoch that represents the point in time to which your data will be restored. This timestamp must be within last 24 hours of the current time.
+      snapshotId:
+        type: string
+        description: Unique identifier of the snapshot to restore.
+
 
   DatabaseUser:
     type: object
