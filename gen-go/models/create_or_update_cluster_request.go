@@ -41,7 +41,7 @@ type CreateOrUpdateClusterRequest struct {
 	NumShards int64 `json:"numShards,omitempty"`
 
 	// Indicates whether the cluster is paused or not.
-	Paused bool `json:"paused,omitempty"`
+	Paused *bool `json:"paused,omitempty"`
 
 	// provider settings
 	ProviderSettings *ProviderSettings `json:"providerSettings,omitempty"`
