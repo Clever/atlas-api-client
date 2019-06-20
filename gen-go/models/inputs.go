@@ -209,8 +209,10 @@ func (i UpdateClusterInput) Path() (string, error) {
 
 // GetRestoreJobsInput holds the input parameters for a getRestoreJobs operation.
 type GetRestoreJobsInput struct {
-	GroupID     string
-	ClusterName string
+	GroupID      string
+	ClusterName  string
+	PageNum      *int64
+	ItemsPerPage *int64
 }
 
 // Validate returns an error if any of the GetRestoreJobsInput parameters don't satisfy the
@@ -242,6 +244,14 @@ func (i GetRestoreJobsInput) Path() (string, error) {
 		}
 	}
 	path = strings.Replace(path, "{clusterName}", pathclusterName, -1)
+
+	if i.PageNum != nil {
+		urlVals.Add("pageNum", strconv.FormatInt(*i.PageNum, 10))
+	}
+
+	if i.ItemsPerPage != nil {
+		urlVals.Add("itemsPerPage", strconv.FormatInt(*i.ItemsPerPage, 10))
+	}
 
 	return path + "?" + urlVals.Encode(), nil
 }

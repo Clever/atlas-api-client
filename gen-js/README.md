@@ -235,6 +235,8 @@ Get all restore jobs for a cluster
 | params | <code>Object</code> |  |
 | params.groupID | <code>string</code> |  |
 | params.clusterName | <code>string</code> | Name of the source cluster for the restore job (the cluster that contained the snapshot to restore) |
+| [params.pageNum] | <code>number</code> |  |
+| [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
 | [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |

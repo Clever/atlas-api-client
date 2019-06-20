@@ -261,6 +261,14 @@ paths:
           required: true
           type: string
           description: "Name of the source cluster for the restore job (the cluster that contained the snapshot to restore)"
+        - name: pageNum
+          in: query
+          required: false
+          type: integer
+        - name: itemsPerPage
+          in: query
+          required: false
+          type: integer
       responses:
         200:
           description: "Success"
