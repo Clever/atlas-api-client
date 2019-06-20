@@ -59,7 +59,7 @@ type Cluster struct {
 	ReplicationSpec *ReplicationSpec `json:"replicationSpec,omitempty"`
 
 	// state name
-	StateName string `json:"stateName,omitempty"`
+	StateName ClusterState `json:"stateName,omitempty"`
 }
 
 // Validate validates this cluster
@@ -77,6 +77,11 @@ func (m *Cluster) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateReplicationSpec(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateStateName(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -139,6 +144,22 @@ func (m *Cluster) validateReplicationSpec(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Cluster) validateStateName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StateName) { // not required
+		return nil
+	}
+
+	if err := m.StateName.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("stateName")
+		}
+		return err
 	}
 
 	return nil

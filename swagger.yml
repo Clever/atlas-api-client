@@ -1598,7 +1598,16 @@ definitions:
       replicationSpec:
         $ref: "#/definitions/ReplicationSpec"
       stateName:
-        type: string
+        $ref: "#/definitions/ClusterState"
+  ClusterState:
+    type: string
+    enum:
+    - IDLE
+    - CREATING
+    - UPDATING
+    - DELETING
+    - DELETED
+    - REPAIRING
 
   CreateOrUpdateClusterRequest:
     type: object
