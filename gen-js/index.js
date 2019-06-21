@@ -1023,6 +1023,8 @@ class AtlasAPIClient {
    * @param {Object} params
    * @param {string} params.groupID
    * @param {string} params.clusterName - Name of the source cluster for the restore job (the cluster that contained the snapshot to restore)
+   * @param {number} [params.pageNum]
+   * @param {number} [params.itemsPerPage]
    * @param {object} [options]
    * @param {number} [options.timeout] - A request specific timeout
    * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
@@ -1072,6 +1074,14 @@ class AtlasAPIClient {
       }
 
       const query = {};
+      if (typeof params.pageNum !== "undefined") {
+        query["pageNum"] = params.pageNum;
+      }
+  
+      if (typeof params.itemsPerPage !== "undefined") {
+        query["itemsPerPage"] = params.itemsPerPage;
+      }
+  
 
       if (span) {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters

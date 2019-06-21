@@ -261,6 +261,14 @@ paths:
           required: true
           type: string
           description: "Name of the source cluster for the restore job (the cluster that contained the snapshot to restore)"
+        - name: pageNum
+          in: query
+          required: false
+          type: integer
+        - name: itemsPerPage
+          in: query
+          required: false
+          type: integer
       responses:
         200:
           description: "Success"
@@ -1590,7 +1598,16 @@ definitions:
       replicationSpec:
         $ref: "#/definitions/ReplicationSpec"
       stateName:
-        type: string
+        $ref: "#/definitions/ClusterState"
+  ClusterState:
+    type: string
+    enum:
+    - IDLE
+    - CREATING
+    - UPDATING
+    - DELETING
+    - DELETED
+    - REPAIRING
 
   CreateOrUpdateClusterRequest:
     type: object
@@ -1611,6 +1628,8 @@ definitions:
         minimum: 1
         maximum: 12
       paused:
+        # without nullable here, `Paused: false` won't show up in the JSON
+        x-nullable: true
         type: boolean
         description: Indicates whether the cluster is paused or not.
       providerSettings:
