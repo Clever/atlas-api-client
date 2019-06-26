@@ -58,6 +58,9 @@ type Cluster struct {
 	// replication spec
 	ReplicationSpec *ReplicationSpec `json:"replicationSpec,omitempty"`
 
+	// srv address
+	SrvAddress string `json:"srvAddress,omitempty"`
+
 	// state name
 	StateName ClusterState `json:"stateName,omitempty"`
 }
