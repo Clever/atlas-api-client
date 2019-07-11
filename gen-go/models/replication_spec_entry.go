@@ -22,15 +22,15 @@ type ReplicationSpecEntry struct {
 	// num shards
 	NumShards int64 `json:"numShards,omitempty"`
 
-	// region config
-	RegionConfig *RegionConfig `json:"regionConfig,omitempty"`
+	// regions config
+	RegionsConfig *RegionsConfig `json:"regionsConfig,omitempty"`
 }
 
 // Validate validates this replication spec entry
 func (m *ReplicationSpecEntry) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateRegionConfig(formats); err != nil {
+	if err := m.validateRegionsConfig(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -41,17 +41,17 @@ func (m *ReplicationSpecEntry) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ReplicationSpecEntry) validateRegionConfig(formats strfmt.Registry) error {
+func (m *ReplicationSpecEntry) validateRegionsConfig(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.RegionConfig) { // not required
+	if swag.IsZero(m.RegionsConfig) { // not required
 		return nil
 	}
 
-	if m.RegionConfig != nil {
+	if m.RegionsConfig != nil {
 
-		if err := m.RegionConfig.Validate(formats); err != nil {
+		if err := m.RegionsConfig.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("regionConfig")
+				return ve.ValidateName("regionsConfig")
 			}
 			return err
 		}

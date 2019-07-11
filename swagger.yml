@@ -1582,20 +1582,20 @@ definitions:
         type: string
       numShards:
         type: integer
-      regionConfig:
-        $ref: "#/definitions/RegionConfig"
-  RegionConfig:
+      regionsConfig:
+        $ref: "#/definitions/RegionsConfig"
+  RegionsConfig:
     type: object
     properties:
       US_EAST_1:
-        $ref: "#/definitions/RegionConfigEntry"
+        $ref: "#/definitions/RegionsConfigEntry"
       US_EAST_2:
-        $ref: "#/definitions/RegionConfigEntry"
+        $ref: "#/definitions/RegionsConfigEntry"
       US_WEST_1:
-        $ref: "#/definitions/RegionConfigEntry"
+        $ref: "#/definitions/RegionsConfigEntry"
       US_WEST_2:
-        $ref: "#/definitions/RegionConfigEntry"
-  RegionConfigEntry:
+        $ref: "#/definitions/RegionsConfigEntry"
+  RegionsConfigEntry:
     type: object
     properties:
       electableNodes:

@@ -12,9 +12,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// RegionConfigEntry region config entry
-// swagger:model RegionConfigEntry
-type RegionConfigEntry struct {
+// RegionsConfigEntry regions config entry
+// swagger:model RegionsConfigEntry
+type RegionsConfigEntry struct {
 
 	// analytics nodes
 	AnalyticsNodes int64 `json:"analyticsNodes,omitempty"`
@@ -29,8 +29,8 @@ type RegionConfigEntry struct {
 	ReadOnlyNodes int64 `json:"readOnlyNodes,omitempty"`
 }
 
-// Validate validates this region config entry
-func (m *RegionConfigEntry) Validate(formats strfmt.Registry) error {
+// Validate validates this regions config entry
+func (m *RegionsConfigEntry) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if len(res) > 0 {
@@ -40,7 +40,7 @@ func (m *RegionConfigEntry) Validate(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *RegionConfigEntry) MarshalBinary() ([]byte, error) {
+func (m *RegionsConfigEntry) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -48,8 +48,8 @@ func (m *RegionConfigEntry) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *RegionConfigEntry) UnmarshalBinary(b []byte) error {
-	var res RegionConfigEntry
+func (m *RegionsConfigEntry) UnmarshalBinary(b []byte) error {
+	var res RegionsConfigEntry
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
