@@ -36,6 +36,9 @@ type ProviderSettings struct {
 
 	// region name
 	RegionName string `json:"regionName,omitempty"`
+
+	// volume type
+	VolumeType string `json:"volumeType,omitempty"`
 }
 
 // Validate validates this provider settings
@@ -58,6 +61,11 @@ func (m *ProviderSettings) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateRegionName(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateVolumeType(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -242,6 +250,47 @@ func (m *ProviderSettings) validateRegionName(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateRegionNameEnum("regionName", "body", m.RegionName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var providerSettingsTypeVolumeTypePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["STANDARD","PROVISIONED"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		providerSettingsTypeVolumeTypePropEnum = append(providerSettingsTypeVolumeTypePropEnum, v)
+	}
+}
+
+const (
+	// ProviderSettingsVolumeTypeSTANDARD captures enum value "STANDARD"
+	ProviderSettingsVolumeTypeSTANDARD string = "STANDARD"
+	// ProviderSettingsVolumeTypePROVISIONED captures enum value "PROVISIONED"
+	ProviderSettingsVolumeTypePROVISIONED string = "PROVISIONED"
+)
+
+// prop value enum
+func (m *ProviderSettings) validateVolumeTypeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, providerSettingsTypeVolumeTypePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ProviderSettings) validateVolumeType(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.VolumeType) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateVolumeTypeEnum("volumeType", "body", m.VolumeType); err != nil {
 		return err
 	}
 

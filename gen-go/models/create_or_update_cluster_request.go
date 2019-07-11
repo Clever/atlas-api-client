@@ -25,6 +25,12 @@ type CreateOrUpdateClusterRequest struct {
 	// backup enabled
 	BackupEnabled *bool `json:"backupEnabled,omitempty"`
 
+	// bi connector
+	BiConnector *BIConnector `json:"biConnector,omitempty"`
+
+	// cluster type
+	ClusterType ClusterType `json:"clusterType,omitempty"`
+
 	// disk size g b
 	// Maximum: 4096
 	DiskSizeGB float64 `json:"diskSizeGB,omitempty"`
@@ -43,6 +49,9 @@ type CreateOrUpdateClusterRequest struct {
 	// Indicates whether the cluster is paused or not.
 	Paused *bool `json:"paused,omitempty"`
 
+	// provider backup enabled
+	ProviderBackupEnabled *bool `json:"providerBackupEnabled,omitempty"`
+
 	// provider settings
 	ProviderSettings *ProviderSettings `json:"providerSettings,omitempty"`
 
@@ -58,6 +67,16 @@ func (m *CreateOrUpdateClusterRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAutoScaling(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateBiConnector(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateClusterType(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -112,6 +131,41 @@ func (m *CreateOrUpdateClusterRequest) validateAutoScaling(formats strfmt.Regist
 	return nil
 }
 
+func (m *CreateOrUpdateClusterRequest) validateBiConnector(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.BiConnector) { // not required
+		return nil
+	}
+
+	if m.BiConnector != nil {
+
+		if err := m.BiConnector.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("biConnector")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *CreateOrUpdateClusterRequest) validateClusterType(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ClusterType) { // not required
+		return nil
+	}
+
+	if err := m.ClusterType.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("clusterType")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *CreateOrUpdateClusterRequest) validateDiskSizeGB(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.DiskSizeGB) { // not required
@@ -129,7 +183,7 @@ var createOrUpdateClusterRequestTypeMongoDBMajorVersionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["3.2","3.4","3.6"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["3.2","3.4","3.6","4.0"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -144,6 +198,8 @@ const (
 	CreateOrUpdateClusterRequestMongoDBMajorVersionNr34 string = "3.4"
 	// CreateOrUpdateClusterRequestMongoDBMajorVersionNr36 captures enum value "3.6"
 	CreateOrUpdateClusterRequestMongoDBMajorVersionNr36 string = "3.6"
+	// CreateOrUpdateClusterRequestMongoDBMajorVersionNr40 captures enum value "4.0"
+	CreateOrUpdateClusterRequestMongoDBMajorVersionNr40 string = "4.0"
 )
 
 // prop value enum

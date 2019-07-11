@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"strconv"
+
 	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/go-openapi/errors"
@@ -22,11 +24,26 @@ type Cluster struct {
 	// backup enabled
 	BackupEnabled bool `json:"backupEnabled,omitempty"`
 
+	// bi connector
+	BiConnector *BIConnector `json:"biConnector,omitempty"`
+
+	// cluster type
+	ClusterType ClusterType `json:"clusterType,omitempty"`
+
 	// disk size g b
 	DiskSizeGB float64 `json:"diskSizeGB,omitempty"`
 
 	// group Id
 	GroupID string `json:"groupId,omitempty"`
+
+	// id
+	ID string `json:"id,omitempty"`
+
+	// links
+	Links []*Link `json:"links"`
+
+	// mongo d b major version
+	MongoDBMajorVersion string `json:"mongoDBMajorVersion,omitempty"`
 
 	// mongo d b version
 	MongoDBVersion string `json:"mongoDBVersion,omitempty"`
@@ -49,11 +66,17 @@ type Cluster struct {
 	// paused
 	Paused bool `json:"paused,omitempty"`
 
+	// pit enabled
+	PitEnabled bool `json:"pitEnabled,omitempty"`
+
+	// provider backup enabled
+	ProviderBackupEnabled bool `json:"providerBackupEnabled,omitempty"`
+
 	// provider settings
 	ProviderSettings *ProviderSettings `json:"providerSettings,omitempty"`
 
 	// replication factor
-	ReplicationFactor float64 `json:"replicationFactor,omitempty"`
+	ReplicationFactor *float64 `json:"replicationFactor,omitempty"`
 
 	// replication spec
 	ReplicationSpec *ReplicationSpec `json:"replicationSpec,omitempty"`
@@ -70,6 +93,21 @@ func (m *Cluster) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAutoScaling(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateBiConnector(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateClusterType(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateLinks(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -109,6 +147,68 @@ func (m *Cluster) validateAutoScaling(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Cluster) validateBiConnector(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.BiConnector) { // not required
+		return nil
+	}
+
+	if m.BiConnector != nil {
+
+		if err := m.BiConnector.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("biConnector")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Cluster) validateClusterType(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ClusterType) { // not required
+		return nil
+	}
+
+	if err := m.ClusterType.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("clusterType")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Cluster) validateLinks(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Links) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Links); i++ {
+
+		if swag.IsZero(m.Links[i]) { // not required
+			continue
+		}
+
+		if m.Links[i] != nil {
+
+			if err := m.Links[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("links" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
