@@ -121,6 +121,7 @@ module.exports.Errors.TooManyRequests = class extends Error {
  * @alias module:atlas-api-client.Errors.InternalError
  * @property {string} detail
  * @property {number} error
+ * @property {string} errorCode
  * @property {string} message
  * @property {string} reason
  */

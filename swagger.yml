@@ -1288,6 +1288,8 @@ definitions:
       message:
         x-go-name: unused
         type: string
+      errorCode:
+        type: string
 
   GetClustersResponse:
     type: object

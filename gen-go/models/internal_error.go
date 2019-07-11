@@ -19,6 +19,9 @@ type InternalError struct {
 	// error code
 	ErrorCode int64 `json:"error,omitempty"`
 
+	// error code
+	ErrorCode string `json:"errorCode,omitempty"`
+
 	// message
 	Message string `json:"detail,omitempty"`
 
