@@ -1575,6 +1575,39 @@ definitions:
       analyticsNodes:
         type: integer
 
+  ReplicationSpecEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      numShards:
+        type: integer
+      regionConfig:
+        $ref: "#/definitions/RegionConfig"
+  RegionConfig:
+    type: object
+    properties:
+      US_EAST_1:
+        $ref: "#/definitions/RegionConfigEntry"
+      US_EAST_2:
+        $ref: "#/definitions/RegionConfigEntry"
+      US_WEST_1:
+        $ref: "#/definitions/RegionConfigEntry"
+      US_WEST_2:
+        $ref: "#/definitions/RegionConfigEntry"
+  RegionConfigEntry:
+    type: object
+    properties:
+      electableNodes:
+        type: integer
+      priority:
+        type: number
+      readOnlyNodes:
+        type: integer
+      analyticsNodes:
+        type: integer
+
+
   BIConnectorReadPreference:
     type: string
     enum:
@@ -1638,6 +1671,11 @@ definitions:
         type: number
       replicationSpec:
         $ref: "#/definitions/ReplicationSpec"
+      replicationSpecs:
+        x-omitempty: true
+        type: array
+        items:
+          $ref: "#/definitions/ReplicationSpecEntry"
       stateName:
         $ref: "#/definitions/ClusterState"
       srvAddress:
@@ -1701,6 +1739,11 @@ definitions:
         type: integer
       replicationSpec:
         $ref: "#/definitions/ReplicationSpec"
+      replicationSpecs:
+        x-omitemtpty: true
+        type: array
+        items:
+          $ref: "#/definitions/ReplicationSpecEntry"
 
 
   CreateRestoreJobRequest:

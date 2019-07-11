@@ -81,6 +81,9 @@ type Cluster struct {
 	// replication spec
 	ReplicationSpec *ReplicationSpec `json:"replicationSpec,omitempty"`
 
+	// replication specs
+	ReplicationSpecs []*ReplicationSpecEntry `json:"replicationSpecs,omitempty"`
+
 	// srv address
 	SrvAddress string `json:"srvAddress,omitempty"`
 
@@ -118,6 +121,11 @@ func (m *Cluster) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateReplicationSpec(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateReplicationSpecs(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -247,6 +255,33 @@ func (m *Cluster) validateReplicationSpec(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Cluster) validateReplicationSpecs(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReplicationSpecs) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ReplicationSpecs); i++ {
+
+		if swag.IsZero(m.ReplicationSpecs[i]) { // not required
+			continue
+		}
+
+		if m.ReplicationSpecs[i] != nil {
+
+			if err := m.ReplicationSpecs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("replicationSpecs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
