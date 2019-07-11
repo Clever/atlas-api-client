@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // RegionsConfigEntry regions config entry
@@ -17,25 +18,85 @@ import (
 type RegionsConfigEntry struct {
 
 	// analytics nodes
-	AnalyticsNodes int64 `json:"analyticsNodes,omitempty"`
+	// Required: true
+	AnalyticsNodes *int64 `json:"analyticsNodes"`
 
 	// electable nodes
-	ElectableNodes int64 `json:"electableNodes,omitempty"`
+	// Required: true
+	ElectableNodes *int64 `json:"electableNodes"`
 
 	// priority
-	Priority float64 `json:"priority,omitempty"`
+	// Required: true
+	Priority *float64 `json:"priority"`
 
 	// read only nodes
-	ReadOnlyNodes int64 `json:"readOnlyNodes,omitempty"`
+	// Required: true
+	ReadOnlyNodes *int64 `json:"readOnlyNodes"`
 }
 
 // Validate validates this regions config entry
 func (m *RegionsConfigEntry) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAnalyticsNodes(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateElectableNodes(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validatePriority(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateReadOnlyNodes(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *RegionsConfigEntry) validateAnalyticsNodes(formats strfmt.Registry) error {
+
+	if err := validate.Required("analyticsNodes", "body", m.AnalyticsNodes); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RegionsConfigEntry) validateElectableNodes(formats strfmt.Registry) error {
+
+	if err := validate.Required("electableNodes", "body", m.ElectableNodes); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RegionsConfigEntry) validatePriority(formats strfmt.Registry) error {
+
+	if err := validate.Required("priority", "body", m.Priority); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RegionsConfigEntry) validateReadOnlyNodes(formats strfmt.Registry) error {
+
+	if err := validate.Required("readOnlyNodes", "body", m.ReadOnlyNodes); err != nil {
+		return err
+	}
+
 	return nil
 }
 
