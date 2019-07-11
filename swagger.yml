@@ -1566,13 +1566,13 @@ definitions:
   ReplicationSpecItem:
     type: object
     properties:
+      analyticsNodes:
+        type: integer
       electableNodes:
         type: integer
       priority:
         type: number
       readOnlyNodes:
-        type: integer
-      analyticsNodes:
         type: integer
 
   ReplicationSpecEntry:
@@ -1584,6 +1584,8 @@ definitions:
         type: integer
       regionsConfig:
         $ref: "#/definitions/RegionsConfig"
+      zoneName:
+        type: string
   RegionsConfig:
     type: object
     properties:

@@ -24,6 +24,9 @@ type ReplicationSpecEntry struct {
 
 	// regions config
 	RegionsConfig *RegionsConfig `json:"regionsConfig,omitempty"`
+
+	// zone name
+	ZoneName string `json:"zoneName,omitempty"`
 }
 
 // Validate validates this replication spec entry
