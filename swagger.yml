@@ -1360,6 +1360,7 @@ definitions:
           - US_WEST_1
           - US_WEST_2
           - US_EAST_1
+          - US_EAST_2
       volumeType:
         type: string
         enum:

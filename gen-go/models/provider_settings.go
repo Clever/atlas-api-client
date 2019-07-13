@@ -217,7 +217,7 @@ var providerSettingsTypeRegionNamePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["US_WEST_1","US_WEST_2","US_EAST_1"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["US_WEST_1","US_WEST_2","US_EAST_1","US_EAST_2"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -232,6 +232,8 @@ const (
 	ProviderSettingsRegionNameUSWEST2 string = "US_WEST_2"
 	// ProviderSettingsRegionNameUSEAST1 captures enum value "US_EAST_1"
 	ProviderSettingsRegionNameUSEAST1 string = "US_EAST_1"
+	// ProviderSettingsRegionNameUSEAST2 captures enum value "US_EAST_2"
+	ProviderSettingsRegionNameUSEAST2 string = "US_EAST_2"
 )
 
 // prop value enum
