@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.5.3
+  version: 0.6.0
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -1360,6 +1360,12 @@ definitions:
           - US_WEST_1
           - US_WEST_2
           - US_EAST_1
+          - US_EAST_2
+      volumeType:
+        type: string
+        enum:
+          - STANDARD
+          - PROVISIONED
 
   RestoreJobDelivery:
     type: object
@@ -1552,6 +1558,8 @@ definitions:
     properties:
       US_EAST_1:
         $ref: "#/definitions/ReplicationSpecItem"
+      US_EAST_2:
+        $ref: "#/definitions/ReplicationSpecItem"
       US_WEST_1:
         $ref: "#/definitions/ReplicationSpecItem"
       US_WEST_2:
@@ -1559,12 +1567,69 @@ definitions:
   ReplicationSpecItem:
     type: object
     properties:
+      analyticsNodes:
+        type: integer
       electableNodes:
         type: integer
       priority:
         type: number
       readOnlyNodes:
         type: integer
+
+  ReplicationSpecEntry:
+    type: object
+    properties:
+      id:
+        type: string
+      numShards:
+        type: integer
+      regionsConfig:
+        $ref: "#/definitions/RegionsConfig"
+      zoneName:
+        type: string
+  RegionsConfig:
+    type: object
+    properties:
+      US_EAST_1:
+        $ref: "#/definitions/RegionsConfigEntry"
+      US_EAST_2:
+        $ref: "#/definitions/RegionsConfigEntry"
+      US_WEST_1:
+        $ref: "#/definitions/RegionsConfigEntry"
+      US_WEST_2:
+        $ref: "#/definitions/RegionsConfigEntry"
+  RegionsConfigEntry:
+    type: object
+    required:
+    - electableNodes
+    - priority
+    - readOnlyNodes
+    - analyticsNodes
+    properties:
+      electableNodes:
+        type: integer
+      priority:
+        type: number
+      readOnlyNodes:
+        type: integer
+      analyticsNodes:
+        type: integer
+
+
+  BIConnectorReadPreference:
+    type: string
+    enum:
+      - primary
+      - secondary
+      - analytics
+  BIConnector:
+    type: object
+    properties:
+      enabled:
+        x-nullable: true
+        type: boolean
+      readPreference:
+        $ref: "#/definitions/BIConnectorReadPreference"
 
   Cluster:
     type: object
@@ -1573,9 +1638,21 @@ definitions:
         $ref: "#/definitions/AutoScaling"
       backupEnabled:
         type: boolean
+      biConnector:
+        $ref: "#/definitions/BIConnector"
+      clusterType:
+        $ref: "#/definitions/ClusterType"
       diskSizeGB:
         type: number
       groupId:
+        type: string
+      id:
+        type: string
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+      mongoDBMajorVersion:
         type: string
       mongoDBVersion:
         type: string
@@ -1591,12 +1668,22 @@ definitions:
         type: integer
       paused:
         type: boolean
+      pitEnabled:
+        type: boolean
+      providerBackupEnabled:
+        type: boolean
       providerSettings:
         $ref: "#/definitions/ProviderSettings"
       replicationFactor:
+        x-nullable: true
         type: number
       replicationSpec:
         $ref: "#/definitions/ReplicationSpec"
+      replicationSpecs:
+        x-omitempty: true
+        type: array
+        items:
+          $ref: "#/definitions/ReplicationSpecEntry"
       stateName:
         $ref: "#/definitions/ClusterState"
       srvAddress:
@@ -1610,20 +1697,37 @@ definitions:
     - DELETING
     - DELETED
     - REPAIRING
+  ClusterType:
+    type: string
+    enum:
+    - REPLICASET
+    - SHARDED
+    - GEOSHARDED
 
   CreateOrUpdateClusterRequest:
     type: object
     properties:
       autoScaling:
         $ref: "#/definitions/AutoScaling"
-      name:
-        type: string
+      backupEnabled:
+        x-nullable: true
+        type: boolean
+      biConnector:
+        $ref: "#/definitions/BIConnector"
+      clusterType:
+        $ref: "#/definitions/ClusterType"
+      diskSizeGB:
+        type: number
+        maximum: 4096
       mongoDBMajorVersion:
         type: string
         enum:
           - "3.2"
           - "3.4"
           - "3.6"
+          - "4.0"
+      name:
+        type: string
       numShards:
         type: integer
         default: 1
@@ -1634,18 +1738,20 @@ definitions:
         x-nullable: true
         type: boolean
         description: Indicates whether the cluster is paused or not.
+      providerBackupEnabled:
+        x-nullable: true
+        type: boolean
       providerSettings:
         $ref: "#/definitions/ProviderSettings"
       replicationFactor:
         type: integer
       replicationSpec:
         $ref: "#/definitions/ReplicationSpec"
-      diskSizeGB:
-        type: number
-        maximum: 4096
-      backupEnabled:
-        x-nullable: true
-        type: boolean
+      replicationSpecs:
+        x-omitemtpty: true
+        type: array
+        items:
+          $ref: "#/definitions/ReplicationSpecEntry"
 
 
   CreateRestoreJobRequest:

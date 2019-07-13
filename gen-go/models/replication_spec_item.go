@@ -16,6 +16,9 @@ import (
 // swagger:model ReplicationSpecItem
 type ReplicationSpecItem struct {
 
+	// analytics nodes
+	AnalyticsNodes int64 `json:"analyticsNodes,omitempty"`
+
 	// electable nodes
 	ElectableNodes int64 `json:"electableNodes,omitempty"`
 

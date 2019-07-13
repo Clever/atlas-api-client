@@ -12,25 +12,25 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ReplicationSpec replication spec
-// swagger:model ReplicationSpec
-type ReplicationSpec struct {
+// RegionsConfig regions config
+// swagger:model RegionsConfig
+type RegionsConfig struct {
 
 	// u s e a s t 1
-	USEAST1 *ReplicationSpecItem `json:"US_EAST_1,omitempty"`
+	USEAST1 *RegionsConfigEntry `json:"US_EAST_1,omitempty"`
 
 	// u s e a s t 2
-	USEAST2 *ReplicationSpecItem `json:"US_EAST_2,omitempty"`
+	USEAST2 *RegionsConfigEntry `json:"US_EAST_2,omitempty"`
 
 	// u s w e s t 1
-	USWEST1 *ReplicationSpecItem `json:"US_WEST_1,omitempty"`
+	USWEST1 *RegionsConfigEntry `json:"US_WEST_1,omitempty"`
 
 	// u s w e s t 2
-	USWEST2 *ReplicationSpecItem `json:"US_WEST_2,omitempty"`
+	USWEST2 *RegionsConfigEntry `json:"US_WEST_2,omitempty"`
 }
 
-// Validate validates this replication spec
-func (m *ReplicationSpec) Validate(formats strfmt.Registry) error {
+// Validate validates this regions config
+func (m *RegionsConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateUSEAST1(formats); err != nil {
@@ -59,7 +59,7 @@ func (m *ReplicationSpec) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ReplicationSpec) validateUSEAST1(formats strfmt.Registry) error {
+func (m *RegionsConfig) validateUSEAST1(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.USEAST1) { // not required
 		return nil
@@ -78,7 +78,7 @@ func (m *ReplicationSpec) validateUSEAST1(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ReplicationSpec) validateUSEAST2(formats strfmt.Registry) error {
+func (m *RegionsConfig) validateUSEAST2(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.USEAST2) { // not required
 		return nil
@@ -97,7 +97,7 @@ func (m *ReplicationSpec) validateUSEAST2(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ReplicationSpec) validateUSWEST1(formats strfmt.Registry) error {
+func (m *RegionsConfig) validateUSWEST1(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.USWEST1) { // not required
 		return nil
@@ -116,7 +116,7 @@ func (m *ReplicationSpec) validateUSWEST1(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ReplicationSpec) validateUSWEST2(formats strfmt.Registry) error {
+func (m *RegionsConfig) validateUSWEST2(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.USWEST2) { // not required
 		return nil
@@ -136,7 +136,7 @@ func (m *ReplicationSpec) validateUSWEST2(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *ReplicationSpec) MarshalBinary() ([]byte, error) {
+func (m *RegionsConfig) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -144,8 +144,8 @@ func (m *ReplicationSpec) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *ReplicationSpec) UnmarshalBinary(b []byte) error {
-	var res ReplicationSpec
+func (m *RegionsConfig) UnmarshalBinary(b []byte) error {
+	var res RegionsConfig
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

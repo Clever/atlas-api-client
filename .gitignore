@@ -9,3 +9,5 @@
 
 vendor
 bin
+node_modules
+gen-go/server
