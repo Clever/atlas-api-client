@@ -247,6 +247,72 @@ paths:
           description: "Conflict"
           schema:
             $ref: "#/definitions/Conflict"
+
+  /groups/{groupID}/clusters/{clusterName}/snapshotSchedule:
+    get:
+      operationId: getSnapshotSchedule
+      description: Get snapshot schedules of a cluster
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: clusterName
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/SnapshotSchedule"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+    patch:
+      operationId: updateSnapshotSchedule
+      description: Update a Cluster's snapshot schedule
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: clusterName
+          in: path
+          required: true
+          type: string
+        - name: updateSnapshotSchedule
+          in: body
+          schema:
+            $ref: "#/definitions/UpdateSnapshotScheduleRequest"
+          required: true
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/SnapshotSchedule"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
+
   /groups/{groupID}/clusters/{clusterName}/restoreJobs:
     get:
       operationId: getRestoreJobs
@@ -1552,6 +1618,54 @@ definitions:
         enum:
         - "REPLICA_SET"
         - "CONFIG_SERVER_REPLICA_SET"
+
+  SnapshotSchedule:
+    type: object
+    properties:
+      groupId:
+        type: string
+      clusterId:
+        type: string
+      snapshotIntervalHours:
+        type: integer
+      snapshotRetentionDays:
+        type: integer
+      dailySnapshotRetentionDays:
+        type: integer
+      pointInTimeWindowHours:
+        type: integer
+      clusterCheckpointIntervalMin:
+        type: integer
+      weeklySnapshotRetentionWeeks:
+        type: integer
+      monthlySnapshotRetentionMonths:
+        type: integer
+      links:
+        type: array
+        items:
+          $ref: '#/definitions/Link'
+
+  UpdateSnapshotScheduleRequest:
+    type: object
+    properties:
+      groupId:
+        type: string
+      clusterId:
+        type: string
+      snapshotIntervalHours:
+        type: integer
+      snapshotRetentionDays:
+        type: integer
+      dailySnapshotRetentionDays:
+        type: integer
+      pointInTimeWindowHours:
+        type: integer
+      clusterCheckpointIntervalMin:
+        type: integer
+      weeklySnapshotRetentionWeeks:
+        type: integer
+      monthlySnapshotRetentionMonths:
+        type: integer
 
   ReplicationSpec:
     type: object
