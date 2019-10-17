@@ -168,9 +168,9 @@ class AtlasAPIClient {
 
     if (options.discovery) {
       try {
-        this.address = discovery("atlas-api-client", "http").url();
+        this.address = discovery(options.serviceName || "atlas-api-client", "http").url();
       } catch (e) {
-        this.address = discovery("atlas-api-client", "default").url();
+        this.address = discovery(options.serviceName || "atlas-api-client", "default").url();
       }
     } else if (options.address) {
       this.address = options.address;
@@ -193,7 +193,7 @@ class AtlasAPIClient {
     if (options.logger) {
       this.logger = options.logger;
     } else {
-      this.logger =  new kayvee.logger("atlas-api-client-wagclient");
+      this.logger = new kayvee.logger((options.serviceName || "atlas-api-client") + "-wagclient");
     }
     if (options.tracer) {
       this.tracer = options.tracer;
@@ -202,7 +202,7 @@ class AtlasAPIClient {
     }
 
     const circuitOptions = Object.assign({}, defaultCircuitOptions, options.circuit);
-    this._hystrixCommand = commandFactory.getOrCreate("atlas-api-client").
+    this._hystrixCommand = commandFactory.getOrCreate(options.serviceName || "atlas-api-client").
       errorHandler(this._hystrixCommandErrorHandler).
       circuitBreakerForceClosed(circuitOptions.forceClosed).
       requestVolumeRejectionThreshold(circuitOptions.maxConcurrentRequests).
@@ -1259,6 +1259,289 @@ class AtlasAPIClient {
       }
   
       requestOptions.body = params.createRestoreJobRequest;
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Get snapshot schedules of a cluster
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.clusterName
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getSnapshotSchedule(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getSnapshotSchedule, arguments), callback);
+  }
+
+  _getSnapshotSchedule(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.clusterName) {
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshotSchedule");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/snapshotSchedule",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+  
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+            
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+            
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
+   * Update a Cluster's snapshot schedule
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.clusterName
+   * @param params.updateSnapshotSchedule
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  updateSnapshotSchedule(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._updateSnapshotSchedule, arguments), callback);
+  }
+
+  _updateSnapshotSchedule(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.clusterName) {
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span) {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshotSchedule");
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "PATCH",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/snapshotSchedule",
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+  
+      requestOptions.body = params.updateSnapshotSchedule;
   
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;

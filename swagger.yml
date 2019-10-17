@@ -1511,7 +1511,7 @@ definitions:
           - "BROKEN"
           - "KILLED"
       timestamp:
-        $ref: "#definitions/SnapshotTimestamp"
+        $ref: "#/definitions/SnapshotTimestamp"
   RestoreJobResponseHash:
     type: object
     properties:
