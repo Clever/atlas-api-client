@@ -54,7 +54,7 @@ type RestoreJob struct {
 	StatusName string `json:"statusName,omitempty"`
 
 	// timestamp
-	Timestamp SnapshotTimestamp `json:"timestamp,omitempty"`
+	Timestamp *SnapshotTimestamp `json:"timestamp,omitempty"`
 }
 
 // Validate validates this restore job
@@ -77,6 +77,11 @@ func (m *RestoreJob) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStatusName(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateTimestamp(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -200,6 +205,25 @@ func (m *RestoreJob) validateStatusName(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateStatusNameEnum("statusName", "body", m.StatusName); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *RestoreJob) validateTimestamp(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Timestamp) { // not required
+		return nil
+	}
+
+	if m.Timestamp != nil {
+
+		if err := m.Timestamp.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("timestamp")
+			}
+			return err
+		}
 	}
 
 	return nil
