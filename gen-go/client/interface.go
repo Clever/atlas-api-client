@@ -102,28 +102,6 @@ type Client interface {
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	CreateRestoreJob(ctx context.Context, i *models.CreateRestoreJobInput) (*models.CreateRestoreJobResponse, error)
 
-	// GetSnapshotSchedule makes a GET request to /groups/{groupID}/clusters/{clusterName}/snapshotSchedule
-	// Get snapshot schedules of a cluster
-	// 200: *models.SnapshotSchedule
-	// 400: *models.BadRequest
-	// 404: *models.NotFound
-	// 500: *models.InternalError
-	// default: client side HTTP errors, for example: context.DeadlineExceeded.
-	GetSnapshotSchedule(ctx context.Context, i *models.GetSnapshotScheduleInput) (*models.SnapshotSchedule, error)
-
-	// UpdateSnapshotSchedule makes a PATCH request to /groups/{groupID}/clusters/{clusterName}/snapshotSchedule
-	// Update a Cluster's snapshot schedule
-	// 200: *models.SnapshotSchedule
-	// 400: *models.BadRequest
-	// 401: *models.Unauthorized
-	// 403: *models.Forbidden
-	// 404: *models.NotFound
-	// 409: *models.Conflict
-	// 429: *models.TooManyRequests
-	// 500: *models.InternalError
-	// default: client side HTTP errors, for example: context.DeadlineExceeded.
-	UpdateSnapshotSchedule(ctx context.Context, i *models.UpdateSnapshotScheduleInput) (*models.SnapshotSchedule, error)
-
 	// GetSnapshots makes a GET request to /groups/{groupID}/clusters/{clusterName}/snapshots
 	// Gets snapshots for a cluster
 	// 200: *models.GetSnapshotsResponse
