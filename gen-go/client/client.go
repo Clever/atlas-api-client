@@ -22,11 +22,17 @@ var _ = strings.Replace
 var _ = strconv.FormatInt
 var _ = bytes.Compare
 
+// Version of the client.
+const Version = "0.6.3"
+
+// VersionHeader is sent with every request.
+const VersionHeader = "X-Client-Version"
+
 // WagClient is used to make requests to the atlas-api-client service.
 type WagClient struct {
 	basePath    string
 	requestDoer doer
-	transport   http.RoundTripper
+	client      *http.Client
 	timeout     time.Duration
 	// Keep the retry doer around so that we can set the number of retries
 	retryDoer *retryDoer
@@ -56,12 +62,12 @@ func New(basePath string) *WagClient {
 	}
 	circuit.init()
 	client := &WagClient{
+		basePath:       basePath,
 		requestDoer:    circuit,
+		client:         &http.Client{Transport: http.DefaultTransport},
 		retryDoer:      &retry,
 		circuitDoer:    circuit,
 		defaultTimeout: 5 * time.Second,
-		transport:      &http.Transport{},
-		basePath:       basePath,
 		logger:         logger,
 	}
 	client.SetCircuitBreakerSettings(DefaultCircuitBreakerSettings)
@@ -144,7 +150,7 @@ func (c *WagClient) SetTimeout(timeout time.Duration) {
 
 // SetTransport sets the http transport used by the client.
 func (c *WagClient) SetTransport(t http.RoundTripper) {
-	c.transport = t
+	c.client.Transport = t
 }
 
 // GetClusters makes a GET request to /groups/{groupID}/clusters
@@ -180,9 +186,9 @@ func (c *WagClient) GetClusters(ctx context.Context, groupID string) (*models.Ge
 }
 
 func (c *WagClient) doGetClustersRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetClustersResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getClusters")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -199,7 +205,7 @@ func (c *WagClient) doGetClustersRequest(ctx context.Context, req *http.Request,
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -338,9 +344,9 @@ func (c *WagClient) CreateCluster(ctx context.Context, i *models.CreateClusterIn
 }
 
 func (c *WagClient) doCreateClusterRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Cluster, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "createCluster")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -357,7 +363,7 @@ func (c *WagClient) doCreateClusterRequest(ctx context.Context, req *http.Reques
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -485,9 +491,9 @@ func (c *WagClient) DeleteCluster(ctx context.Context, i *models.DeleteClusterIn
 }
 
 func (c *WagClient) doDeleteClusterRequest(ctx context.Context, req *http.Request, headers map[string]string) error {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "deleteCluster")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -504,7 +510,7 @@ func (c *WagClient) doDeleteClusterRequest(ctx context.Context, req *http.Reques
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -627,9 +633,9 @@ func (c *WagClient) GetCluster(ctx context.Context, i *models.GetClusterInput) (
 }
 
 func (c *WagClient) doGetClusterRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Cluster, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getCluster")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -646,7 +652,7 @@ func (c *WagClient) doGetClusterRequest(ctx context.Context, req *http.Request, 
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -785,9 +791,9 @@ func (c *WagClient) UpdateCluster(ctx context.Context, i *models.UpdateClusterIn
 }
 
 func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Cluster, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "updateCluster")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -804,7 +810,7 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -932,9 +938,9 @@ func (c *WagClient) GetRestoreJobs(ctx context.Context, i *models.GetRestoreJobs
 }
 
 func (c *WagClient) doGetRestoreJobsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetRestoreJobsResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getRestoreJobs")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -951,7 +957,7 @@ func (c *WagClient) doGetRestoreJobsRequest(ctx context.Context, req *http.Reque
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -1090,9 +1096,9 @@ func (c *WagClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestor
 }
 
 func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.CreateRestoreJobResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "createRestoreJob")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -1109,7 +1115,7 @@ func (c *WagClient) doCreateRestoreJobRequest(ctx context.Context, req *http.Req
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -1233,9 +1239,9 @@ func (c *WagClient) GetSnapshotSchedule(ctx context.Context, i *models.GetSnapsh
 }
 
 func (c *WagClient) doGetSnapshotScheduleRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.SnapshotSchedule, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getSnapshotSchedule")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -1252,7 +1258,7 @@ func (c *WagClient) doGetSnapshotScheduleRequest(ctx context.Context, req *http.
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -1359,9 +1365,9 @@ func (c *WagClient) UpdateSnapshotSchedule(ctx context.Context, i *models.Update
 }
 
 func (c *WagClient) doUpdateSnapshotScheduleRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.SnapshotSchedule, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "updateSnapshotSchedule")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -1378,7 +1384,7 @@ func (c *WagClient) doUpdateSnapshotScheduleRequest(ctx context.Context, req *ht
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -1503,9 +1509,9 @@ func (c *WagClient) GetSnapshots(ctx context.Context, i *models.GetSnapshotsInpu
 }
 
 func (c *WagClient) doGetSnapshotsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetSnapshotsResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getSnapshots")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -1522,7 +1528,7 @@ func (c *WagClient) doGetSnapshotsRequest(ctx context.Context, req *http.Request
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -1626,9 +1632,9 @@ func (c *WagClient) GetRestoreJob(ctx context.Context, i *models.GetRestoreJobIn
 }
 
 func (c *WagClient) doGetRestoreJobRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.RestoreJob, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getRestoreJob")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -1645,7 +1651,7 @@ func (c *WagClient) doGetRestoreJobRequest(ctx context.Context, req *http.Reques
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -1773,9 +1779,9 @@ func (c *WagClient) GetContainers(ctx context.Context, groupID string) (*models.
 }
 
 func (c *WagClient) doGetContainersRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetContainersResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getContainers")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -1792,7 +1798,7 @@ func (c *WagClient) doGetContainersRequest(ctx context.Context, req *http.Reques
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -1931,9 +1937,9 @@ func (c *WagClient) CreateContainer(ctx context.Context, i *models.CreateContain
 }
 
 func (c *WagClient) doCreateContainerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Container, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "createContainer")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -1950,7 +1956,7 @@ func (c *WagClient) doCreateContainerRequest(ctx context.Context, req *http.Requ
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -2075,9 +2081,9 @@ func (c *WagClient) GetContainer(ctx context.Context, i *models.GetContainerInpu
 }
 
 func (c *WagClient) doGetContainerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Container, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getContainer")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -2094,7 +2100,7 @@ func (c *WagClient) doGetContainerRequest(ctx context.Context, req *http.Request
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -2209,9 +2215,9 @@ func (c *WagClient) UpdateContainer(ctx context.Context, i *models.UpdateContain
 }
 
 func (c *WagClient) doUpdateContainerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Container, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "updateContainer")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -2228,7 +2234,7 @@ func (c *WagClient) doUpdateContainerRequest(ctx context.Context, req *http.Requ
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -2356,9 +2362,9 @@ func (c *WagClient) GetDatabaseUsers(ctx context.Context, groupID string) (*mode
 }
 
 func (c *WagClient) doGetDatabaseUsersRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetDatabaseUsersResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getDatabaseUsers")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -2375,7 +2381,7 @@ func (c *WagClient) doGetDatabaseUsersRequest(ctx context.Context, req *http.Req
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -2514,9 +2520,9 @@ func (c *WagClient) CreateDatabaseUser(ctx context.Context, i *models.CreateData
 }
 
 func (c *WagClient) doCreateDatabaseUserRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.DatabaseUser, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "createDatabaseUser")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -2533,7 +2539,7 @@ func (c *WagClient) doCreateDatabaseUserRequest(ctx context.Context, req *http.R
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -2661,9 +2667,9 @@ func (c *WagClient) DeleteDatabaseUser(ctx context.Context, i *models.DeleteData
 }
 
 func (c *WagClient) doDeleteDatabaseUserRequest(ctx context.Context, req *http.Request, headers map[string]string) error {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "deleteDatabaseUser")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -2680,7 +2686,7 @@ func (c *WagClient) doDeleteDatabaseUserRequest(ctx context.Context, req *http.R
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -2800,9 +2806,9 @@ func (c *WagClient) GetDatabaseUser(ctx context.Context, i *models.GetDatabaseUs
 }
 
 func (c *WagClient) doGetDatabaseUserRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.DatabaseUser, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getDatabaseUser")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -2819,7 +2825,7 @@ func (c *WagClient) doGetDatabaseUserRequest(ctx context.Context, req *http.Requ
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -2934,9 +2940,9 @@ func (c *WagClient) UpdateDatabaseUser(ctx context.Context, i *models.UpdateData
 }
 
 func (c *WagClient) doUpdateDatabaseUserRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.DatabaseUser, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "updateDatabaseUser")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -2953,7 +2959,7 @@ func (c *WagClient) doUpdateDatabaseUserRequest(ctx context.Context, req *http.R
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3078,9 +3084,9 @@ func (c *WagClient) GetPeers(ctx context.Context, groupID string) (*models.GetPe
 }
 
 func (c *WagClient) doGetPeersRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetPeersResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getPeers")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -3097,7 +3103,7 @@ func (c *WagClient) doGetPeersRequest(ctx context.Context, req *http.Request, he
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3209,9 +3215,9 @@ func (c *WagClient) CreatePeer(ctx context.Context, i *models.CreatePeerInput) (
 }
 
 func (c *WagClient) doCreatePeerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Peer, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "createPeer")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -3228,7 +3234,7 @@ func (c *WagClient) doCreatePeerRequest(ctx context.Context, req *http.Request, 
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3329,9 +3335,9 @@ func (c *WagClient) DeletePeer(ctx context.Context, i *models.DeletePeerInput) e
 }
 
 func (c *WagClient) doDeletePeerRequest(ctx context.Context, req *http.Request, headers map[string]string) error {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "deletePeer")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -3348,7 +3354,7 @@ func (c *WagClient) doDeletePeerRequest(ctx context.Context, req *http.Request, 
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3443,9 +3449,9 @@ func (c *WagClient) GetPeer(ctx context.Context, i *models.GetPeerInput) (*model
 }
 
 func (c *WagClient) doGetPeerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Peer, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getPeer")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -3462,7 +3468,7 @@ func (c *WagClient) doGetPeerRequest(ctx context.Context, req *http.Request, hea
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3566,9 +3572,9 @@ func (c *WagClient) UpdatePeer(ctx context.Context, i *models.UpdatePeerInput) (
 }
 
 func (c *WagClient) doUpdatePeerRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.Peer, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "updatePeer")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -3585,7 +3591,7 @@ func (c *WagClient) doUpdatePeerRequest(ctx context.Context, req *http.Request, 
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3689,9 +3695,9 @@ func (c *WagClient) GetProcesses(ctx context.Context, groupID string) (*models.G
 }
 
 func (c *WagClient) doGetProcessesRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetProcessesResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getProcesses")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -3708,7 +3714,7 @@ func (c *WagClient) doGetProcessesRequest(ctx context.Context, req *http.Request
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3836,9 +3842,9 @@ func (c *WagClient) GetProcessDatabases(ctx context.Context, i *models.GetProces
 }
 
 func (c *WagClient) doGetProcessDatabasesRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetProcessDatabasesResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getProcessDatabases")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -3855,7 +3861,7 @@ func (c *WagClient) doGetProcessDatabasesRequest(ctx context.Context, req *http.
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -3983,9 +3989,9 @@ func (c *WagClient) GetProcessDatabaseMeasurements(ctx context.Context, i *model
 }
 
 func (c *WagClient) doGetProcessDatabaseMeasurementsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetProcessDatabaseMeasurementsResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getProcessDatabaseMeasurements")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -4002,7 +4008,7 @@ func (c *WagClient) doGetProcessDatabaseMeasurementsRequest(ctx context.Context,
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -4130,9 +4136,9 @@ func (c *WagClient) GetProcessDisks(ctx context.Context, i *models.GetProcessDis
 }
 
 func (c *WagClient) doGetProcessDisksRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetProcessDisksResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getProcessDisks")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -4149,7 +4155,7 @@ func (c *WagClient) doGetProcessDisksRequest(ctx context.Context, req *http.Requ
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -4277,9 +4283,9 @@ func (c *WagClient) GetProcessDiskMeasurements(ctx context.Context, i *models.Ge
 }
 
 func (c *WagClient) doGetProcessDiskMeasurementsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetProcessDiskMeasurementsResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getProcessDiskMeasurements")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -4296,7 +4302,7 @@ func (c *WagClient) doGetProcessDiskMeasurementsRequest(ctx context.Context, req
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode
@@ -4424,9 +4430,9 @@ func (c *WagClient) GetProcessMeasurements(ctx context.Context, i *models.GetPro
 }
 
 func (c *WagClient) doGetProcessMeasurementsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetProcessMeasurementsResponse, error) {
-	client := &http.Client{Transport: c.transport}
-
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getProcessMeasurements")
+	req.Header.Set(VersionHeader, Version)
 
 	for field, value := range headers {
 		req.Header.Set(field, value)
@@ -4443,7 +4449,7 @@ func (c *WagClient) doGetProcessMeasurementsRequest(ctx context.Context, req *ht
 		defer cancel()
 		req = req.WithContext(ctx)
 	}
-	resp, err := c.requestDoer.Do(client, req)
+	resp, err := c.requestDoer.Do(c.client, req)
 	retCode := 0
 	if resp != nil {
 		retCode = resp.StatusCode

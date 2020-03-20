@@ -49,21 +49,173 @@ interface AddressOptions {
   address: string;
 }
 
-type AtlasAPIClientOptions = (DiscoveryOptions | AddressOptions) & GenericOptions; 
+type AtlasAPIClientOptions = (DiscoveryOptions | AddressOptions) & GenericOptions;
 
+import models = AtlasAPIClient.Models
 
-type AutoScaling = {
+declare class AtlasAPIClient {
+  constructor(options: AtlasAPIClientOptions);
+
+  
+  getClusters(groupID: string, options?: RequestOptions, cb?: Callback<models.GetClustersResponse>): Promise<models.GetClustersResponse>
+  
+  createCluster(params: models.CreateClusterParams, options?: RequestOptions, cb?: Callback<models.Cluster>): Promise<models.Cluster>
+  
+  deleteCluster(params: models.DeleteClusterParams, options?: RequestOptions, cb?: Callback<void>): Promise<void>
+  
+  getCluster(params: models.GetClusterParams, options?: RequestOptions, cb?: Callback<models.Cluster>): Promise<models.Cluster>
+  
+  updateCluster(params: models.UpdateClusterParams, options?: RequestOptions, cb?: Callback<models.Cluster>): Promise<models.Cluster>
+  
+  getRestoreJobs(params: models.GetRestoreJobsParams, options?: RequestOptions, cb?: Callback<models.GetRestoreJobsResponse>): Promise<models.GetRestoreJobsResponse>
+  
+  createRestoreJob(params: models.CreateRestoreJobParams, options?: RequestOptions, cb?: Callback<models.CreateRestoreJobResponse>): Promise<models.CreateRestoreJobResponse>
+  
+  getSnapshotSchedule(params: models.GetSnapshotScheduleParams, options?: RequestOptions, cb?: Callback<models.SnapshotSchedule>): Promise<models.SnapshotSchedule>
+  
+  updateSnapshotSchedule(params: models.UpdateSnapshotScheduleParams, options?: RequestOptions, cb?: Callback<models.SnapshotSchedule>): Promise<models.SnapshotSchedule>
+  
+  getSnapshots(params: models.GetSnapshotsParams, options?: RequestOptions, cb?: Callback<models.GetSnapshotsResponse>): Promise<models.GetSnapshotsResponse>
+  
+  getRestoreJob(params: models.GetRestoreJobParams, options?: RequestOptions, cb?: Callback<models.RestoreJob>): Promise<models.RestoreJob>
+  
+  getContainers(groupID: string, options?: RequestOptions, cb?: Callback<models.GetContainersResponse>): Promise<models.GetContainersResponse>
+  
+  createContainer(params: models.CreateContainerParams, options?: RequestOptions, cb?: Callback<models.Container>): Promise<models.Container>
+  
+  getContainer(params: models.GetContainerParams, options?: RequestOptions, cb?: Callback<models.Container>): Promise<models.Container>
+  
+  updateContainer(params: models.UpdateContainerParams, options?: RequestOptions, cb?: Callback<models.Container>): Promise<models.Container>
+  
+  getDatabaseUsers(groupID: string, options?: RequestOptions, cb?: Callback<models.GetDatabaseUsersResponse>): Promise<models.GetDatabaseUsersResponse>
+  
+  createDatabaseUser(params: models.CreateDatabaseUserParams, options?: RequestOptions, cb?: Callback<models.DatabaseUser>): Promise<models.DatabaseUser>
+  
+  deleteDatabaseUser(params: models.DeleteDatabaseUserParams, options?: RequestOptions, cb?: Callback<void>): Promise<void>
+  
+  getDatabaseUser(params: models.GetDatabaseUserParams, options?: RequestOptions, cb?: Callback<models.DatabaseUser>): Promise<models.DatabaseUser>
+  
+  updateDatabaseUser(params: models.UpdateDatabaseUserParams, options?: RequestOptions, cb?: Callback<models.DatabaseUser>): Promise<models.DatabaseUser>
+  
+  getPeers(groupID: string, options?: RequestOptions, cb?: Callback<models.GetPeersResponse>): Promise<models.GetPeersResponse>
+  
+  createPeer(params: models.CreatePeerParams, options?: RequestOptions, cb?: Callback<models.Peer>): Promise<models.Peer>
+  
+  deletePeer(params: models.DeletePeerParams, options?: RequestOptions, cb?: Callback<void>): Promise<void>
+  
+  getPeer(params: models.GetPeerParams, options?: RequestOptions, cb?: Callback<models.Peer>): Promise<models.Peer>
+  
+  updatePeer(params: models.UpdatePeerParams, options?: RequestOptions, cb?: Callback<models.Peer>): Promise<models.Peer>
+  
+  getProcesses(groupID: string, options?: RequestOptions, cb?: Callback<models.GetProcessesResponse>): Promise<models.GetProcessesResponse>
+  
+  getProcessDatabases(params: models.GetProcessDatabasesParams, options?: RequestOptions, cb?: Callback<models.GetProcessDatabasesResponse>): Promise<models.GetProcessDatabasesResponse>
+  
+  getProcessDatabaseMeasurements(params: models.GetProcessDatabaseMeasurementsParams, options?: RequestOptions, cb?: Callback<models.GetProcessDatabaseMeasurementsResponse>): Promise<models.GetProcessDatabaseMeasurementsResponse>
+  
+  getProcessDisks(params: models.GetProcessDisksParams, options?: RequestOptions, cb?: Callback<models.GetProcessDisksResponse>): Promise<models.GetProcessDisksResponse>
+  
+  getProcessDiskMeasurements(params: models.GetProcessDiskMeasurementsParams, options?: RequestOptions, cb?: Callback<models.GetProcessDiskMeasurementsResponse>): Promise<models.GetProcessDiskMeasurementsResponse>
+  
+  getProcessMeasurements(params: models.GetProcessMeasurementsParams, options?: RequestOptions, cb?: Callback<models.GetProcessMeasurementsResponse>): Promise<models.GetProcessMeasurementsResponse>
+  
+}
+
+declare namespace AtlasAPIClient {
+  const RetryPolicies: {
+    Single: RetryPolicy;
+    Exponential: RetryPolicy;
+    None: RetryPolicy;
+  }
+
+  const DefaultCircuitOptions: CircuitOptions;
+
+  namespace Errors {
+    interface ErrorBody {
+      message: string;
+      [key: string]: any;
+    }
+
+    
+    class BadRequest {
+  detail?: string;
+  error?: number;
+  message?: string;
+  reason?: string;
+
+  constructor(body: ErrorBody);
+}
+    
+    class Unauthorized {
+  detail?: string;
+  error?: number;
+  message?: string;
+  reason?: string;
+
+  constructor(body: ErrorBody);
+}
+    
+    class Forbidden {
+  detail?: string;
+  error?: number;
+  message?: string;
+  reason?: string;
+
+  constructor(body: ErrorBody);
+}
+    
+    class NotFound {
+  detail?: string;
+  error?: number;
+  message?: string;
+  reason?: string;
+
+  constructor(body: ErrorBody);
+}
+    
+    class Conflict {
+  detail?: string;
+  error?: number;
+  message?: string;
+  reason?: string;
+
+  constructor(body: ErrorBody);
+}
+    
+    class TooManyRequests {
+  detail?: string;
+  error?: number;
+  message?: string;
+  reason?: string;
+
+  constructor(body: ErrorBody);
+}
+    
+    class InternalError {
+  detail?: string;
+  error?: number;
+  message?: string;
+  reason?: string;
+
+  constructor(body: ErrorBody);
+}
+    
+  }
+
+  namespace Models {
+    
+    type AutoScaling = {
   diskGBEnabled?: boolean;
 };
-
-type BIConnector = {
+    
+    type BIConnector = {
   enabled?: boolean;
   readPreference?: BIConnectorReadPreference;
 };
-
-type BIConnectorReadPreference = ("primary" | "secondary" | "analytics");
-
-type Cluster = {
+    
+    type BIConnectorReadPreference = ("primary" | "secondary" | "analytics");
+    
+    type Cluster = {
   autoScaling?: AutoScaling;
   backupEnabled?: boolean;
   biConnector?: BIConnector;
@@ -89,19 +241,19 @@ type Cluster = {
   srvAddress?: string;
   stateName?: ClusterState;
 };
-
-type ClusterState = ("IDLE" | "CREATING" | "UPDATING" | "DELETING" | "DELETED" | "REPAIRING");
-
-type ClusterType = ("REPLICASET" | "SHARDED" | "GEOSHARDED");
-
-type Conflict = {
+    
+    type ClusterState = ("IDLE" | "CREATING" | "UPDATING" | "DELETING" | "DELETED" | "REPAIRING");
+    
+    type ClusterType = ("REPLICASET" | "SHARDED" | "GEOSHARDED");
+    
+    type Conflict = {
   detail?: string;
   error?: number;
   message?: string;
   reason?: string;
 };
-
-type Container = {
+    
+    type Container = {
   atlasCidrBlock?: string;
   id?: string;
   providerName?: string;
@@ -109,27 +261,27 @@ type Container = {
   regionName?: string;
   vpcId?: string;
 };
-
-type CreateClusterParams = {
+    
+    type CreateClusterParams = {
   groupID: string;
   createOrUpdateClusterRequest: CreateOrUpdateClusterRequest;
 };
-
-type CreateContainerParams = {
+    
+    type CreateContainerParams = {
   groupID: string;
   createOrUpdateContainerRequest: CreateOrUpdateContainerRequest;
 };
-
-type CreateDatabaseUserParams = {
+    
+    type CreateDatabaseUserParams = {
   groupID: string;
   createDatabaseUserRequest: CreateDatabaseUserRequest;
 };
-
-type CreateDatabaseUserRequest = {
+    
+    type CreateDatabaseUserRequest = {
   
 };
-
-type CreateOrUpdateClusterRequest = {
+    
+    type CreateOrUpdateClusterRequest = {
   autoScaling?: AutoScaling;
   backupEnabled?: boolean;
   biConnector?: BIConnector;
@@ -145,19 +297,19 @@ type CreateOrUpdateClusterRequest = {
   replicationSpec?: ReplicationSpec;
   replicationSpecs?: ReplicationSpecEntry[];
 };
-
-type CreateOrUpdateContainerRequest = {
+    
+    type CreateOrUpdateContainerRequest = {
   atlasCidrBlock?: string;
   providerName?: ("AWS");
   regionName?: string;
 };
-
-type CreatePeerParams = {
+    
+    type CreatePeerParams = {
   groupID: string;
   createPeerRequest: CreatePeerRequest;
 };
-
-type CreatePeerRequest = {
+    
+    type CreatePeerRequest = {
   accepterRegionName?: string;
   awsAccountId?: string;
   containerId?: string;
@@ -165,117 +317,117 @@ type CreatePeerRequest = {
   routeTableCidrBlock?: string;
   vpcId?: string;
 };
-
-type CreateRestoreJobParams = {
+    
+    type CreateRestoreJobParams = {
   groupID: string;
   clusterName: string;
   createRestoreJobRequest: CreateRestoreJobRequest;
 };
-
-type CreateRestoreJobRequest = {
+    
+    type CreateRestoreJobRequest = {
   delivery: RestoreJobDelivery;
   pointInTimeUTCMillis?: string;
   snapshotId?: string;
 };
-
-type CreateRestoreJobResponse = {
+    
+    type CreateRestoreJobResponse = {
   results?: RestoreJob[];
   totalCount?: number;
 };
-
-type DataPoint = {
+    
+    type DataPoint = {
   timestamp?: string;
   value?: number;
 };
-
-type Database = {
+    
+    type Database = {
   databaseName?: string;
   links?: Link[];
 };
-
-type DatabaseUser = {
+    
+    type DatabaseUser = {
   databaseName?: string;
   groupId?: string;
   links?: Link[];
   roles?: Role[];
   username?: string;
 };
-
-type DeleteClusterParams = {
+    
+    type DeleteClusterParams = {
   groupID: string;
   clusterName: string;
 };
-
-type DeleteDatabaseUserParams = {
+    
+    type DeleteDatabaseUserParams = {
   groupID: string;
   username: string;
 };
-
-type DeletePeerParams = {
+    
+    type DeletePeerParams = {
   groupID: string;
   peerID: string;
 };
-
-type Disk = {
+    
+    type Disk = {
   links?: Link[];
   partitionName?: string;
 };
-
-type Forbidden = {
+    
+    type Forbidden = {
   detail?: string;
   error?: number;
   message?: string;
   reason?: string;
 };
-
-type GetClusterParams = {
+    
+    type GetClusterParams = {
   groupID: string;
   clusterName: string;
 };
-
-type GetClustersResponse = {
+    
+    type GetClustersResponse = {
   results?: Cluster[];
   totalCount?: number;
 };
-
-type GetContainerParams = {
+    
+    type GetContainerParams = {
   groupID: string;
   containerID: string;
 };
-
-type GetContainersResponse = {
+    
+    type GetContainersResponse = {
   links?: Link[];
   results?: Container[];
   totalCount?: number;
 };
-
-type GetDatabaseUserParams = {
+    
+    type GetDatabaseUserParams = {
   groupID: string;
   username: string;
 };
-
-type GetDatabaseUsersResponse = {
+    
+    type GetDatabaseUsersResponse = {
   results?: DatabaseUser[];
   totalCount?: number;
 };
-
-type GetPeerParams = {
+    
+    type GetPeerParams = {
   groupID: string;
   peerID: string;
 };
-
-type GetPeersResponse = {
+    
+    type GetPeersResponse = {
   links?: Link[];
   results?: Peer[];
   totalCount?: number;
 };
-
-type GetProcessDatabaseMeasurementsParams = {
+    
+    type GetProcessDatabaseMeasurementsParams = {
   groupID: string;
   host: string;
   port: number;
   databaseID: string;
-  granularity: string;
+  granularity: ("PT1M" | "PT5M" | "PT1H" | "P1D");
   period?: string;
   start?: string;
   end?: string;
@@ -283,8 +435,8 @@ type GetProcessDatabaseMeasurementsParams = {
   pageNum?: number;
   itemsPerPage?: number;
 };
-
-type GetProcessDatabaseMeasurementsResponse = {
+    
+    type GetProcessDatabaseMeasurementsResponse = {
   databaseName?: string;
   end?: string;
   granularity?: Granularity;
@@ -295,27 +447,27 @@ type GetProcessDatabaseMeasurementsResponse = {
   processId?: string;
   start?: string;
 };
-
-type GetProcessDatabasesParams = {
+    
+    type GetProcessDatabasesParams = {
   groupID: string;
   host: string;
   port: number;
   pageNum?: number;
   itemsPerPage?: number;
 };
-
-type GetProcessDatabasesResponse = {
+    
+    type GetProcessDatabasesResponse = {
   links?: Link[];
   results?: Database[];
   totalCount?: number;
 };
-
-type GetProcessDiskMeasurementsParams = {
+    
+    type GetProcessDiskMeasurementsParams = {
   groupID: string;
   host: string;
   port: number;
   diskName: string;
-  granularity: string;
+  granularity: ("PT1M" | "PT5M" | "PT1H" | "P1D");
   period?: string;
   start?: string;
   end?: string;
@@ -323,8 +475,8 @@ type GetProcessDiskMeasurementsParams = {
   pageNum?: number;
   itemsPerPage?: number;
 };
-
-type GetProcessDiskMeasurementsResponse = {
+    
+    type GetProcessDiskMeasurementsResponse = {
   end?: string;
   granularity?: Granularity;
   groupId?: string;
@@ -335,26 +487,26 @@ type GetProcessDiskMeasurementsResponse = {
   processId?: string;
   start?: string;
 };
-
-type GetProcessDisksParams = {
+    
+    type GetProcessDisksParams = {
   groupID: string;
   host: string;
   port: number;
   pageNum?: number;
   itemsPerPage?: number;
 };
-
-type GetProcessDisksResponse = {
+    
+    type GetProcessDisksResponse = {
   links?: Link[];
   results?: Disk[];
   totalCount?: number;
 };
-
-type GetProcessMeasurementsParams = {
+    
+    type GetProcessMeasurementsParams = {
   groupID: string;
   host: string;
   port: number;
-  granularity: string;
+  granularity: ("PT1M" | "PT5M" | "PT1H" | "P1D");
   period?: string;
   start?: string;
   end?: string;
@@ -362,8 +514,8 @@ type GetProcessMeasurementsParams = {
   pageNum?: number;
   itemsPerPage?: number;
 };
-
-type GetProcessMeasurementsResponse = {
+    
+    type GetProcessMeasurementsResponse = {
   end?: string;
   granularity?: Granularity;
   groupId?: string;
@@ -373,61 +525,61 @@ type GetProcessMeasurementsResponse = {
   processId?: string;
   start?: string;
 };
-
-type GetProcessesResponse = {
+    
+    type GetProcessesResponse = {
   links?: Link[];
   results?: Process[];
   totalCount?: number;
 };
-
-type GetRestoreJobParams = {
+    
+    type GetRestoreJobParams = {
   groupID: string;
   sourceClusterName: string;
   jobID: string;
 };
-
-type GetRestoreJobsParams = {
+    
+    type GetRestoreJobsParams = {
   groupID: string;
   clusterName: string;
   pageNum?: number;
   itemsPerPage?: number;
 };
-
-type GetRestoreJobsResponse = {
+    
+    type GetRestoreJobsResponse = {
   results?: RestoreJob[];
   totalCount?: number;
 };
-
-type GetSnapshotScheduleParams = {
+    
+    type GetSnapshotScheduleParams = {
   groupID: string;
   clusterName: string;
 };
-
-type GetSnapshotsParams = {
+    
+    type GetSnapshotsParams = {
   groupID: string;
   clusterName: string;
 };
-
-type GetSnapshotsResponse = {
+    
+    type GetSnapshotsResponse = {
   links?: Link[];
   results?: Snapshot[];
   totalCount?: number;
 };
-
-type Granularity = ("PT1M" | "PT5M" | "PT1H" | "P1D");
-
-type Link = {
+    
+    type Granularity = ("PT1M" | "PT5M" | "PT1H" | "P1D");
+    
+    type Link = {
   href?: string;
   rel?: string;
 };
-
-type Measurement = {
+    
+    type Measurement = {
   dataPoints?: DataPoint[];
   name?: string;
   units?: Units;
 };
-
-type Peer = {
+    
+    type Peer = {
   accepterRegionName?: string;
   awsAccountId?: string;
   connectionId?: string;
@@ -438,12 +590,12 @@ type Peer = {
   statusName?: PeerStatus;
   vpcId?: string;
 };
-
-type PeerErrorState = ("REJECTED" | "EXPIRED" | "INVALID_ARGUMENT");
-
-type PeerStatus = ("INITIATING" | "PENDING_ACCEPTANCE" | "FAILED" | "FINALIZING" | "AVAILABLE" | "TERMINATING");
-
-type Process = {
+    
+    type PeerErrorState = ("REJECTED" | "EXPIRED" | "INVALID_ARGUMENT");
+    
+    type PeerStatus = ("INITIATING" | "PENDING_ACCEPTANCE" | "FAILED" | "FINALIZING" | "AVAILABLE" | "TERMINATING");
+    
+    type Process = {
   created?: string;
   groupId?: string;
   hostname?: string;
@@ -456,55 +608,55 @@ type Process = {
   typeName?: ProcessType;
   version?: string;
 };
-
-type ProcessType = ("REPLICA_PRIMARY" | "REPLICA_SECONDARY" | "RECOVERING" | "SHARD_MONGOS" | "SHARD_CONFIG" | "SHARD_STANDALONE" | "SHARD_PRIMARY" | "SHARD_SECONDARY" | "NO_DATA");
-
-type ProviderSettings = {
+    
+    type ProcessType = ("REPLICA_PRIMARY" | "REPLICA_SECONDARY" | "RECOVERING" | "SHARD_MONGOS" | "SHARD_CONFIG" | "SHARD_STANDALONE" | "SHARD_PRIMARY" | "SHARD_SECONDARY" | "NO_DATA");
+    
+    type ProviderSettings = {
   backingProviderName?: ("AWS");
   diskIOPS?: number;
   encryptEBSVolume?: boolean;
-  instanceSizeName?: ("M2" | "M5" | "M10" | "M20" | "M30" | "M40" | "M50" | "M60" | "M100" | "M200");
+  instanceSizeName?: ("M2" | "M5" | "M10" | "M20" | "M30" | "M40" | "R40" | "M50" | "R50" | "M60" | "R60" | "M80" | "R80" | "M100" | "M140" | "M200" | "R200" | "M300" | "R300" | "R400" | "R700");
   providerName?: ("AWS" | "TENANT");
   regionName?: ("US_WEST_1" | "US_WEST_2" | "US_EAST_1" | "US_EAST_2");
   volumeType?: ("STANDARD" | "PROVISIONED");
 };
-
-type RegionsConfig = {
+    
+    type RegionsConfig = {
   US_EAST_1?: RegionsConfigEntry;
   US_EAST_2?: RegionsConfigEntry;
   US_WEST_1?: RegionsConfigEntry;
   US_WEST_2?: RegionsConfigEntry;
 };
-
-type RegionsConfigEntry = {
+    
+    type RegionsConfigEntry = {
   analyticsNodes: number;
   electableNodes: number;
   priority: number;
   readOnlyNodes: number;
 };
-
-type ReplicationSpec = {
+    
+    type ReplicationSpec = {
   US_EAST_1?: ReplicationSpecItem;
   US_EAST_2?: ReplicationSpecItem;
   US_WEST_1?: ReplicationSpecItem;
   US_WEST_2?: ReplicationSpecItem;
 };
-
-type ReplicationSpecEntry = {
+    
+    type ReplicationSpecEntry = {
   id?: string;
   numShards?: number;
   regionsConfig?: RegionsConfig;
   zoneName?: string;
 };
-
-type ReplicationSpecItem = {
+    
+    type ReplicationSpecItem = {
   analyticsNodes?: number;
   electableNodes?: number;
   priority?: number;
   readOnlyNodes?: number;
 };
-
-type RestoreJob = {
+    
+    type RestoreJob = {
   clusterId?: string;
   created?: string;
   delivery?: RestoreJobResponseDelivery;
@@ -518,33 +670,33 @@ type RestoreJob = {
   statusName?: ("FINISHED" | "IN_PROGRESS" | "BROKEN" | "KILLED");
   timestamp?: SnapshotTimestamp;
 };
-
-type RestoreJobDelivery = {
+    
+    type RestoreJobDelivery = {
   methodName?: ("AUTOMATED_RESTORE");
   targetClusterName?: string;
   targetGroupId?: string;
 };
-
-type RestoreJobResponseDelivery = {
+    
+    type RestoreJobResponseDelivery = {
   methodName?: ("AUTOMATED_RESTORE" | "HTTP");
   statusName?: ("NOT_STARTED" | "IN_PROGRESS" | "READY" | "FAILED" | "INTERRUPTED" | "EXPIRED" | "MAX_DOWNLOADS_EXCEEDED");
 };
-
-type RestoreJobResponseHash = {
+    
+    type RestoreJobResponseHash = {
   fileName?: string;
   hash?: string;
   typeName?: string;
 };
-
-type Role = {
+    
+    type Role = {
   collectionName?: string;
   databaseName?: string;
   roleName?: RoleName;
 };
-
-type RoleName = ("atlasAdmin" | "readWriteAnyDatabase" | "readAnyDatabase" | "backup" | "clusterMonitor" | "dbAdmin" | "dbAdminAnyDatabase" | "enableSharding" | "read" | "readWrite");
-
-type Snapshot = {
+    
+    type RoleName = ("atlasAdmin" | "readWriteAnyDatabase" | "readAnyDatabase" | "backup" | "clusterMonitor" | "dbAdmin" | "dbAdminAnyDatabase" | "enableSharding" | "read" | "readWrite");
+    
+    type Snapshot = {
   clusterId?: string;
   complete?: boolean;
   created?: SnapshotTimestamp;
@@ -556,8 +708,8 @@ type Snapshot = {
   links?: Link[];
   parts?: SnapshotPart[];
 };
-
-type SnapshotPart = {
+    
+    type SnapshotPart = {
   clusterId?: string;
   compressionSetting?: string;
   dataSizeBytes?: number;
@@ -569,8 +721,8 @@ type SnapshotPart = {
   storageSizeBytes?: number;
   typeName?: ("REPLICA_SET" | "CONFIG_SERVER_REPLICA_SET");
 };
-
-type SnapshotSchedule = {
+    
+    type SnapshotSchedule = {
   clusterCheckpointIntervalMin?: number;
   clusterId?: string;
   dailySnapshotRetentionDays?: number;
@@ -582,71 +734,71 @@ type SnapshotSchedule = {
   snapshotRetentionDays?: number;
   weeklySnapshotRetentionWeeks?: number;
 };
-
-type SnapshotTimestamp = {
+    
+    type SnapshotTimestamp = {
   date?: string;
   increment?: number;
 };
-
-type TooManyRequests = {
+    
+    type TooManyRequests = {
   detail?: string;
   error?: number;
   message?: string;
   reason?: string;
 };
-
-type Unauthorized = {
+    
+    type Unauthorized = {
   detail?: string;
   error?: number;
   message?: string;
   reason?: string;
 };
-
-type Units = ("PERCENT" | "MILLISECONDS" | "BYTES" | "GIGABYTES" | "BYTES_PER_SECOND" | "MEGABYTES_PER_SECOND" | "GIGABYTES_PER_HOUR" | "SCALAR_PER_SECOND" | "SCALAR");
-
-type UpdateClusterParams = {
+    
+    type Units = ("PERCENT" | "MILLISECONDS" | "BYTES" | "GIGABYTES" | "BYTES_PER_SECOND" | "MEGABYTES_PER_SECOND" | "GIGABYTES_PER_HOUR" | "SCALAR_PER_SECOND" | "SCALAR");
+    
+    type UpdateClusterParams = {
   groupID: string;
   clusterName: string;
   createOrUpdateClusterRequest: CreateOrUpdateClusterRequest;
 };
-
-type UpdateContainerParams = {
+    
+    type UpdateContainerParams = {
   groupID: string;
   containerID: string;
   createOrUpdateContainerRequest: CreateOrUpdateContainerRequest;
 };
-
-type UpdateDatabaseUserParams = {
+    
+    type UpdateDatabaseUserParams = {
   groupID: string;
   username: string;
   updateDatabaseUserRequest: UpdateDatabaseUserRequest;
 };
-
-type UpdateDatabaseUserRequest = {
+    
+    type UpdateDatabaseUserRequest = {
   password?: string;
   roles?: Role[];
 };
-
-type UpdatePeerParams = {
+    
+    type UpdatePeerParams = {
   groupID: string;
   peerID: string;
   updatePeerRequest: UpdatePeerRequest;
 };
-
-type UpdatePeerRequest = {
+    
+    type UpdatePeerRequest = {
   awsAccountId?: string;
   providerName?: string;
   routeTableCidrBlock?: string;
   vpcId?: string;
 };
-
-type UpdateSnapshotScheduleParams = {
+    
+    type UpdateSnapshotScheduleParams = {
   groupID: string;
   clusterName: string;
   updateSnapshotSchedule: UpdateSnapshotScheduleRequest;
 };
-
-type UpdateSnapshotScheduleRequest = {
+    
+    type UpdateSnapshotScheduleRequest = {
   clusterCheckpointIntervalMin?: number;
   clusterId?: string;
   dailySnapshotRetentionDays?: number;
@@ -657,134 +809,6 @@ type UpdateSnapshotScheduleRequest = {
   snapshotRetentionDays?: number;
   weeklySnapshotRetentionWeeks?: number;
 };
-
-declare class AtlasAPIClient {
-  constructor(options: AtlasAPIClientOptions);
-
-  
-  getClusters(groupID: string, options?: RequestOptions, cb?: Callback<GetClustersResponse>): Promise<GetClustersResponse>
-  
-  createCluster(params: CreateClusterParams, options?: RequestOptions, cb?: Callback<Cluster>): Promise<Cluster>
-  
-  deleteCluster(params: DeleteClusterParams, options?: RequestOptions, cb?: Callback<void>): Promise<void>
-  
-  getCluster(params: GetClusterParams, options?: RequestOptions, cb?: Callback<Cluster>): Promise<Cluster>
-  
-  updateCluster(params: UpdateClusterParams, options?: RequestOptions, cb?: Callback<Cluster>): Promise<Cluster>
-  
-  getRestoreJobs(params: GetRestoreJobsParams, options?: RequestOptions, cb?: Callback<GetRestoreJobsResponse>): Promise<GetRestoreJobsResponse>
-  
-  createRestoreJob(params: CreateRestoreJobParams, options?: RequestOptions, cb?: Callback<CreateRestoreJobResponse>): Promise<CreateRestoreJobResponse>
-  
-  getSnapshotSchedule(params: GetSnapshotScheduleParams, options?: RequestOptions, cb?: Callback<SnapshotSchedule>): Promise<SnapshotSchedule>
-  
-  updateSnapshotSchedule(params: UpdateSnapshotScheduleParams, options?: RequestOptions, cb?: Callback<SnapshotSchedule>): Promise<SnapshotSchedule>
-  
-  getSnapshots(params: GetSnapshotsParams, options?: RequestOptions, cb?: Callback<GetSnapshotsResponse>): Promise<GetSnapshotsResponse>
-  
-  getRestoreJob(params: GetRestoreJobParams, options?: RequestOptions, cb?: Callback<RestoreJob>): Promise<RestoreJob>
-  
-  getContainers(groupID: string, options?: RequestOptions, cb?: Callback<GetContainersResponse>): Promise<GetContainersResponse>
-  
-  createContainer(params: CreateContainerParams, options?: RequestOptions, cb?: Callback<Container>): Promise<Container>
-  
-  getContainer(params: GetContainerParams, options?: RequestOptions, cb?: Callback<Container>): Promise<Container>
-  
-  updateContainer(params: UpdateContainerParams, options?: RequestOptions, cb?: Callback<Container>): Promise<Container>
-  
-  getDatabaseUsers(groupID: string, options?: RequestOptions, cb?: Callback<GetDatabaseUsersResponse>): Promise<GetDatabaseUsersResponse>
-  
-  createDatabaseUser(params: CreateDatabaseUserParams, options?: RequestOptions, cb?: Callback<DatabaseUser>): Promise<DatabaseUser>
-  
-  deleteDatabaseUser(params: DeleteDatabaseUserParams, options?: RequestOptions, cb?: Callback<void>): Promise<void>
-  
-  getDatabaseUser(params: GetDatabaseUserParams, options?: RequestOptions, cb?: Callback<DatabaseUser>): Promise<DatabaseUser>
-  
-  updateDatabaseUser(params: UpdateDatabaseUserParams, options?: RequestOptions, cb?: Callback<DatabaseUser>): Promise<DatabaseUser>
-  
-  getPeers(groupID: string, options?: RequestOptions, cb?: Callback<GetPeersResponse>): Promise<GetPeersResponse>
-  
-  createPeer(params: CreatePeerParams, options?: RequestOptions, cb?: Callback<Peer>): Promise<Peer>
-  
-  deletePeer(params: DeletePeerParams, options?: RequestOptions, cb?: Callback<void>): Promise<void>
-  
-  getPeer(params: GetPeerParams, options?: RequestOptions, cb?: Callback<Peer>): Promise<Peer>
-  
-  updatePeer(params: UpdatePeerParams, options?: RequestOptions, cb?: Callback<Peer>): Promise<Peer>
-  
-  getProcesses(groupID: string, options?: RequestOptions, cb?: Callback<GetProcessesResponse>): Promise<GetProcessesResponse>
-  
-  getProcessDatabases(params: GetProcessDatabasesParams, options?: RequestOptions, cb?: Callback<GetProcessDatabasesResponse>): Promise<GetProcessDatabasesResponse>
-  
-  getProcessDatabaseMeasurements(params: GetProcessDatabaseMeasurementsParams, options?: RequestOptions, cb?: Callback<GetProcessDatabaseMeasurementsResponse>): Promise<GetProcessDatabaseMeasurementsResponse>
-  
-  getProcessDisks(params: GetProcessDisksParams, options?: RequestOptions, cb?: Callback<GetProcessDisksResponse>): Promise<GetProcessDisksResponse>
-  
-  getProcessDiskMeasurements(params: GetProcessDiskMeasurementsParams, options?: RequestOptions, cb?: Callback<GetProcessDiskMeasurementsResponse>): Promise<GetProcessDiskMeasurementsResponse>
-  
-  getProcessMeasurements(params: GetProcessMeasurementsParams, options?: RequestOptions, cb?: Callback<GetProcessMeasurementsResponse>): Promise<GetProcessMeasurementsResponse>
-  
-}
-
-declare namespace AtlasAPIClient {
-  const RetryPolicies: {
-    Single: RetryPolicy;
-    Exponential: RetryPolicy;
-    None: RetryPolicy;
-  }
-
-  const DefaultCircuitOptions: CircuitOptions;
-
-  namespace Errors {
-    
-    class BadRequest {
-  detail?: string;
-  error?: number;
-  message?: string;
-  reason?: string;
-}
-    
-    class Unauthorized {
-  detail?: string;
-  error?: number;
-  message?: string;
-  reason?: string;
-}
-    
-    class Forbidden {
-  detail?: string;
-  error?: number;
-  message?: string;
-  reason?: string;
-}
-    
-    class NotFound {
-  detail?: string;
-  error?: number;
-  message?: string;
-  reason?: string;
-}
-    
-    class Conflict {
-  detail?: string;
-  error?: number;
-  message?: string;
-  reason?: string;
-}
-    
-    class TooManyRequests {
-  detail?: string;
-  error?: number;
-  message?: string;
-  reason?: string;
-}
-    
-    class InternalError {
-  detail?: string;
-  error?: number;
-  message?: string;
-  reason?: string;
-}
     
   }
 }

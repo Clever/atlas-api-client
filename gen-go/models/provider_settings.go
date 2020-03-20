@@ -119,7 +119,7 @@ var providerSettingsTypeInstanceSizeNamePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["M2","M5","M10","M20","M30","M40","M50","M60","M100","M200"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["M2","M5","M10","M20","M30","M40","R40","M50","R50","M60","R60","M80","R80","M100","M140","M200","R200","M300","R300","R400","R700"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -140,14 +140,36 @@ const (
 	ProviderSettingsInstanceSizeNameM30 string = "M30"
 	// ProviderSettingsInstanceSizeNameM40 captures enum value "M40"
 	ProviderSettingsInstanceSizeNameM40 string = "M40"
+	// ProviderSettingsInstanceSizeNameR40 captures enum value "R40"
+	ProviderSettingsInstanceSizeNameR40 string = "R40"
 	// ProviderSettingsInstanceSizeNameM50 captures enum value "M50"
 	ProviderSettingsInstanceSizeNameM50 string = "M50"
+	// ProviderSettingsInstanceSizeNameR50 captures enum value "R50"
+	ProviderSettingsInstanceSizeNameR50 string = "R50"
 	// ProviderSettingsInstanceSizeNameM60 captures enum value "M60"
 	ProviderSettingsInstanceSizeNameM60 string = "M60"
+	// ProviderSettingsInstanceSizeNameR60 captures enum value "R60"
+	ProviderSettingsInstanceSizeNameR60 string = "R60"
+	// ProviderSettingsInstanceSizeNameM80 captures enum value "M80"
+	ProviderSettingsInstanceSizeNameM80 string = "M80"
+	// ProviderSettingsInstanceSizeNameR80 captures enum value "R80"
+	ProviderSettingsInstanceSizeNameR80 string = "R80"
 	// ProviderSettingsInstanceSizeNameM100 captures enum value "M100"
 	ProviderSettingsInstanceSizeNameM100 string = "M100"
+	// ProviderSettingsInstanceSizeNameM140 captures enum value "M140"
+	ProviderSettingsInstanceSizeNameM140 string = "M140"
 	// ProviderSettingsInstanceSizeNameM200 captures enum value "M200"
 	ProviderSettingsInstanceSizeNameM200 string = "M200"
+	// ProviderSettingsInstanceSizeNameR200 captures enum value "R200"
+	ProviderSettingsInstanceSizeNameR200 string = "R200"
+	// ProviderSettingsInstanceSizeNameM300 captures enum value "M300"
+	ProviderSettingsInstanceSizeNameM300 string = "M300"
+	// ProviderSettingsInstanceSizeNameR300 captures enum value "R300"
+	ProviderSettingsInstanceSizeNameR300 string = "R300"
+	// ProviderSettingsInstanceSizeNameR400 captures enum value "R400"
+	ProviderSettingsInstanceSizeNameR400 string = "R400"
+	// ProviderSettingsInstanceSizeNameR700 captures enum value "R700"
+	ProviderSettingsInstanceSizeNameR700 string = "R700"
 )
 
 // prop value enum

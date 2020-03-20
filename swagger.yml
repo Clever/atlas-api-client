@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.6.2
+  version: 0.6.3
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -1416,10 +1416,21 @@ definitions:
           - M20
           - M30
           - M40
+          - R40
           - M50
+          - R50
           - M60
+          - R60
+          - M80
+          - R80
           - M100
+          - M140
           - M200
+          - R200
+          - M300
+          - R300
+          - R400
+          - R700
       regionName:
         type: string
         enum:
