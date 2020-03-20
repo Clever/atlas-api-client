@@ -72,7 +72,7 @@ Create a new client object.
 | [options.address] | <code>string</code> |  | URL where the server is located. Must provide this or the discovery argument |
 | [options.discovery] | <code>bool</code> |  | Use clever-discovery to locate the server. Must provide this or the address argument |
 | [options.timeout] | <code>number</code> |  | The timeout to use for all client requests, in milliseconds. This can be overridden on a per-request basis. Default is 5000ms. |
-| [options.keepalive] | <code>bool</code> |  | Set keepalive to true for client requests. This sets the forever: true attribute in request. Defaults to false |
+| [options.keepalive] | <code>bool</code> |  | Set keepalive to true for client requests. This sets the forever: true attribute in request. Defaults to true. |
 | [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | <code>RetryPolicies.Single</code> | The logic to determine which requests to retry, as well as how many times to retry. |
 | [options.logger] | <code>module:kayvee.Logger</code> | <code>logger.New(&quot;atlas-api-client-wagclient&quot;)</code> | The Kayvee logger to use in the client. |
 | [options.circuit] | <code>Object</code> |  | Options for constructing the client's circuit breaker. |
@@ -811,7 +811,7 @@ Get the measurements of the specified database for a Atlas MongoDB process.
 | [params.period] | <code>string</code> |  |
 | [params.start] | <code>string</code> |  |
 | [params.end] | <code>string</code> |  |
-| [params.m] | <code>Array.&lt;string&gt;</code> |  |
+| [params.m] | <code>[ &#x27;Array&#x27; ].&lt;string&gt;</code> |  |
 | [params.pageNum] | <code>number</code> |  |
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
@@ -877,7 +877,7 @@ Get the measurements of the specified disk for a Atlas MongoDB process.
 | [params.period] | <code>string</code> |  |
 | [params.start] | <code>string</code> |  |
 | [params.end] | <code>string</code> |  |
-| [params.m] | <code>Array.&lt;string&gt;</code> |  |
+| [params.m] | <code>[ &#x27;Array&#x27; ].&lt;string&gt;</code> |  |
 | [params.pageNum] | <code>number</code> |  |
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
@@ -912,7 +912,7 @@ Get measurements for a specific Atlas MongoDB process (mongod or mongos).
 | [params.period] | <code>string</code> |  |
 | [params.start] | <code>string</code> |  |
 | [params.end] | <code>string</code> |  |
-| [params.m] | <code>Array.&lt;string&gt;</code> |  |
+| [params.m] | <code>[ &#x27;Array&#x27; ].&lt;string&gt;</code> |  |
 | [params.pageNum] | <code>number</code> |  |
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |

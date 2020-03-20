@@ -146,7 +146,7 @@ class AtlasAPIClient {
    * @param {number} [options.timeout] - The timeout to use for all client requests,
    * in milliseconds. This can be overridden on a per-request basis. Default is 5000ms.
    * @param {bool} [options.keepalive] - Set keepalive to true for client requests. This sets the
-   * forever: true attribute in request. Defaults to false
+   * forever: true attribute in request. Defaults to true.
    * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy=RetryPolicies.Single] - The logic to
    * determine which requests to retry, as well as how many times to retry.
    * @param {module:kayvee.Logger} [options.logger=logger.New("atlas-api-client-wagclient")] - The Kayvee
@@ -177,10 +177,10 @@ class AtlasAPIClient {
     } else {
       throw new Error("Cannot initialize atlas-api-client without discovery or address");
     }
-    if (options.keepalive) {
+    if (options.keepalive !== undefined) {
       this.keepalive = options.keepalive;
     } else {
-      this.keepalive = false;
+      this.keepalive = true;
     }
     if (options.timeout) {
       this.timeout = options.timeout;
@@ -295,6 +295,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getClusters";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -302,16 +304,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/clusters"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -321,12 +324,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -347,49 +350,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -445,6 +448,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "createCluster";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -452,16 +457,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/clusters");
+        span.log({event: "POST /api/atlas/v1.0/groups/{groupID}/clusters"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -471,14 +477,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.createOrUpdateClusterRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -499,49 +505,49 @@ class AtlasAPIClient {
             case 201:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -597,6 +603,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "deleteCluster";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -608,16 +616,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("DELETE /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}");
+        span.log({event: "DELETE /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "DELETE",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -627,12 +636,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -653,49 +662,49 @@ class AtlasAPIClient {
             case 202:
               resolve();
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -751,6 +760,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getCluster";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -762,16 +773,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -781,12 +793,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -807,49 +819,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -906,6 +918,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "updateCluster";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -917,16 +931,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}");
+        span.log({event: "PATCH /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -936,14 +951,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.createOrUpdateClusterRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -964,49 +979,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -1064,6 +1079,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getRestoreJobs";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -1077,22 +1094,23 @@ class AtlasAPIClient {
       if (typeof params.pageNum !== "undefined") {
         query["pageNum"] = params.pageNum;
       }
-  
+
       if (typeof params.itemsPerPage !== "undefined") {
         query["itemsPerPage"] = params.itemsPerPage;
       }
-  
 
-      if (span) {
+
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restoreJobs");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restoreJobs"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/restoreJobs",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -1102,12 +1120,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -1128,49 +1146,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -1227,6 +1245,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "createRestoreJob";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -1238,16 +1258,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restoreJobs");
+        span.log({event: "POST /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restoreJobs"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/restoreJobs",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -1257,14 +1278,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.createRestoreJobRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -1285,49 +1306,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -1379,6 +1400,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getSnapshotSchedule";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -1390,16 +1413,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshotSchedule");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshotSchedule"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/snapshotSchedule",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -1409,12 +1433,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -1435,25 +1459,25 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -1510,6 +1534,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "updateSnapshotSchedule";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -1521,16 +1547,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshotSchedule");
+        span.log({event: "PATCH /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshotSchedule"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/snapshotSchedule",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -1540,14 +1567,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.updateSnapshotSchedule;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -1568,49 +1595,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -1663,6 +1690,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getSnapshots";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -1674,16 +1703,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshots");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/snapshots"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/snapshots",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -1693,12 +1723,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -1719,31 +1749,31 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -1800,6 +1830,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getRestoreJob";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -1815,16 +1847,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/clusters/{sourceClusterName}/restoreJobs/{jobID}");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/clusters/{sourceClusterName}/restoreJobs/{jobID}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.sourceClusterName + "/restoreJobs/" + params.jobID + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -1834,12 +1867,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -1860,49 +1893,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -1959,6 +1992,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getContainers";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -1966,16 +2001,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/containers");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/containers"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -1985,12 +2021,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -2011,49 +2047,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -2109,6 +2145,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "createContainer";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -2116,16 +2154,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/containers");
+        span.log({event: "POST /api/atlas/v1.0/groups/{groupID}/containers"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -2135,14 +2174,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.createOrUpdateContainerRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -2163,49 +2202,49 @@ class AtlasAPIClient {
             case 201:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -2258,6 +2297,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getContainer";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -2269,16 +2310,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/containers/{containerID}");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/containers/{containerID}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers/" + params.containerID + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -2288,12 +2330,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -2314,31 +2356,31 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -2395,6 +2437,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "updateContainer";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -2406,16 +2450,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/containers/{containerID}");
+        span.log({event: "PATCH /api/atlas/v1.0/groups/{groupID}/containers/{containerID}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/containers/" + params.containerID + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -2425,14 +2470,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.createOrUpdateContainerRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -2453,49 +2498,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -2552,6 +2597,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getDatabaseUsers";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -2559,16 +2606,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/databaseUsers");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/databaseUsers"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -2578,12 +2626,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -2604,49 +2652,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -2702,6 +2750,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "createDatabaseUser";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -2709,16 +2759,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/databaseUsers");
+        span.log({event: "POST /api/atlas/v1.0/groups/{groupID}/databaseUsers"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -2728,14 +2779,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.createDatabaseUserRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -2756,49 +2807,49 @@ class AtlasAPIClient {
             case 201:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -2854,6 +2905,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "deleteDatabaseUser";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -2865,16 +2918,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("DELETE /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}");
+        span.log({event: "DELETE /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "DELETE",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -2884,12 +2938,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -2910,49 +2964,49 @@ class AtlasAPIClient {
             case 200:
               resolve();
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3005,6 +3059,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getDatabaseUser";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3016,16 +3072,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3035,12 +3092,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -3061,31 +3118,31 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3142,6 +3199,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "updateDatabaseUser";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3153,16 +3212,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}");
+        span.log({event: "PATCH /api/atlas/v1.0/groups/{groupID}/databaseUsers/admin/{username}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/databaseUsers/admin/" + params.username + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3172,14 +3232,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.updateDatabaseUserRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -3200,49 +3260,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3296,6 +3356,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getPeers";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3303,16 +3365,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/peers");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/peers"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3322,12 +3385,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -3348,31 +3411,31 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3425,6 +3488,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "createPeer";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3432,16 +3497,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("POST /api/atlas/v1.0/groups/{groupID}/peers");
+        span.log({event: "POST /api/atlas/v1.0/groups/{groupID}/peers"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "POST",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3451,14 +3517,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.createPeerRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -3479,31 +3545,31 @@ class AtlasAPIClient {
             case 201:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3556,6 +3622,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "deletePeer";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3567,16 +3635,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("DELETE /api/atlas/v1.0/groups/{groupID}/peers/{peerID}");
+        span.log({event: "DELETE /api/atlas/v1.0/groups/{groupID}/peers/{peerID}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "DELETE",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers/" + params.peerID + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3586,12 +3655,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -3612,31 +3681,31 @@ class AtlasAPIClient {
             case 200:
               resolve();
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3688,6 +3757,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getPeer";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3699,16 +3770,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/peers/{peerID}");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/peers/{peerID}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers/" + params.peerID + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3718,12 +3790,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -3744,25 +3816,25 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3816,6 +3888,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "updatePeer";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3827,16 +3901,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("PATCH /api/atlas/v1.0/groups/{groupID}/peers/{peerID}");
+        span.log({event: "PATCH /api/atlas/v1.0/groups/{groupID}/peers/{peerID}"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "PATCH",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/peers/" + params.peerID + "",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3846,14 +3921,14 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
       requestOptions.body = params.updatePeerRequest;
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -3874,31 +3949,31 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -3955,6 +4030,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getProcesses";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -3962,16 +4039,17 @@ class AtlasAPIClient {
 
       const query = {};
 
-      if (span) {
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/processes"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -3981,12 +4059,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -4007,49 +4085,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -4108,6 +4186,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getProcessDatabases";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -4125,22 +4205,23 @@ class AtlasAPIClient {
       if (typeof params.pageNum !== "undefined") {
         query["pageNum"] = params.pageNum;
       }
-  
+
       if (typeof params.itemsPerPage !== "undefined") {
         query["itemsPerPage"] = params.itemsPerPage;
       }
-  
 
-      if (span) {
+
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/databases");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/databases"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/databases",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -4150,12 +4231,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -4176,49 +4257,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -4283,6 +4364,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getProcessDatabaseMeasurements";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -4302,42 +4385,43 @@ class AtlasAPIClient {
 
       const query = {};
       query["granularity"] = params.granularity;
-  
+
       if (typeof params.period !== "undefined") {
         query["period"] = params.period;
       }
-  
+
       if (typeof params.start !== "undefined") {
         query["start"] = params.start;
       }
-  
+
       if (typeof params.end !== "undefined") {
         query["end"] = params.end;
       }
-  
+
       if (typeof params.m !== "undefined") {
         query["m"] = params.m;
       }
-  
+
       if (typeof params.pageNum !== "undefined") {
         query["pageNum"] = params.pageNum;
       }
-  
+
       if (typeof params.itemsPerPage !== "undefined") {
         query["itemsPerPage"] = params.itemsPerPage;
       }
-  
 
-      if (span) {
+
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/databases/{databaseID}/measurements");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/databases/{databaseID}/measurements"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/databases/" + params.databaseID + "/measurements",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -4347,12 +4431,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -4373,49 +4457,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -4474,6 +4558,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getProcessDisks";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -4491,22 +4577,23 @@ class AtlasAPIClient {
       if (typeof params.pageNum !== "undefined") {
         query["pageNum"] = params.pageNum;
       }
-  
+
       if (typeof params.itemsPerPage !== "undefined") {
         query["itemsPerPage"] = params.itemsPerPage;
       }
-  
 
-      if (span) {
+
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/disks");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/disks"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/disks",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -4516,12 +4603,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -4542,49 +4629,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -4649,6 +4736,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getProcessDiskMeasurements";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -4668,42 +4757,43 @@ class AtlasAPIClient {
 
       const query = {};
       query["granularity"] = params.granularity;
-  
+
       if (typeof params.period !== "undefined") {
         query["period"] = params.period;
       }
-  
+
       if (typeof params.start !== "undefined") {
         query["start"] = params.start;
       }
-  
+
       if (typeof params.end !== "undefined") {
         query["end"] = params.end;
       }
-  
+
       if (typeof params.m !== "undefined") {
         query["m"] = params.m;
       }
-  
+
       if (typeof params.pageNum !== "undefined") {
         query["pageNum"] = params.pageNum;
       }
-  
+
       if (typeof params.itemsPerPage !== "undefined") {
         query["itemsPerPage"] = params.itemsPerPage;
       }
-  
 
-      if (span) {
+
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/disks/{diskName}/measurements");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/disks/{diskName}/measurements"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/disks/" + params.diskName + "/measurements",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -4713,12 +4803,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -4739,49 +4829,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -4845,6 +4935,8 @@ class AtlasAPIClient {
       const span = options.span;
 
       const headers = {};
+      headers["Canonical-Resource"] = "getProcessMeasurements";
+      headers[versionHeader] = version;
       if (!params.groupID) {
         reject(new Error("groupID must be non-empty because it's a path parameter"));
         return;
@@ -4860,42 +4952,43 @@ class AtlasAPIClient {
 
       const query = {};
       query["granularity"] = params.granularity;
-  
+
       if (typeof params.period !== "undefined") {
         query["period"] = params.period;
       }
-  
+
       if (typeof params.start !== "undefined") {
         query["start"] = params.start;
       }
-  
+
       if (typeof params.end !== "undefined") {
         query["end"] = params.end;
       }
-  
+
       if (typeof params.m !== "undefined") {
         query["m"] = params.m;
       }
-  
+
       if (typeof params.pageNum !== "undefined") {
         query["pageNum"] = params.pageNum;
       }
-  
+
       if (typeof params.itemsPerPage !== "undefined") {
         query["itemsPerPage"] = params.itemsPerPage;
       }
-  
 
-      if (span) {
+
+      if (span && typeof span.log === "function") {
         // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
         tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
-        span.logEvent("GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/measurements");
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/processes/{host}:{port}/measurements"});
         span.setTag("span.kind", "client");
       }
 
       const requestOptions = {
         method: "GET",
         uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/processes/" + params.host + ":" + params.port + "/measurements",
+        gzip: true,
         json: true,
         timeout,
         headers,
@@ -4905,12 +4998,12 @@ class AtlasAPIClient {
       if (this.keepalive) {
         requestOptions.forever = true;
       }
-  
+
 
       const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
       const backoffs = retryPolicy.backoffs();
       const logger = this.logger;
-  
+
       let retries = 0;
       (function requestOnce() {
         request(requestOptions, (err, response, body) => {
@@ -4931,49 +5024,49 @@ class AtlasAPIClient {
             case 200:
               resolve(body);
               break;
-            
+
             case 400:
               var err = new Errors.BadRequest(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 401:
               var err = new Errors.Unauthorized(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 403:
               var err = new Errors.Forbidden(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 404:
               var err = new Errors.NotFound(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 409:
               var err = new Errors.Conflict(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 429:
               var err = new Errors.TooManyRequests(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             case 500:
               var err = new Errors.InternalError(body || {});
               responseLog(logger, requestOptions, response, err);
               reject(err);
               return;
-            
+
             default:
               var err = new Error("Received unexpected statusCode " + response.statusCode);
               responseLog(logger, requestOptions, response, err);
@@ -5005,3 +5098,8 @@ module.exports.RetryPolicies = {
 module.exports.Errors = Errors;
 
 module.exports.DefaultCircuitOptions = defaultCircuitOptions;
+
+const version = "0.6.3";
+const versionHeader = "X-Client-Version";
+module.exports.Version = version;
+module.exports.VersionHeader = versionHeader;
