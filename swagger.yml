@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.6.3
+  version: 0.7.0
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -421,6 +421,46 @@ paths:
           required: true
           type: string
       responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/RestoreJob"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        409:
+          description: "Conflict"
+          schema:
+            $ref: "#/definitions/Conflict"
+        429:
+          description: "To Many Requests"
+          schema:
+            $ref: "#/definitions/TooManyRequests"
+
+  /groups/{groupID}/clusters/{clusterName}/restartPrimaries:
+    post:
+      operationId: restartPrimaries
+      description: Restart the cluster's primaries, triggering a failover.
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: clusterName
+          in: path
+          required: true
+          type: string
+      responses:
+        # TODO not sure if this is 200, 201, 202
         200:
           description: "Success"
           schema:
@@ -1254,6 +1294,55 @@ paths:
           description: "Not found"
           schema:
             $ref: "#/definitions/NotFound"
+
+  /groups/{groupID}/events:
+    get:
+      operationId: getEvents
+      description: Get Atlas events for the given group.
+      parameters:
+        - name: groupID
+          in: path
+          required: true
+          type: string
+        - name: pageNum
+          in: query
+          type: integer
+        - name: itemsPerPage
+          in: query
+          type: integer
+          maximum: 500
+        - name: pretty
+          in: query
+          type: boolean
+        - name: eventType
+          in: query
+          type: string
+          enum: *EventTypes
+        - name: minDate
+          in: query
+          type: string
+          format: date
+        - name: maxDate
+          in: query
+          type: string
+          format: date
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GetEventsResponse"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Unauthorized"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/NotFound"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/Forbidden"
 
 definitions:
   Unauthorized:
@@ -2321,3 +2410,138 @@ definitions:
         type: string
       vpcId:
         type: string
+
+  GetEventsResponse:
+    type: object
+    properties:
+      links:
+        type: array
+        items:
+          $ref: "#/definitions/Link"
+      results:
+        type: array
+        items:
+          $ref: "#/definitions/Event"
+      totalCount:
+        type: number
+
+  EventType:
+    type: string
+    enum: &EventTypes
+    # billing
+    - CREDIT_CARD_ABOUT_TO_EXPIRE
+    - PENDING_INVOICE_OVER_THRESHOLD
+    - DAILY_BILL_OVER_THRESHOLD
+    # encryption key
+    - AWS_ENCRYPTION_KEY_NEEDS_ROTATION
+    - AZURE_ENCRYPTION_KEY_NEEDS_ROTATION
+    - GCP_ENCRYPTION_KEY_NEEDS_ROTATION
+    # host
+    - HOST_DOWN
+    - OUTSIDE_METRIC_THRESHOLD
+    # project
+    - USERS_WITHOUT_MULTIFACTOR_AUTH
+    # replica set
+    - PRIMARY_ELECTED
+    - NO_PRIMARY
+    - TOO_MANY_ELECTIONS
+    - REPLICATION_OPLOG_WINDOW_RUNNING_OUT
+    # sharded cluster
+    - CLUSTER_MONGOS_IS_MISSING
+    # users
+    - USER_ROLES_CHANGED_AUDIT
+    - JOINED_GROUP
+    - REMOVED_FROM_GROUP
+    # x.509
+    - NDS_X509_USER_AUTHENTICATION_MANAGED_USER_CERTS_EXPIRATION_CHECK
+    - NDS_X509_USER_AUTHENTICATION_CUSTOMER_CA_EXPIRATION_CHECK
+
+  Event:
+    type: object
+    properties:
+      alertId:
+        type: string
+      alertConfigId:
+        type: string
+      apiKeyId:
+        type: string
+      collection:
+        type: string
+      created:
+        type: string
+        format: date-time
+      currentValue:
+        $ref: "#/definitions/MetricValue"
+      database:
+        type: string
+      eventTypeName:
+        $ref: "#/definitions/EventType"
+      groupId:
+        type: string
+      hostname:
+        type: string
+      id:
+        type: string
+      invoiceId:
+        type: string
+      isGlobalAdmin:
+        type: boolean
+      links:
+        type: array
+        items:
+          $ref: "#/definitions/Link"
+      metricName:
+        type: string
+      opType:
+        type: string
+      orgId:
+        type: string
+      paymentId:
+        type: string
+      port:
+        type: integer
+      publicKey:
+        type: string
+      remoteAddress:
+        type: string
+      replicaSetName:
+        type: string
+      shardName:
+        type: string
+      targetPublicKey:
+        type: string
+      targetUsername:
+        type: string
+      teamID:
+        type: string
+      userId:
+        type: string
+      username:
+        type: string
+      whitelistEntry:
+        type: string
+
+  MetricValue:
+    type: object
+    properties:
+      number:
+        type: integer
+      units:
+        type: string
+        enum:
+        - RAW
+        - BITS
+        - BYTES
+        - KILOBITS
+        - KILOBYTES
+        - MEGABITS
+        - MEGABYTES
+        - GIGABITS
+        - GIGABYTES
+        - TERABYTES
+        - PETABYTES
+        - MILLISECONDS
+        - SECONDS
+        - MINUTES
+        - HOURS
+        - DAYS

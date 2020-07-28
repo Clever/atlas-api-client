@@ -207,6 +207,45 @@ func (i UpdateClusterInput) Path() (string, error) {
 	return path + "?" + urlVals.Encode(), nil
 }
 
+// RestartPrimariesInput holds the input parameters for a restartPrimaries operation.
+type RestartPrimariesInput struct {
+	GroupID     string
+	ClusterName string
+}
+
+// Validate returns an error if any of the RestartPrimariesInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i RestartPrimariesInput) Validate() error {
+
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i RestartPrimariesInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restartPrimaries"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	pathclusterName := i.ClusterName
+	if pathclusterName == "" {
+		err := fmt.Errorf("clusterName cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{clusterName}", pathclusterName, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
 // GetRestoreJobsInput holds the input parameters for a getRestoreJobs operation.
 type GetRestoreJobsInput struct {
 	GroupID      string
@@ -804,6 +843,88 @@ func (i UpdateDatabaseUserInput) Path() (string, error) {
 		}
 	}
 	path = strings.Replace(path, "{username}", pathusername, -1)
+
+	return path + "?" + urlVals.Encode(), nil
+}
+
+// GetEventsInput holds the input parameters for a getEvents operation.
+type GetEventsInput struct {
+	GroupID      string
+	PageNum      *int64
+	ItemsPerPage *int64
+	Pretty       *bool
+	EventType    *string
+	MinDate      *strfmt.Date
+	MaxDate      *strfmt.Date
+}
+
+// Validate returns an error if any of the GetEventsInput parameters don't satisfy the
+// requirements from the swagger yml file.
+func (i GetEventsInput) Validate() error {
+
+	if i.ItemsPerPage != nil {
+		if err := validate.MaximumInt("itemsPerPage", "query", *i.ItemsPerPage, int64(500), false); err != nil {
+			return err
+		}
+	}
+
+	if i.EventType != nil {
+		if err := validate.Enum("eventType", "query", *i.EventType, []interface{}{"CREDIT_CARD_ABOUT_TO_EXPIRE", "PENDING_INVOICE_OVER_THRESHOLD", "DAILY_BILL_OVER_THRESHOLD", "AWS_ENCRYPTION_KEY_NEEDS_ROTATION", "AZURE_ENCRYPTION_KEY_NEEDS_ROTATION", "GCP_ENCRYPTION_KEY_NEEDS_ROTATION", "HOST_DOWN", "OUTSIDE_METRIC_THRESHOLD", "USERS_WITHOUT_MULTIFACTOR_AUTH", "PRIMARY_ELECTED", "NO_PRIMARY", "TOO_MANY_ELECTIONS", "REPLICATION_OPLOG_WINDOW_RUNNING_OUT", "CLUSTER_MONGOS_IS_MISSING", "USER_ROLES_CHANGED_AUDIT", "JOINED_GROUP", "REMOVED_FROM_GROUP", "NDS_X509_USER_AUTHENTICATION_MANAGED_USER_CERTS_EXPIRATION_CHECK", "NDS_X509_USER_AUTHENTICATION_CUSTOMER_CA_EXPIRATION_CHECK"}); err != nil {
+			return err
+		}
+	}
+
+	if i.MinDate != nil {
+		if err := validate.FormatOf("minDate", "query", "date", (*i.MinDate).String(), strfmt.Default); err != nil {
+			return err
+		}
+	}
+
+	if i.MaxDate != nil {
+		if err := validate.FormatOf("maxDate", "query", "date", (*i.MaxDate).String(), strfmt.Default); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Path returns the URI path for the input.
+func (i GetEventsInput) Path() (string, error) {
+	path := "/api/atlas/v1.0/groups/{groupID}/events"
+	urlVals := url.Values{}
+
+	pathgroupID := i.GroupID
+	if pathgroupID == "" {
+		err := fmt.Errorf("groupID cannot be empty because it's a path parameter")
+		if err != nil {
+			return "", err
+		}
+	}
+	path = strings.Replace(path, "{groupID}", pathgroupID, -1)
+
+	if i.PageNum != nil {
+		urlVals.Add("pageNum", strconv.FormatInt(*i.PageNum, 10))
+	}
+
+	if i.ItemsPerPage != nil {
+		urlVals.Add("itemsPerPage", strconv.FormatInt(*i.ItemsPerPage, 10))
+	}
+
+	if i.Pretty != nil {
+		urlVals.Add("pretty", strconv.FormatBool(*i.Pretty))
+	}
+
+	if i.EventType != nil {
+		urlVals.Add("eventType", *i.EventType)
+	}
+
+	if i.MinDate != nil {
+		urlVals.Add("minDate", (*i.MinDate).String())
+	}
+
+	if i.MaxDate != nil {
+		urlVals.Add("maxDate", (*i.MaxDate).String())
+	}
 
 	return path + "?" + urlVals.Encode(), nil
 }

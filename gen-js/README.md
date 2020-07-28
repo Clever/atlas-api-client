@@ -13,6 +13,7 @@ atlas-api-client client library.
             * [.deleteCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deleteCluster) ⇒ <code>Promise</code>
             * [.getCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getCluster) ⇒ <code>Promise</code>
             * [.updateCluster(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updateCluster) ⇒ <code>Promise</code>
+            * [.restartPrimaries(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+restartPrimaries) ⇒ <code>Promise</code>
             * [.getRestoreJobs(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getRestoreJobs) ⇒ <code>Promise</code>
             * [.createRestoreJob(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createRestoreJob) ⇒ <code>Promise</code>
             * [.getSnapshotSchedule(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getSnapshotSchedule) ⇒ <code>Promise</code>
@@ -28,6 +29,7 @@ atlas-api-client client library.
             * [.deleteDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deleteDatabaseUser) ⇒ <code>Promise</code>
             * [.getDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getDatabaseUser) ⇒ <code>Promise</code>
             * [.updateDatabaseUser(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+updateDatabaseUser) ⇒ <code>Promise</code>
+            * [.getEvents(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getEvents) ⇒ <code>Promise</code>
             * [.getPeers(groupID, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+getPeers) ⇒ <code>Promise</code>
             * [.createPeer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+createPeer) ⇒ <code>Promise</code>
             * [.deletePeer(params, [options], [cb])](#module_atlas-api-client--AtlasAPIClient+deletePeer) ⇒ <code>Promise</code>
@@ -210,6 +212,33 @@ Update a Cluster
 | params.groupID | <code>string</code> |  |
 | params.clusterName | <code>string</code> |  |
 | params.createOrUpdateClusterRequest |  |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+restartPrimaries"></a>
+
+#### atlasAPIClient.restartPrimaries(params, [options], [cb]) ⇒ <code>Promise</code>
+Restart the cluster's primaries, triggering a failover.
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
+**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| params.clusterName | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
 | [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
@@ -605,6 +634,36 @@ Update a DatabaseUser
 | params.groupID | <code>string</code> |  |
 | params.username | <code>string</code> |  |
 | params.updateDatabaseUserRequest |  |  |
+| [options] | <code>object</code> |  |
+| [options.timeout] | <code>number</code> | A request specific timeout |
+| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [cb] | <code>function</code> |  |
+
+<a name="module_atlas-api-client--AtlasAPIClient+getEvents"></a>
+
+#### atlasAPIClient.getEvents(params, [options], [cb]) ⇒ <code>Promise</code>
+Get Atlas events for the given group.
+
+**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Fulfill**: <code>Object</code>  
+**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
+**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
+**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
+**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
+**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: <code>Error</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> |  |
+| params.groupID | <code>string</code> |  |
+| [params.pageNum] | <code>number</code> |  |
+| [params.itemsPerPage] | <code>number</code> |  |
+| [params.pretty] | <code>boolean</code> |  |
+| [params.eventType] | <code>string</code> |  |
+| [params.minDate] | <code>string</code> |  |
+| [params.maxDate] | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
 | [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
