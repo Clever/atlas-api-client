@@ -23,7 +23,7 @@ var _ = strconv.FormatInt
 var _ = bytes.Compare
 
 // Version of the client.
-const Version = "0.6.3"
+const Version = "0.7.0"
 
 // VersionHeader is sent with every request.
 const VersionHeader = "X-Client-Version"
@@ -176,7 +176,7 @@ func (c *WagClient) GetClusters(ctx context.Context, groupID string) (*models.Ge
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -334,7 +334,7 @@ func (c *WagClient) CreateCluster(ctx context.Context, i *models.CreateClusterIn
 
 	}
 
-	req, err := http.NewRequest("POST", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "POST", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -481,7 +481,7 @@ func (c *WagClient) DeleteCluster(ctx context.Context, i *models.DeleteClusterIn
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("DELETE", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "DELETE", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return err
@@ -623,7 +623,7 @@ func (c *WagClient) GetCluster(ctx context.Context, i *models.GetClusterInput) (
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -781,7 +781,7 @@ func (c *WagClient) UpdateCluster(ctx context.Context, i *models.UpdateClusterIn
 
 	}
 
-	req, err := http.NewRequest("PATCH", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "PATCH", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -905,6 +905,153 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 	}
 }
 
+// RestartPrimaries makes a POST request to /groups/{groupID}/clusters/{clusterName}/restartPrimaries
+// Restart the cluster's primaries, triggering a failover.
+// 200: *models.RestoreJob
+// 400: *models.BadRequest
+// 401: *models.Unauthorized
+// 403: *models.Forbidden
+// 404: *models.NotFound
+// 409: *models.Conflict
+// 429: *models.TooManyRequests
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) RestartPrimaries(ctx context.Context, i *models.RestartPrimariesInput) (*models.RestoreJob, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := i.Path()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	req, err := http.NewRequestWithContext(ctx, "POST", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doRestartPrimariesRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doRestartPrimariesRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.RestoreJob, error) {
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "restartPrimaries")
+	req.Header.Set(VersionHeader, Version)
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "restartPrimaries")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(c.client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 200:
+
+		var output models.RestoreJob
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 401:
+
+		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 409:
+
+		var output models.Conflict
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 429:
+
+		var output models.TooManyRequests
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
 // GetRestoreJobs makes a GET request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 // Get all restore jobs for a cluster
 // 200: *models.GetRestoreJobsResponse
@@ -928,7 +1075,7 @@ func (c *WagClient) GetRestoreJobs(ctx context.Context, i *models.GetRestoreJobs
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -1086,7 +1233,7 @@ func (c *WagClient) CreateRestoreJob(ctx context.Context, i *models.CreateRestor
 
 	}
 
-	req, err := http.NewRequest("POST", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "POST", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -1229,7 +1376,7 @@ func (c *WagClient) GetSnapshotSchedule(ctx context.Context, i *models.GetSnapsh
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -1355,7 +1502,7 @@ func (c *WagClient) UpdateSnapshotSchedule(ctx context.Context, i *models.Update
 
 	}
 
-	req, err := http.NewRequest("PATCH", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "PATCH", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -1499,7 +1646,7 @@ func (c *WagClient) GetSnapshots(ctx context.Context, i *models.GetSnapshotsInpu
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -1622,7 +1769,7 @@ func (c *WagClient) GetRestoreJob(ctx context.Context, i *models.GetRestoreJobIn
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -1769,7 +1916,7 @@ func (c *WagClient) GetContainers(ctx context.Context, groupID string) (*models.
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -1927,7 +2074,7 @@ func (c *WagClient) CreateContainer(ctx context.Context, i *models.CreateContain
 
 	}
 
-	req, err := http.NewRequest("POST", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "POST", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -2071,7 +2218,7 @@ func (c *WagClient) GetContainer(ctx context.Context, i *models.GetContainerInpu
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -2205,7 +2352,7 @@ func (c *WagClient) UpdateContainer(ctx context.Context, i *models.UpdateContain
 
 	}
 
-	req, err := http.NewRequest("PATCH", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "PATCH", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -2352,7 +2499,7 @@ func (c *WagClient) GetDatabaseUsers(ctx context.Context, groupID string) (*mode
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -2510,7 +2657,7 @@ func (c *WagClient) CreateDatabaseUser(ctx context.Context, i *models.CreateData
 
 	}
 
-	req, err := http.NewRequest("POST", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "POST", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -2657,7 +2804,7 @@ func (c *WagClient) DeleteDatabaseUser(ctx context.Context, i *models.DeleteData
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("DELETE", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "DELETE", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return err
@@ -2796,7 +2943,7 @@ func (c *WagClient) GetDatabaseUser(ctx context.Context, i *models.GetDatabaseUs
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -2930,7 +3077,7 @@ func (c *WagClient) UpdateDatabaseUser(ctx context.Context, i *models.UpdateData
 
 	}
 
-	req, err := http.NewRequest("PATCH", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "PATCH", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -3054,6 +3201,135 @@ func (c *WagClient) doUpdateDatabaseUserRequest(ctx context.Context, req *http.R
 	}
 }
 
+// GetEvents makes a GET request to /groups/{groupID}/events
+// Get Atlas events for the given group.
+// 200: *models.GetEventsResponse
+// 400: *models.BadRequest
+// 401: *models.Unauthorized
+// 403: *models.Forbidden
+// 404: *models.NotFound
+// 500: *models.InternalError
+// default: client side HTTP errors, for example: context.DeadlineExceeded.
+func (c *WagClient) GetEvents(ctx context.Context, i *models.GetEventsInput) (*models.GetEventsResponse, error) {
+	headers := make(map[string]string)
+
+	var body []byte
+	path, err := i.Path()
+
+	if err != nil {
+		return nil, err
+	}
+
+	path = c.basePath + path
+
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doGetEventsRequest(ctx, req, headers)
+}
+
+func (c *WagClient) doGetEventsRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.GetEventsResponse, error) {
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Canonical-Resource", "getEvents")
+	req.Header.Set(VersionHeader, Version)
+
+	for field, value := range headers {
+		req.Header.Set(field, value)
+	}
+
+	// Add the opname for doers like tracing
+	ctx = context.WithValue(ctx, opNameCtx{}, "getEvents")
+	req = req.WithContext(ctx)
+	// Don't add the timeout in a "doer" because we don't want to call "defer.cancel()"
+	// until we've finished all the processing of the request object. Otherwise we'll cancel
+	// our own request before we've finished it.
+	if c.defaultTimeout != 0 {
+		ctx, cancel := context.WithTimeout(req.Context(), c.defaultTimeout)
+		defer cancel()
+		req = req.WithContext(ctx)
+	}
+	resp, err := c.requestDoer.Do(c.client, req)
+	retCode := 0
+	if resp != nil {
+		retCode = resp.StatusCode
+	}
+
+	// log all client failures and non-successful HT
+	logData := logger.M{
+		"backend":     "atlas-api-client",
+		"method":      req.Method,
+		"uri":         req.URL,
+		"status_code": retCode,
+	}
+	if err == nil && retCode > 399 {
+		logData["message"] = resp.Status
+		c.logger.ErrorD("client-request-finished", logData)
+	}
+	if err != nil {
+		logData["message"] = err.Error()
+		c.logger.ErrorD("client-request-finished", logData)
+		return nil, err
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+
+	case 200:
+
+		var output models.GetEventsResponse
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+
+		return &output, nil
+
+	case 400:
+
+		var output models.BadRequest
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 401:
+
+		var output models.Unauthorized
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 403:
+
+		var output models.Forbidden
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 404:
+
+		var output models.NotFound
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	case 500:
+
+		var output models.InternalError
+		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
+			return nil, err
+		}
+		return nil, &output
+
+	default:
+		return nil, &models.InternalError{Message: "Unknown response"}
+	}
+}
+
 // GetPeers makes a GET request to /groups/{groupID}/peers
 // Get All VPC Peering Connections in One Project (first page only)
 // 200: *models.GetPeersResponse
@@ -3074,7 +3350,7 @@ func (c *WagClient) GetPeers(ctx context.Context, groupID string) (*models.GetPe
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -3205,7 +3481,7 @@ func (c *WagClient) CreatePeer(ctx context.Context, i *models.CreatePeerInput) (
 
 	}
 
-	req, err := http.NewRequest("POST", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "POST", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -3325,7 +3601,7 @@ func (c *WagClient) DeletePeer(ctx context.Context, i *models.DeletePeerInput) e
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("DELETE", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "DELETE", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return err
@@ -3439,7 +3715,7 @@ func (c *WagClient) GetPeer(ctx context.Context, i *models.GetPeerInput) (*model
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -3562,7 +3838,7 @@ func (c *WagClient) UpdatePeer(ctx context.Context, i *models.UpdatePeerInput) (
 
 	}
 
-	req, err := http.NewRequest("PATCH", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "PATCH", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -3685,7 +3961,7 @@ func (c *WagClient) GetProcesses(ctx context.Context, groupID string) (*models.G
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -3832,7 +4108,7 @@ func (c *WagClient) GetProcessDatabases(ctx context.Context, i *models.GetProces
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -3979,7 +4255,7 @@ func (c *WagClient) GetProcessDatabaseMeasurements(ctx context.Context, i *model
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -4126,7 +4402,7 @@ func (c *WagClient) GetProcessDisks(ctx context.Context, i *models.GetProcessDis
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -4273,7 +4549,7 @@ func (c *WagClient) GetProcessDiskMeasurements(ctx context.Context, i *models.Ge
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err
@@ -4420,7 +4696,7 @@ func (c *WagClient) GetProcessMeasurements(ctx context.Context, i *models.GetPro
 
 	path = c.basePath + path
 
-	req, err := http.NewRequest("GET", path, bytes.NewBuffer(body))
+	req, err := http.NewRequestWithContext(ctx, "GET", path, bytes.NewBuffer(body))
 
 	if err != nil {
 		return nil, err

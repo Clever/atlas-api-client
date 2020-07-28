@@ -1034,6 +1034,163 @@ class AtlasAPIClient {
   }
 
   /**
+   * Restart the cluster's primaries, triggering a failover.
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {string} params.clusterName
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.Conflict}
+   * @reject {module:atlas-api-client.Errors.TooManyRequests}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  restartPrimaries(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._restartPrimaries, arguments), callback);
+  }
+
+  _restartPrimaries(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      headers["Canonical-Resource"] = "restartPrimaries";
+      headers[versionHeader] = version;
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+      if (!params.clusterName) {
+        reject(new Error("clusterName must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+
+      if (span && typeof span.log === "function") {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.log({event: "POST /api/atlas/v1.0/groups/{groupID}/clusters/{clusterName}/restartPrimaries"});
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "POST",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/clusters/" + params.clusterName + "/restartPrimaries",
+        gzip: true,
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 409:
+              var err = new Errors.Conflict(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 429:
+              var err = new Errors.TooManyRequests(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
    * Get all restore jobs for a cluster
    * @param {Object} params
    * @param {string} params.groupID
@@ -3315,6 +3472,174 @@ class AtlasAPIClient {
   }
 
   /**
+   * Get Atlas events for the given group.
+   * @param {Object} params
+   * @param {string} params.groupID
+   * @param {number} [params.pageNum]
+   * @param {number} [params.itemsPerPage]
+   * @param {boolean} [params.pretty]
+   * @param {string} [params.eventType]
+   * @param {string} [params.minDate]
+   * @param {string} [params.maxDate]
+   * @param {object} [options]
+   * @param {number} [options.timeout] - A request specific timeout
+   * @param {external:Span} [options.span] - An OpenTracing span - For example from the parent request
+   * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
+   * @param {function} [cb]
+   * @returns {Promise}
+   * @fulfill {Object}
+   * @reject {module:atlas-api-client.Errors.BadRequest}
+   * @reject {module:atlas-api-client.Errors.Unauthorized}
+   * @reject {module:atlas-api-client.Errors.Forbidden}
+   * @reject {module:atlas-api-client.Errors.NotFound}
+   * @reject {module:atlas-api-client.Errors.InternalError}
+   * @reject {Error}
+   */
+  getEvents(params, options, cb) {
+    let callback = cb;
+    if (!cb && typeof options === "function") {
+      callback = options;
+    }
+    return applyCallback(this._hystrixCommand.execute(this._getEvents, arguments), callback);
+  }
+
+  _getEvents(params, options, cb) {
+    if (!cb && typeof options === "function") {
+      options = undefined;
+    }
+
+    return new Promise((resolve, reject) => {
+      if (!options) {
+        options = {};
+      }
+
+      const timeout = options.timeout || this.timeout;
+      const tracer = options.tracer || this.tracer;
+      const span = options.span;
+
+      const headers = {};
+      headers["Canonical-Resource"] = "getEvents";
+      headers[versionHeader] = version;
+      if (!params.groupID) {
+        reject(new Error("groupID must be non-empty because it's a path parameter"));
+        return;
+      }
+
+      const query = {};
+      if (typeof params.pageNum !== "undefined") {
+        query["pageNum"] = params.pageNum;
+      }
+
+      if (typeof params.itemsPerPage !== "undefined") {
+        query["itemsPerPage"] = params.itemsPerPage;
+      }
+
+      if (typeof params.pretty !== "undefined") {
+        query["pretty"] = params.pretty;
+      }
+
+      if (typeof params.eventType !== "undefined") {
+        query["eventType"] = params.eventType;
+      }
+
+      if (typeof params.minDate !== "undefined") {
+        query["minDate"] = params.minDate;
+      }
+
+      if (typeof params.maxDate !== "undefined") {
+        query["maxDate"] = params.maxDate;
+      }
+
+
+      if (span && typeof span.log === "function") {
+        // Need to get tracer to inject. Use HTTP headers format so we can properly escape special characters
+        tracer.inject(span, opentracing.FORMAT_HTTP_HEADERS, headers);
+        span.log({event: "GET /api/atlas/v1.0/groups/{groupID}/events"});
+        span.setTag("span.kind", "client");
+      }
+
+      const requestOptions = {
+        method: "GET",
+        uri: this.address + "/api/atlas/v1.0/groups/" + params.groupID + "/events",
+        gzip: true,
+        json: true,
+        timeout,
+        headers,
+        qs: query,
+        useQuerystring: true,
+      };
+      if (this.keepalive) {
+        requestOptions.forever = true;
+      }
+
+
+      const retryPolicy = options.retryPolicy || this.retryPolicy || singleRetryPolicy;
+      const backoffs = retryPolicy.backoffs();
+      const logger = this.logger;
+
+      let retries = 0;
+      (function requestOnce() {
+        request(requestOptions, (err, response, body) => {
+          if (retries < backoffs.length && retryPolicy.retry(requestOptions, err, response, body)) {
+            const backoff = backoffs[retries];
+            retries += 1;
+            setTimeout(requestOnce, backoff);
+            return;
+          }
+          if (err) {
+            err._fromRequest = true;
+            responseLog(logger, requestOptions, response, err)
+            reject(err);
+            return;
+          }
+
+          switch (response.statusCode) {
+            case 200:
+              resolve(body);
+              break;
+
+            case 400:
+              var err = new Errors.BadRequest(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 401:
+              var err = new Errors.Unauthorized(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 403:
+              var err = new Errors.Forbidden(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 404:
+              var err = new Errors.NotFound(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            case 500:
+              var err = new Errors.InternalError(body || {});
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+
+            default:
+              var err = new Error("Received unexpected statusCode " + response.statusCode);
+              responseLog(logger, requestOptions, response, err);
+              reject(err);
+              return;
+          }
+        });
+      }());
+    });
+  }
+
+  /**
    * Get All VPC Peering Connections in One Project (first page only)
    * @param {string} groupID
    * @param {object} [options]
@@ -5099,7 +5424,7 @@ module.exports.Errors = Errors;
 
 module.exports.DefaultCircuitOptions = defaultCircuitOptions;
 
-const version = "0.6.3";
+const version = "0.7.0";
 const versionHeader = "X-Client-Version";
 module.exports.Version = version;
 module.exports.VersionHeader = versionHeader;

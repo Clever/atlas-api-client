@@ -76,6 +76,19 @@ type Client interface {
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateCluster(ctx context.Context, i *models.UpdateClusterInput) (*models.Cluster, error)
 
+	// RestartPrimaries makes a POST request to /groups/{groupID}/clusters/{clusterName}/restartPrimaries
+	// Restart the cluster's primaries, triggering a failover.
+	// 200: *models.RestoreJob
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
+	// 404: *models.NotFound
+	// 409: *models.Conflict
+	// 429: *models.TooManyRequests
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	RestartPrimaries(ctx context.Context, i *models.RestartPrimariesInput) (*models.RestoreJob, error)
+
 	// GetRestoreJobs makes a GET request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 	// Get all restore jobs for a cluster
 	// 200: *models.GetRestoreJobsResponse
@@ -257,6 +270,17 @@ type Client interface {
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
 	UpdateDatabaseUser(ctx context.Context, i *models.UpdateDatabaseUserInput) (*models.DatabaseUser, error)
+
+	// GetEvents makes a GET request to /groups/{groupID}/events
+	// Get Atlas events for the given group.
+	// 200: *models.GetEventsResponse
+	// 400: *models.BadRequest
+	// 401: *models.Unauthorized
+	// 403: *models.Forbidden
+	// 404: *models.NotFound
+	// 500: *models.InternalError
+	// default: client side HTTP errors, for example: context.DeadlineExceeded.
+	GetEvents(ctx context.Context, i *models.GetEventsInput) (*models.GetEventsResponse, error)
 
 	// GetPeers makes a GET request to /groups/{groupID}/peers
 	// Get All VPC Peering Connections in One Project (first page only)

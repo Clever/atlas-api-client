@@ -19,6 +19,7 @@ interface IterResult<R> {
   map<T>(f: (r: R) => T, cb?: Callback<T[]>): Promise<T[]>;
   toArray(cb?: Callback<R[]>): Promise<R[]>;
   forEach(f: (r: R) => void, cb?: Callback<void>): Promise<void>;
+  forEachAsync(f: (r: R) => void, cb?: Callback<void>): Promise<void>;
 }
 
 interface CircuitOptions {
@@ -67,6 +68,8 @@ declare class AtlasAPIClient {
   
   updateCluster(params: models.UpdateClusterParams, options?: RequestOptions, cb?: Callback<models.Cluster>): Promise<models.Cluster>
   
+  restartPrimaries(params: models.RestartPrimariesParams, options?: RequestOptions, cb?: Callback<models.RestoreJob>): Promise<models.RestoreJob>
+  
   getRestoreJobs(params: models.GetRestoreJobsParams, options?: RequestOptions, cb?: Callback<models.GetRestoreJobsResponse>): Promise<models.GetRestoreJobsResponse>
   
   createRestoreJob(params: models.CreateRestoreJobParams, options?: RequestOptions, cb?: Callback<models.CreateRestoreJobResponse>): Promise<models.CreateRestoreJobResponse>
@@ -96,6 +99,8 @@ declare class AtlasAPIClient {
   getDatabaseUser(params: models.GetDatabaseUserParams, options?: RequestOptions, cb?: Callback<models.DatabaseUser>): Promise<models.DatabaseUser>
   
   updateDatabaseUser(params: models.UpdateDatabaseUserParams, options?: RequestOptions, cb?: Callback<models.DatabaseUser>): Promise<models.DatabaseUser>
+  
+  getEvents(params: models.GetEventsParams, options?: RequestOptions, cb?: Callback<models.GetEventsResponse>): Promise<models.GetEventsResponse>
   
   getPeers(groupID: string, options?: RequestOptions, cb?: Callback<models.GetPeersResponse>): Promise<models.GetPeersResponse>
   
@@ -373,6 +378,40 @@ declare namespace AtlasAPIClient {
   partitionName?: string;
 };
     
+    type Event = {
+  alertConfigId?: string;
+  alertId?: string;
+  apiKeyId?: string;
+  collection?: string;
+  created?: string;
+  currentValue?: MetricValue;
+  database?: string;
+  eventTypeName?: EventType;
+  groupId?: string;
+  hostname?: string;
+  id?: string;
+  invoiceId?: string;
+  isGlobalAdmin?: boolean;
+  links?: Link[];
+  metricName?: string;
+  opType?: string;
+  orgId?: string;
+  paymentId?: string;
+  port?: number;
+  publicKey?: string;
+  remoteAddress?: string;
+  replicaSetName?: string;
+  shardName?: string;
+  targetPublicKey?: string;
+  targetUsername?: string;
+  teamID?: string;
+  userId?: string;
+  username?: string;
+  whitelistEntry?: string;
+};
+    
+    type EventType = ("CREDIT_CARD_ABOUT_TO_EXPIRE" | "PENDING_INVOICE_OVER_THRESHOLD" | "DAILY_BILL_OVER_THRESHOLD" | "AWS_ENCRYPTION_KEY_NEEDS_ROTATION" | "AZURE_ENCRYPTION_KEY_NEEDS_ROTATION" | "GCP_ENCRYPTION_KEY_NEEDS_ROTATION" | "HOST_DOWN" | "OUTSIDE_METRIC_THRESHOLD" | "USERS_WITHOUT_MULTIFACTOR_AUTH" | "PRIMARY_ELECTED" | "NO_PRIMARY" | "TOO_MANY_ELECTIONS" | "REPLICATION_OPLOG_WINDOW_RUNNING_OUT" | "CLUSTER_MONGOS_IS_MISSING" | "USER_ROLES_CHANGED_AUDIT" | "JOINED_GROUP" | "REMOVED_FROM_GROUP" | "NDS_X509_USER_AUTHENTICATION_MANAGED_USER_CERTS_EXPIRATION_CHECK" | "NDS_X509_USER_AUTHENTICATION_CUSTOMER_CA_EXPIRATION_CHECK");
+    
     type Forbidden = {
   detail?: string;
   error?: number;
@@ -408,6 +447,22 @@ declare namespace AtlasAPIClient {
     
     type GetDatabaseUsersResponse = {
   results?: DatabaseUser[];
+  totalCount?: number;
+};
+    
+    type GetEventsParams = {
+  groupID: string;
+  pageNum?: number;
+  itemsPerPage?: number;
+  pretty?: boolean;
+  eventType?: ("CREDIT_CARD_ABOUT_TO_EXPIRE" | "PENDING_INVOICE_OVER_THRESHOLD" | "DAILY_BILL_OVER_THRESHOLD" | "AWS_ENCRYPTION_KEY_NEEDS_ROTATION" | "AZURE_ENCRYPTION_KEY_NEEDS_ROTATION" | "GCP_ENCRYPTION_KEY_NEEDS_ROTATION" | "HOST_DOWN" | "OUTSIDE_METRIC_THRESHOLD" | "USERS_WITHOUT_MULTIFACTOR_AUTH" | "PRIMARY_ELECTED" | "NO_PRIMARY" | "TOO_MANY_ELECTIONS" | "REPLICATION_OPLOG_WINDOW_RUNNING_OUT" | "CLUSTER_MONGOS_IS_MISSING" | "USER_ROLES_CHANGED_AUDIT" | "JOINED_GROUP" | "REMOVED_FROM_GROUP" | "NDS_X509_USER_AUTHENTICATION_MANAGED_USER_CERTS_EXPIRATION_CHECK" | "NDS_X509_USER_AUTHENTICATION_CUSTOMER_CA_EXPIRATION_CHECK");
+  minDate?: string;
+  maxDate?: string;
+};
+    
+    type GetEventsResponse = {
+  links?: Link[];
+  results?: Event[];
   totalCount?: number;
 };
     
@@ -579,6 +634,11 @@ declare namespace AtlasAPIClient {
   units?: Units;
 };
     
+    type MetricValue = {
+  number?: number;
+  units?: ("RAW" | "BITS" | "BYTES" | "KILOBITS" | "KILOBYTES" | "MEGABITS" | "MEGABYTES" | "GIGABITS" | "GIGABYTES" | "TERABYTES" | "PETABYTES" | "MILLISECONDS" | "SECONDS" | "MINUTES" | "HOURS" | "DAYS");
+};
+    
     type Peer = {
   accepterRegionName?: string;
   awsAccountId?: string;
@@ -654,6 +714,11 @@ declare namespace AtlasAPIClient {
   electableNodes?: number;
   priority?: number;
   readOnlyNodes?: number;
+};
+    
+    type RestartPrimariesParams = {
+  groupID: string;
+  clusterName: string;
 };
     
     type RestoreJob = {
