@@ -78,7 +78,7 @@ type Client interface {
 
 	// RestartPrimaries makes a POST request to /groups/{groupID}/clusters/{clusterName}/restartPrimaries
 	// Restart the cluster's primaries, triggering a failover.
-	// 200: *models.RestoreJob
+	// 200: nil
 	// 400: *models.BadRequest
 	// 401: *models.Unauthorized
 	// 403: *models.Forbidden
@@ -87,7 +87,7 @@ type Client interface {
 	// 429: *models.TooManyRequests
 	// 500: *models.InternalError
 	// default: client side HTTP errors, for example: context.DeadlineExceeded.
-	RestartPrimaries(ctx context.Context, i *models.RestartPrimariesInput) (*models.RestoreJob, error)
+	RestartPrimaries(ctx context.Context, i *models.RestartPrimariesInput) error
 
 	// GetRestoreJobs makes a GET request to /groups/{groupID}/clusters/{clusterName}/restoreJobs
 	// Get all restore jobs for a cluster

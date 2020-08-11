@@ -88,7 +88,7 @@ func TestRestartPrimaries(t *testing.T) {
 
 	client := conf.Client()
 
-	_, err := client.RestartPrimaries(context.Background(), &models.RestartPrimariesInput{
+	err := client.RestartPrimaries(context.Background(), &models.RestartPrimariesInput{
 		GroupID:     groupID,
 		ClusterName: clusterName,
 	})

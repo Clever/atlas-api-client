@@ -854,8 +854,8 @@ type GetEventsInput struct {
 	ItemsPerPage *int64
 	Pretty       *bool
 	EventType    *string
-	MinDate      *strfmt.Date
-	MaxDate      *strfmt.Date
+	MinDate      *strfmt.DateTime
+	MaxDate      *strfmt.DateTime
 }
 
 // Validate returns an error if any of the GetEventsInput parameters don't satisfy the
@@ -875,13 +875,13 @@ func (i GetEventsInput) Validate() error {
 	}
 
 	if i.MinDate != nil {
-		if err := validate.FormatOf("minDate", "query", "date", (*i.MinDate).String(), strfmt.Default); err != nil {
+		if err := validate.FormatOf("minDate", "query", "date-time", (*i.MinDate).String(), strfmt.Default); err != nil {
 			return err
 		}
 	}
 
 	if i.MaxDate != nil {
-		if err := validate.FormatOf("maxDate", "query", "date", (*i.MaxDate).String(), strfmt.Default); err != nil {
+		if err := validate.FormatOf("maxDate", "query", "date-time", (*i.MaxDate).String(), strfmt.Default); err != nil {
 			return err
 		}
 	}

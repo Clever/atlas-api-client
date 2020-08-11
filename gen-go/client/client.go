@@ -23,7 +23,7 @@ var _ = strconv.FormatInt
 var _ = bytes.Compare
 
 // Version of the client.
-const Version = "0.7.0"
+const Version = "0.7.1"
 
 // VersionHeader is sent with every request.
 const VersionHeader = "X-Client-Version"
@@ -907,7 +907,7 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 
 // RestartPrimaries makes a POST request to /groups/{groupID}/clusters/{clusterName}/restartPrimaries
 // Restart the cluster's primaries, triggering a failover.
-// 200: *models.RestoreJob
+// 200: nil
 // 400: *models.BadRequest
 // 401: *models.Unauthorized
 // 403: *models.Forbidden
@@ -916,14 +916,14 @@ func (c *WagClient) doUpdateClusterRequest(ctx context.Context, req *http.Reques
 // 429: *models.TooManyRequests
 // 500: *models.InternalError
 // default: client side HTTP errors, for example: context.DeadlineExceeded.
-func (c *WagClient) RestartPrimaries(ctx context.Context, i *models.RestartPrimariesInput) (*models.RestoreJob, error) {
+func (c *WagClient) RestartPrimaries(ctx context.Context, i *models.RestartPrimariesInput) error {
 	headers := make(map[string]string)
 
 	var body []byte
 	path, err := i.Path()
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	path = c.basePath + path
@@ -931,13 +931,13 @@ func (c *WagClient) RestartPrimaries(ctx context.Context, i *models.RestartPrima
 	req, err := http.NewRequestWithContext(ctx, "POST", path, bytes.NewBuffer(body))
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	return c.doRestartPrimariesRequest(ctx, req, headers)
 }
 
-func (c *WagClient) doRestartPrimariesRequest(ctx context.Context, req *http.Request, headers map[string]string) (*models.RestoreJob, error) {
+func (c *WagClient) doRestartPrimariesRequest(ctx context.Context, req *http.Request, headers map[string]string) error {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Canonical-Resource", "restartPrimaries")
 	req.Header.Set(VersionHeader, Version)
@@ -977,78 +977,73 @@ func (c *WagClient) doRestartPrimariesRequest(ctx context.Context, req *http.Req
 	if err != nil {
 		logData["message"] = err.Error()
 		c.logger.ErrorD("client-request-finished", logData)
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
 	switch resp.StatusCode {
 
 	case 200:
 
-		var output models.RestoreJob
-		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
-		}
-
-		return &output, nil
+		return nil
 
 	case 400:
 
 		var output models.BadRequest
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
+			return err
 		}
-		return nil, &output
+		return &output
 
 	case 401:
 
 		var output models.Unauthorized
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
+			return err
 		}
-		return nil, &output
+		return &output
 
 	case 403:
 
 		var output models.Forbidden
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
+			return err
 		}
-		return nil, &output
+		return &output
 
 	case 404:
 
 		var output models.NotFound
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
+			return err
 		}
-		return nil, &output
+		return &output
 
 	case 409:
 
 		var output models.Conflict
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
+			return err
 		}
-		return nil, &output
+		return &output
 
 	case 429:
 
 		var output models.TooManyRequests
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
+			return err
 		}
-		return nil, &output
+		return &output
 
 	case 500:
 
 		var output models.InternalError
 		if err := json.NewDecoder(resp.Body).Decode(&output); err != nil {
-			return nil, err
+			return err
 		}
-		return nil, &output
+		return &output
 
 	default:
-		return nil, &models.InternalError{Message: "Unknown response"}
+		return &models.InternalError{Message: "Unknown response"}
 	}
 }
 

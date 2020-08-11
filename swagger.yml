@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   title: atlas-api-client
   description: "Swagger description of the MongoDB Atlas API: https://docs.atlas.mongodb.com/reference/api-resources/. Used to generate client code to interact with the API."
-  version: 0.7.0
+  version: 0.7.1
   x-npm-package: atlas-api-client
 basePath: /api/atlas/v1.0
 schemes:
@@ -460,11 +460,8 @@ paths:
           required: true
           type: string
       responses:
-        # TODO not sure if this is 200, 201, 202
         200:
           description: "Success"
-          schema:
-            $ref: "#/definitions/RestoreJob"
         401:
           description: "Unauthorized"
           schema:
@@ -1321,11 +1318,11 @@ paths:
         - name: minDate
           in: query
           type: string
-          format: date
+          format: date-time
         - name: maxDate
           in: query
           type: string
-          format: date
+          format: date-time
       responses:
         200:
           description: "Success"
