@@ -224,7 +224,7 @@ Update a Cluster
 Restart the cluster's primaries, triggering a failover.
 
 **Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
-**Fulfill**: <code>Object</code>  
+**Fulfill**: <code>undefined</code>  
 **Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
 **Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
 **Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  

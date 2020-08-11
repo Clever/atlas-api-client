@@ -1044,7 +1044,7 @@ class AtlasAPIClient {
    * @param {module:atlas-api-client.RetryPolicies} [options.retryPolicy] - A request specific retryPolicy
    * @param {function} [cb]
    * @returns {Promise}
-   * @fulfill {Object}
+   * @fulfill {undefined}
    * @reject {module:atlas-api-client.Errors.BadRequest}
    * @reject {module:atlas-api-client.Errors.Unauthorized}
    * @reject {module:atlas-api-client.Errors.Forbidden}
@@ -1134,7 +1134,7 @@ class AtlasAPIClient {
 
           switch (response.statusCode) {
             case 200:
-              resolve(body);
+              resolve();
               break;
 
             case 400:
@@ -5424,7 +5424,7 @@ module.exports.Errors = Errors;
 
 module.exports.DefaultCircuitOptions = defaultCircuitOptions;
 
-const version = "0.7.0";
+const version = "0.7.1";
 const versionHeader = "X-Client-Version";
 module.exports.Version = version;
 module.exports.VersionHeader = versionHeader;

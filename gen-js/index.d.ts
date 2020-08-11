@@ -68,7 +68,7 @@ declare class AtlasAPIClient {
   
   updateCluster(params: models.UpdateClusterParams, options?: RequestOptions, cb?: Callback<models.Cluster>): Promise<models.Cluster>
   
-  restartPrimaries(params: models.RestartPrimariesParams, options?: RequestOptions, cb?: Callback<models.RestoreJob>): Promise<models.RestoreJob>
+  restartPrimaries(params: models.RestartPrimariesParams, options?: RequestOptions, cb?: Callback<void>): Promise<void>
   
   getRestoreJobs(params: models.GetRestoreJobsParams, options?: RequestOptions, cb?: Callback<models.GetRestoreJobsResponse>): Promise<models.GetRestoreJobsResponse>
   
