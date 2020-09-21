@@ -1,6 +1,8 @@
 # atlas-api-client [![GoDoc](https://godoc.org/github.com/Clever/atlas-api-client/gen-go/client?status.png)](https://godoc.org/github.com/Clever/atlas-api-client/gen-go/client)
 
-Go and JavaScript clients for MongoDB Atlas
+With MongoDB's release of [go-client-mongodb-atlas](https://github.com/mongodb/go-client-mongodb-atlas), new repos should opt to use the official client instead. This repo is used for those that have not migrated over.
+
+Go and JavaScript clients for MongoDB Atlas.
 
 Owned by eng-infra.
 
