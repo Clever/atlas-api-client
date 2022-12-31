@@ -38,3 +38,4 @@ func main() {
 - Update swagger.yml with your endpoints. See the [Swagger spec](http://swagger.io/specification/) for additional details on defining your swagger file.
 
 - Run `make generate` to generate the code.
+test
