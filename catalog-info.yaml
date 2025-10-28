@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: atlas-api-client
+  description: Go client for MongoDB Atlas
+  owner: eng-infra
+spec:
+  type: unknown
+  lifecycle: production
+  owner: eng-infra
+  system: Clever
