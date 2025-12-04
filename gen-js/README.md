@@ -75,7 +75,7 @@ Create a new client object.
 | [options.discovery] | <code>bool</code> |  | Use clever-discovery to locate the server. Must provide this or the address argument |
 | [options.timeout] | <code>number</code> |  | The timeout to use for all client requests, in milliseconds. This can be overridden on a per-request basis. Default is 5000ms. |
 | [options.keepalive] | <code>bool</code> |  | Set keepalive to true for client requests. This sets the forever: true attribute in request. Defaults to true. |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | <code>RetryPolicies.Single</code> | The logic to determine which requests to retry, as well as how many times to retry. |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | <code>RetryPolicies.Single</code> | The logic to determine which requests to retry, as well as how many times to retry. |
 | [options.logger] | <code>module:kayvee.Logger</code> | <code>logger.New(&quot;atlas-api-client-wagclient&quot;)</code> | The Kayvee logger to use in the client. |
 | [options.circuit] | <code>Object</code> |  | Options for constructing the client's circuit breaker. |
 | [options.circuit.forceClosed] | <code>bool</code> |  | When set to true the circuit will always be closed. Default: true. |
@@ -89,15 +89,15 @@ Create a new client object.
 #### atlasAPIClient.getClusters(groupID, [options], [cb]) ⇒ <code>Promise</code>
 Get all clusters
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -105,8 +105,8 @@ Get all clusters
 | groupID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+createCluster"></a>
@@ -114,15 +114,15 @@ Get all clusters
 #### atlasAPIClient.createCluster(params, [options], [cb]) ⇒ <code>Promise</code>
 Create a Cluster
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -132,8 +132,8 @@ Create a Cluster
 | params.createOrUpdateClusterRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+deleteCluster"></a>
@@ -141,15 +141,15 @@ Create a Cluster
 #### atlasAPIClient.deleteCluster(params, [options], [cb]) ⇒ <code>Promise</code>
 Deletes a cluster
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>undefined</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -159,8 +159,8 @@ Deletes a cluster
 | params.clusterName | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getCluster"></a>
@@ -168,15 +168,15 @@ Deletes a cluster
 #### atlasAPIClient.getCluster(params, [options], [cb]) ⇒ <code>Promise</code>
 Gets a cluster
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -186,8 +186,8 @@ Gets a cluster
 | params.clusterName | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+updateCluster"></a>
@@ -195,15 +195,15 @@ Gets a cluster
 #### atlasAPIClient.updateCluster(params, [options], [cb]) ⇒ <code>Promise</code>
 Update a Cluster
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -214,8 +214,8 @@ Update a Cluster
 | params.createOrUpdateClusterRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+restartPrimaries"></a>
@@ -223,15 +223,15 @@ Update a Cluster
 #### atlasAPIClient.restartPrimaries(params, [options], [cb]) ⇒ <code>Promise</code>
 Restart the cluster's primaries, triggering a failover.
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>undefined</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -241,8 +241,8 @@ Restart the cluster's primaries, triggering a failover.
 | params.clusterName | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getRestoreJobs"></a>
@@ -250,15 +250,15 @@ Restart the cluster's primaries, triggering a failover.
 #### atlasAPIClient.getRestoreJobs(params, [options], [cb]) ⇒ <code>Promise</code>
 Get all restore jobs for a cluster
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -270,8 +270,8 @@ Get all restore jobs for a cluster
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+createRestoreJob"></a>
@@ -279,15 +279,15 @@ Get all restore jobs for a cluster
 #### atlasAPIClient.createRestoreJob(params, [options], [cb]) ⇒ <code>Promise</code>
 Create a restore job
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -298,8 +298,8 @@ Create a restore job
 | params.createRestoreJobRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getSnapshotSchedule"></a>
@@ -307,11 +307,11 @@ Create a restore job
 #### atlasAPIClient.getSnapshotSchedule(params, [options], [cb]) ⇒ <code>Promise</code>
 Get snapshot schedules of a cluster
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -321,8 +321,8 @@ Get snapshot schedules of a cluster
 | params.clusterName | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+updateSnapshotSchedule"></a>
@@ -330,15 +330,15 @@ Get snapshot schedules of a cluster
 #### atlasAPIClient.updateSnapshotSchedule(params, [options], [cb]) ⇒ <code>Promise</code>
 Update a Cluster's snapshot schedule
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -349,8 +349,8 @@ Update a Cluster's snapshot schedule
 | params.updateSnapshotSchedule |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getSnapshots"></a>
@@ -358,12 +358,12 @@ Update a Cluster's snapshot schedule
 #### atlasAPIClient.getSnapshots(params, [options], [cb]) ⇒ <code>Promise</code>
 Gets snapshots for a cluster
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -373,8 +373,8 @@ Gets snapshots for a cluster
 | params.clusterName | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getRestoreJob"></a>
@@ -382,15 +382,15 @@ Gets snapshots for a cluster
 #### atlasAPIClient.getRestoreJob(params, [options], [cb]) ⇒ <code>Promise</code>
 Get one restore job
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -401,8 +401,8 @@ Get one restore job
 | params.jobID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getContainers"></a>
@@ -410,15 +410,15 @@ Get one restore job
 #### atlasAPIClient.getContainers(groupID, [options], [cb]) ⇒ <code>Promise</code>
 Get All Containers
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -426,8 +426,8 @@ Get All Containers
 | groupID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+createContainer"></a>
@@ -435,15 +435,15 @@ Get All Containers
 #### atlasAPIClient.createContainer(params, [options], [cb]) ⇒ <code>Promise</code>
 Create a Container
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -453,8 +453,8 @@ Create a Container
 | params.createOrUpdateContainerRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getContainer"></a>
@@ -462,12 +462,12 @@ Create a Container
 #### atlasAPIClient.getContainer(params, [options], [cb]) ⇒ <code>Promise</code>
 Gets a container
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -477,8 +477,8 @@ Gets a container
 | params.containerID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+updateContainer"></a>
@@ -486,15 +486,15 @@ Gets a container
 #### atlasAPIClient.updateContainer(params, [options], [cb]) ⇒ <code>Promise</code>
 Update a Container
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -505,8 +505,8 @@ Update a Container
 | params.createOrUpdateContainerRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getDatabaseUsers"></a>
@@ -514,15 +514,15 @@ Update a Container
 #### atlasAPIClient.getDatabaseUsers(groupID, [options], [cb]) ⇒ <code>Promise</code>
 Get All DatabaseUsers
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -530,8 +530,8 @@ Get All DatabaseUsers
 | groupID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+createDatabaseUser"></a>
@@ -539,15 +539,15 @@ Get All DatabaseUsers
 #### atlasAPIClient.createDatabaseUser(params, [options], [cb]) ⇒ <code>Promise</code>
 Create a DatabaseUser
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -557,8 +557,8 @@ Create a DatabaseUser
 | params.createDatabaseUserRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+deleteDatabaseUser"></a>
@@ -566,15 +566,15 @@ Create a DatabaseUser
 #### atlasAPIClient.deleteDatabaseUser(params, [options], [cb]) ⇒ <code>Promise</code>
 Deletes a DatabaseUser
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>undefined</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -584,8 +584,8 @@ Deletes a DatabaseUser
 | params.username | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getDatabaseUser"></a>
@@ -593,12 +593,12 @@ Deletes a DatabaseUser
 #### atlasAPIClient.getDatabaseUser(params, [options], [cb]) ⇒ <code>Promise</code>
 Gets a database user
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -608,8 +608,8 @@ Gets a database user
 | params.username | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+updateDatabaseUser"></a>
@@ -617,15 +617,15 @@ Gets a database user
 #### atlasAPIClient.updateDatabaseUser(params, [options], [cb]) ⇒ <code>Promise</code>
 Update a DatabaseUser
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -636,8 +636,8 @@ Update a DatabaseUser
 | params.updateDatabaseUserRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getEvents"></a>
@@ -645,13 +645,13 @@ Update a DatabaseUser
 #### atlasAPIClient.getEvents(params, [options], [cb]) ⇒ <code>Promise</code>
 Get Atlas events for the given group.
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -666,8 +666,8 @@ Get Atlas events for the given group.
 | [params.maxDate] | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getPeers"></a>
@@ -675,12 +675,12 @@ Get Atlas events for the given group.
 #### atlasAPIClient.getPeers(groupID, [options], [cb]) ⇒ <code>Promise</code>
 Get All VPC Peering Connections in One Project (first page only)
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -688,8 +688,8 @@ Get All VPC Peering Connections in One Project (first page only)
 | groupID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+createPeer"></a>
@@ -697,12 +697,12 @@ Get All VPC Peering Connections in One Project (first page only)
 #### atlasAPIClient.createPeer(params, [options], [cb]) ⇒ <code>Promise</code>
 Create One New VPC Peering Connection
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -712,8 +712,8 @@ Create One New VPC Peering Connection
 | params.createPeerRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+deletePeer"></a>
@@ -721,12 +721,12 @@ Create One New VPC Peering Connection
 #### atlasAPIClient.deletePeer(params, [options], [cb]) ⇒ <code>Promise</code>
 Delete One Existing VPC Peering Connection
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>undefined</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -736,8 +736,8 @@ Delete One Existing VPC Peering Connection
 | params.peerID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getPeer"></a>
@@ -745,11 +745,11 @@ Delete One Existing VPC Peering Connection
 #### atlasAPIClient.getPeer(params, [options], [cb]) ⇒ <code>Promise</code>
 Gets One Specific VPC Peering Connection
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -759,8 +759,8 @@ Gets One Specific VPC Peering Connection
 | params.peerID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+updatePeer"></a>
@@ -768,12 +768,12 @@ Gets One Specific VPC Peering Connection
 #### atlasAPIClient.updatePeer(params, [options], [cb]) ⇒ <code>Promise</code>
 Update One Existing VPC Peering Connection
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -784,8 +784,8 @@ Update One Existing VPC Peering Connection
 | params.updatePeerRequest |  |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getProcesses"></a>
@@ -793,15 +793,15 @@ Update One Existing VPC Peering Connection
 #### atlasAPIClient.getProcesses(groupID, [options], [cb]) ⇒ <code>Promise</code>
 Get All Processes
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -809,8 +809,8 @@ Get All Processes
 | groupID | <code>string</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getProcessDatabases"></a>
@@ -818,15 +818,15 @@ Get All Processes
 #### atlasAPIClient.getProcessDatabases(params, [options], [cb]) ⇒ <code>Promise</code>
 Get the available databases for a Atlas MongoDB Process
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -839,8 +839,8 @@ Get the available databases for a Atlas MongoDB Process
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getProcessDatabaseMeasurements"></a>
@@ -848,15 +848,15 @@ Get the available databases for a Atlas MongoDB Process
 #### atlasAPIClient.getProcessDatabaseMeasurements(params, [options], [cb]) ⇒ <code>Promise</code>
 Get the measurements of the specified database for a Atlas MongoDB process.
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -870,13 +870,13 @@ Get the measurements of the specified database for a Atlas MongoDB process.
 | [params.period] | <code>string</code> |  |
 | [params.start] | <code>string</code> |  |
 | [params.end] | <code>string</code> |  |
-| [params.m] | <code>[ &#x27;Array&#x27; ].&lt;string&gt;</code> |  |
+| [params.m] | <code>Array.&lt;string&gt;</code> |  |
 | [params.pageNum] | <code>number</code> |  |
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getProcessDisks"></a>
@@ -884,15 +884,15 @@ Get the measurements of the specified database for a Atlas MongoDB process.
 #### atlasAPIClient.getProcessDisks(params, [options], [cb]) ⇒ <code>Promise</code>
 Get the available disks for a Atlas MongoDB Process
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -905,8 +905,8 @@ Get the available disks for a Atlas MongoDB Process
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getProcessDiskMeasurements"></a>
@@ -914,15 +914,15 @@ Get the available disks for a Atlas MongoDB Process
 #### atlasAPIClient.getProcessDiskMeasurements(params, [options], [cb]) ⇒ <code>Promise</code>
 Get the measurements of the specified disk for a Atlas MongoDB process.
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -936,13 +936,13 @@ Get the measurements of the specified disk for a Atlas MongoDB process.
 | [params.period] | <code>string</code> |  |
 | [params.start] | <code>string</code> |  |
 | [params.end] | <code>string</code> |  |
-| [params.m] | <code>[ &#x27;Array&#x27; ].&lt;string&gt;</code> |  |
+| [params.m] | <code>Array.&lt;string&gt;</code> |  |
 | [params.pageNum] | <code>number</code> |  |
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient+getProcessMeasurements"></a>
@@ -950,15 +950,15 @@ Get the measurements of the specified disk for a Atlas MongoDB process.
 #### atlasAPIClient.getProcessMeasurements(params, [options], [cb]) ⇒ <code>Promise</code>
 Get measurements for a specific Atlas MongoDB process (mongod or mongos).
 
-**Kind**: instance method of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: instance method of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 **Fulfill**: <code>Object</code>  
-**Reject**: <code>[BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)</code>  
-**Reject**: <code>[Unauthorized](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)</code>  
-**Reject**: <code>[Forbidden](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)</code>  
-**Reject**: <code>[NotFound](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)</code>  
-**Reject**: <code>[Conflict](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)</code>  
-**Reject**: <code>[TooManyRequests](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)</code>  
-**Reject**: <code>[InternalError](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)</code>  
+**Reject**: [<code>BadRequest</code>](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest)  
+**Reject**: [<code>Unauthorized</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Unauthorized)  
+**Reject**: [<code>Forbidden</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Forbidden)  
+**Reject**: [<code>NotFound</code>](#module_atlas-api-client--AtlasAPIClient.Errors.NotFound)  
+**Reject**: [<code>Conflict</code>](#module_atlas-api-client--AtlasAPIClient.Errors.Conflict)  
+**Reject**: [<code>TooManyRequests</code>](#module_atlas-api-client--AtlasAPIClient.Errors.TooManyRequests)  
+**Reject**: [<code>InternalError</code>](#module_atlas-api-client--AtlasAPIClient.Errors.InternalError)  
 **Reject**: <code>Error</code>  
 
 | Param | Type | Description |
@@ -971,13 +971,13 @@ Get measurements for a specific Atlas MongoDB process (mongod or mongos).
 | [params.period] | <code>string</code> |  |
 | [params.start] | <code>string</code> |  |
 | [params.end] | <code>string</code> |  |
-| [params.m] | <code>[ &#x27;Array&#x27; ].&lt;string&gt;</code> |  |
+| [params.m] | <code>Array.&lt;string&gt;</code> |  |
 | [params.pageNum] | <code>number</code> |  |
 | [params.itemsPerPage] | <code>number</code> |  |
 | [options] | <code>object</code> |  |
 | [options.timeout] | <code>number</code> | A request specific timeout |
-| [options.span] | <code>[Span](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html)</code> | An OpenTracing span - For example from the parent request |
-| [options.retryPolicy] | <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code> | A request specific retryPolicy |
+| [options.span] | [<code>Span</code>](https://doc.esdoc.org/github.com/opentracing/opentracing-javascript/class/src/span.js~Span.html) | An OpenTracing span - For example from the parent request |
+| [options.retryPolicy] | [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies) | A request specific retryPolicy |
 | [cb] | <code>function</code> |  |
 
 <a name="module_atlas-api-client--AtlasAPIClient.RetryPolicies"></a>
@@ -985,7 +985,7 @@ Get measurements for a specific Atlas MongoDB process (mongod or mongos).
 #### AtlasAPIClient.RetryPolicies
 Retry policies available to use.
 
-**Kind**: static property of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: static property of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 
 * [.RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)
     * [.Exponential](#module_atlas-api-client--AtlasAPIClient.RetryPolicies.Exponential)
@@ -997,25 +997,25 @@ Retry policies available to use.
 ##### RetryPolicies.Exponential
 The exponential retry policy will retry five times with an exponential backoff.
 
-**Kind**: static constant of <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code>  
+**Kind**: static constant of [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)  
 <a name="module_atlas-api-client--AtlasAPIClient.RetryPolicies.Single"></a>
 
 ##### RetryPolicies.Single
 Use this retry policy to retry a request once.
 
-**Kind**: static constant of <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code>  
+**Kind**: static constant of [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)  
 <a name="module_atlas-api-client--AtlasAPIClient.RetryPolicies.None"></a>
 
 ##### RetryPolicies.None
 Use this retry policy to turn off retries.
 
-**Kind**: static constant of <code>[RetryPolicies](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)</code>  
+**Kind**: static constant of [<code>RetryPolicies</code>](#module_atlas-api-client--AtlasAPIClient.RetryPolicies)  
 <a name="module_atlas-api-client--AtlasAPIClient.Errors"></a>
 
 #### AtlasAPIClient.Errors
 Errors returned by methods.
 
-**Kind**: static property of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: static property of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
 
 * [.Errors](#module_atlas-api-client--AtlasAPIClient.Errors)
     * [.BadRequest](#module_atlas-api-client--AtlasAPIClient.Errors.BadRequest) ⇐ <code>Error</code>
@@ -1031,8 +1031,8 @@ Errors returned by methods.
 ##### Errors.BadRequest ⇐ <code>Error</code>
 BadRequest
 
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
+**Kind**: static class of [<code>Errors</code>](#module_atlas-api-client--AtlasAPIClient.Errors)  
+**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1047,8 +1047,8 @@ BadRequest
 ##### Errors.Unauthorized ⇐ <code>Error</code>
 Unauthorized
 
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
+**Kind**: static class of [<code>Errors</code>](#module_atlas-api-client--AtlasAPIClient.Errors)  
+**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1063,8 +1063,8 @@ Unauthorized
 ##### Errors.Forbidden ⇐ <code>Error</code>
 Forbidden
 
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
+**Kind**: static class of [<code>Errors</code>](#module_atlas-api-client--AtlasAPIClient.Errors)  
+**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1079,8 +1079,8 @@ Forbidden
 ##### Errors.NotFound ⇐ <code>Error</code>
 NotFound
 
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
+**Kind**: static class of [<code>Errors</code>](#module_atlas-api-client--AtlasAPIClient.Errors)  
+**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1095,8 +1095,8 @@ NotFound
 ##### Errors.Conflict ⇐ <code>Error</code>
 Conflict
 
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
+**Kind**: static class of [<code>Errors</code>](#module_atlas-api-client--AtlasAPIClient.Errors)  
+**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1111,8 +1111,8 @@ Conflict
 ##### Errors.TooManyRequests ⇐ <code>Error</code>
 TooManyRequests
 
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
+**Kind**: static class of [<code>Errors</code>](#module_atlas-api-client--AtlasAPIClient.Errors)  
+**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1127,8 +1127,8 @@ TooManyRequests
 ##### Errors.InternalError ⇐ <code>Error</code>
 InternalError
 
-**Kind**: static class of <code>[Errors](#module_atlas-api-client--AtlasAPIClient.Errors)</code>  
-**Extends:** <code>Error</code>  
+**Kind**: static class of [<code>Errors</code>](#module_atlas-api-client--AtlasAPIClient.Errors)  
+**Extends**: <code>Error</code>  
 **Properties**
 
 | Name | Type |
@@ -1143,4 +1143,4 @@ InternalError
 #### AtlasAPIClient.DefaultCircuitOptions
 Default circuit breaker options.
 
-**Kind**: static constant of <code>[AtlasAPIClient](#exp_module_atlas-api-client--AtlasAPIClient)</code>  
+**Kind**: static constant of [<code>AtlasAPIClient</code>](#exp_module_atlas-api-client--AtlasAPIClient)  
